@@ -1,0 +1,17 @@
+{
+    "name": "SpookLens",
+    "short_name": "SpookLens",
+    "theme_color": "#581c87",
+    "background_color": "#581c87",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "/",
+    "orientation": "landscape-primary",
+    "icons": [
+      {
+        "src": "/images/logo.png",
+        "type": "image/png",
+        "sizes": "128x128"
+      }
+    ]
+  }
