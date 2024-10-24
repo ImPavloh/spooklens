@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -33,7 +34,7 @@ import {
 } from 'react-icons/fa'
 import { GiPumpkin } from 'react-icons/gi'
 
-import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore'
+import { doc, updateDoc, deleteDoc } from 'firebase/firestore'
 import {
   updatePassword,
   reauthenticateWithCredential,
@@ -43,6 +44,7 @@ import {
 import { db, auth } from '@/lib/firebase'
 
 import BackgroundAnimation from '@/components/extras/BackgroundAnimation'
+import PhotoGallery from '@/components/PhotoGallery'
 
 interface AlertState {
   type: 'success' | 'error'
@@ -62,14 +64,6 @@ interface UserProfile {
   potions: number
 }
 
-interface Photo {
-  id: string
-  imageUrl: string
-  title: string
-  description: string
-  createdAt: Date
-}
-
 interface LocalSettings {
   disableBackgroundImage: boolean
 }
@@ -85,7 +79,6 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
   const [newPassword, setNewPassword] = useState('')
   const [currentPassword, setCurrentPassword] = useState('')
   const [alert, setAlert] = useState<AlertState | null>(null)
-  const [photos, setPhotos] = useState<Photo[]>([])
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [deleteConfirmation, setDeleteConfirmation] = useState('')
   const [isReauthenticating, setIsReauthenticating] = useState(false)
@@ -296,7 +289,7 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
                 </TabsContent>
                 <TabsContent value="photos">
                   <ScrollArea className="h-[450px] pr-4">
-                    <PhotoGallery photos={photos} />
+                    <PhotoGallery />
                   </ScrollArea>
                 </TabsContent>
                 <TabsContent value="stats">
@@ -589,63 +582,6 @@ const AlertMessage = ({ alert }: { alert: AlertState | null }) => (
     )}
   </AnimatePresence>
 )
-
-// mejorable (y sin testear) ~ tambien hay que convertir y exportar el componente
-const PhotoGallery() {
-  const [photos, setPhotos] = useState<Photo[]>([])
-
-  useEffect(() => {
-    const fetchPhotos = async () => {
-      const user = auth.currentUser
-      if (!user) return
-
-      const userRef = doc(db, 'users', user.uid)
-      const userSnap = await getDoc(userRef)
-
-      if (userSnap.exists()) {
-        const userData = userSnap.data()
-        const imageHistory = userData.imageHistory || {}
-
-        const photoArray = Object.entries(imageHistory).map(([id, data]: [string, any]) => ({
-          id,
-          imageUrl: data.imageUrl,
-          title: data.title,
-          description: data.description,
-          createdAt: data.createdAt.toDate()
-        }))
-
-        setPhotos(photoArray.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()))
-      }
-    }
-
-    fetchPhotos()
-  }, [])
-
-  return (
-    <ScrollArea className="h-[450px] pr-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-        {photos.map((photo) => (
-          <div key={photo.id} className="relative group">
-            <Image
-              src={photo.imageUrl}
-              alt={photo.title}
-              width={300}
-              height={300}
-              className="rounded-lg object-cover shadow-lg"
-            />
-            <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center rounded-lg p-2">
-              <span className="text-white text-sm font-bold mb-1">{photo.title}</span>
-              <span className="text-white text-xs text-center">{photo.description}</span>
-              <span className="text-white text-xs mt-2">
-                {photo.createdAt.toLocaleDateString()}
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </ScrollArea>
-  )
-}
 
 const StatsView = ({ profile }: { profile: UserProfile }) => (
   <div className="space-y-6 mt-4">
