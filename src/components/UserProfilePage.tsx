@@ -590,8 +590,8 @@ const AlertMessage = ({ alert }: { alert: AlertState | null }) => (
   </AnimatePresence>
 )
 
-// mejorable (y sin testear)
-export default function PhotoGallery() {
+// mejorable (y sin testear) ~ tambien hay que convertir y exportar el componente
+const PhotoGallery() {
   const [photos, setPhotos] = useState<Photo[]>([])
 
   useEffect(() => {
