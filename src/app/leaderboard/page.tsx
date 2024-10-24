@@ -31,9 +31,6 @@ const leaderboardCategories = [
 
 interface LocalSettings {
   disableBackgroundImage: boolean
-  disableMusicPlayerAnimations: boolean
-  disableChatBackgroundAnimations: boolean
-  musicPlayerVolume: number
 }
 
 export default function ImprovedLeaderboardPage() {
@@ -49,9 +46,6 @@ export default function ImprovedLeaderboardPage() {
       ? JSON.parse(savedSettings)
       : {
           disableBackgroundImage: false,
-          disableMusicPlayerAnimations: false,
-          disableChatBackgroundAnimations: false,
-          musicPlayerVolume: 50,
         }
   })
 

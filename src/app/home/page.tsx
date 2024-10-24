@@ -16,19 +16,6 @@ import MyViewer from '@/components/MyViewer'
 
 const MemoizedChatRoom = React.memo(ChatRoom)
 const MemoizedMusicPlayer = React.memo(MusicPlayer)
-
-const pageVariants = {
-  initial: { opacity: 0, y: 10 },
-  in: { opacity: 1, y: 0 },
-  out: { opacity: 0, y: 10 },
-}
-
-const pageTransition = {
-  type: 'tween',
-  ease: 'anticipate',
-  duration: 0.4,
-}
-
 interface LocalSettings {
   disableBackgroundImage: boolean
   disableMusicPlayerAnimations: boolean
@@ -115,17 +102,12 @@ export default function Page() {
 
   return (
     <>
-      <motion.div
-        variants={pageVariants}
-        transition={pageTransition}
-        initial="initial"
-        animate="in"
-        exit="out"
+      <div
         className={`min-h-screen flex flex-col ${backgroundClass} text-orange-200 overflow-hidden pt-16 ${hauntedClass}`}
       >
         {!localSettings.disableBackgroundImage && (
           <BackgroundAnimation
-            numWebs={20}
+            numWebs={15}
             webColor="text-orange-300"
             opacity={0.15}
           />
@@ -212,7 +194,7 @@ export default function Page() {
             </div>
           </div>
         </main>
-      </motion.div>
+      </div>
 
       <SpookyUploaderModal
         isOpen={isUploadModalOpen}

@@ -17,7 +17,7 @@ const breeSerif = Bree_Serif({
 
 export const metadata: Metadata = {
   title: 'SpookLens',
-  description: 'Web para la Hackathon de Cloudinary + MiduDev',
+  description: 'Finalist website in the 2024 Cloudinary + MiduDev Spooky AI Creations Hackathon.',
   keywords: [
     'SpookLens',
     'Next.js',
@@ -26,16 +26,17 @@ export const metadata: Metadata = {
     'Cloudinary',
     'MiduDev',
     'Pavloh',
+    'Halloween'
   ],
   authors: [{ name: 'Pavloh' }],
   openGraph: {
     title: 'SpookLens',
-    description: 'Web para la Hackathon de Cloudinary x MiduDev',
-    url: 'https://spookymatch.vercel.app',
+    description: 'Finalist website in the 2024 Cloudinary + MiduDev Spooky AI Creations Hackathon.',
+    url: 'https://spooklens.vercel.app',
     siteName: 'SpookLens',
     images: [
       {
-        url: 'https://spookymatch.vercel.app/images/screenshots/s2.png',
+        url: 'https://spooklens.vercel.app/images/screenshots/s3.jpg',
         width: 1200,
         height: 630,
       },
@@ -46,8 +47,8 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'SpookLens',
-    description: 'Web para la Hackathon de Cloudinary + MiduDev',
-    images: ['https://spooklens.vercel.app/images/screenshots/s2.jpg'],
+    description: 'Finalist website in the 2024 Cloudinary + MiduDev Spooky AI Creations Hackathon.v',
+    images: ['https://spooklens.vercel.app/images/screenshots/s3.jpg'],
   },
   icons: {
     icon: '/favicon.ico',

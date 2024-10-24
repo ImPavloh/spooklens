@@ -33,7 +33,7 @@ import {
 } from 'react-icons/fa'
 import { GiPumpkin } from 'react-icons/gi'
 
-import { doc, updateDoc, deleteDoc } from 'firebase/firestore'
+import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore'
 import {
   updatePassword,
   reauthenticateWithCredential,
@@ -64,15 +64,14 @@ interface UserProfile {
 
 interface Photo {
   id: string
-  url: string
-  date: string
+  imageUrl: string
+  title: string
+  description: string
+  createdAt: Date
 }
 
 interface LocalSettings {
   disableBackgroundImage: boolean
-  disableMusicPlayerAnimations: boolean
-  disableChatBackgroundAnimations: boolean
-  musicPlayerVolume: number
 }
 
 interface UserProfilePageProps {
@@ -86,7 +85,7 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
   const [newPassword, setNewPassword] = useState('')
   const [currentPassword, setCurrentPassword] = useState('')
   const [alert, setAlert] = useState<AlertState | null>(null)
-  const [photos] = useState<Photo[]>([])
+  const [photos, setPhotos] = useState<Photo[]>([])
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [deleteConfirmation, setDeleteConfirmation] = useState('')
   const [isReauthenticating, setIsReauthenticating] = useState(false)
@@ -97,16 +96,10 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
         ? JSON.parse(savedSettings)
         : {
             disableBackgroundImage: false,
-            disableMusicPlayerAnimations: false,
-            disableChatBackgroundAnimations: false,
-            musicPlayerVolume: 50,
           }
     }
     return {
       disableBackgroundImage: false,
-      disableMusicPlayerAnimations: false,
-      disableChatBackgroundAnimations: false,
-      musicPlayerVolume: 50,
     }
   })
 
@@ -597,24 +590,60 @@ const AlertMessage = ({ alert }: { alert: AlertState | null }) => (
   </AnimatePresence>
 )
 
-const PhotoGallery = ({ photos }: { photos: Photo[] }) => {
+// mejorable (y sin testear)
+export default function PhotoGallery() {
+  const [photos, setPhotos] = useState<Photo[]>([])
+
+  useEffect(() => {
+    const fetchPhotos = async () => {
+      const user = auth.currentUser
+      if (!user) return
+
+      const userRef = doc(db, 'users', user.uid)
+      const userSnap = await getDoc(userRef)
+
+      if (userSnap.exists()) {
+        const userData = userSnap.data()
+        const imageHistory = userData.imageHistory || {}
+
+        const photoArray = Object.entries(imageHistory).map(([id, data]: [string, any]) => ({
+          id,
+          imageUrl: data.imageUrl,
+          title: data.title,
+          description: data.description,
+          createdAt: data.createdAt.toDate()
+        }))
+
+        setPhotos(photoArray.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()))
+      }
+    }
+
+    fetchPhotos()
+  }, [])
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-      {photos.map((photo) => (
-        <div key={photo.id} className="relative group">
-          <Image
-            src={photo.url}
-            alt={`Photo from ${photo.date}`}
-            width={300}
-            height={300}
-            className="rounded-lg object-cover shadow-lg"
-          />
-          <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center rounded-lg">
-            <span className="text-white text-sm">{photo.date}</span>
+    <ScrollArea className="h-[450px] pr-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+        {photos.map((photo) => (
+          <div key={photo.id} className="relative group">
+            <Image
+              src={photo.imageUrl}
+              alt={photo.title}
+              width={300}
+              height={300}
+              className="rounded-lg object-cover shadow-lg"
+            />
+            <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center rounded-lg p-2">
+              <span className="text-white text-sm font-bold mb-1">{photo.title}</span>
+              <span className="text-white text-xs text-center">{photo.description}</span>
+              <span className="text-white text-xs mt-2">
+                {photo.createdAt.toLocaleDateString()}
+              </span>
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </ScrollArea>
   )
 }
 

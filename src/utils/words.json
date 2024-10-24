@@ -7,5 +7,5 @@
   "controversial": ["nazi","hitler","stalin","mao","isis","terrorist","pedo","rapist","diddy","binladen","massacre","genocide","klan","fascist","dictator","gulag","holocaust","slave","lynch","nazi","hitler","genocidio","esclavo","terrorista","dictador","violador","pedofilo","estalin"],
   "politicalFigures": ["trump","biden","kamala","obama","putin","xi","modi","merkel","macron","boris","bernie","hillary","sanders","mitch","pelosi","reagan","churchill","castro","lenin","maduro","chavez","uribe","lopezobrador","peron","kirchner","videla"],
   "religions": ["god","devil","jesus","allah","buddha","dios","diablo","jesus","ala","buda","krishna","satan","shiva","vishnu","jehova","lucifer","yahve"],
-  "reservedNames": ["pavloh", "snow"]
+  "reservedNames": ["pavloh", "impavloh", "snow"]
 }

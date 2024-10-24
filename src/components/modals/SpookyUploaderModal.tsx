@@ -668,7 +668,7 @@ export default function SpookyUploader({
                       createdAt: new Date(),
                     },
                   },
-                  profileImage: downloadURL,
+                  profileImage: downloadURL, // modificar o quitar esto
                 })
 
                 setUploading(false)

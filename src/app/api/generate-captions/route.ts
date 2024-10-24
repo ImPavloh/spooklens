@@ -11,6 +11,7 @@ import cloudinary, { getCloudinarySignature } from '@/lib/cloudinary';
 interface AIResponse {
   title: string;
   description: string;
+  tokensUsed: number;
 }
 
 async function analyzeImageWithAIVision(imageUrl: string): Promise<AIResponse> {
@@ -20,7 +21,7 @@ async function analyzeImageWithAIVision(imageUrl: string): Promise<AIResponse> {
     source: { uri: imageUrl },
     prompts: [
       "Create a spooky title for this eerie image in five words or less",
-      "Briefly describe this image in fifteen words or less"
+      "Briefly describe this image in ten words or less"
     ]
   };
 
@@ -40,26 +41,29 @@ async function analyzeImageWithAIVision(imageUrl: string): Promise<AIResponse> {
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Failed to analyze image with AI Vision: ${response.status} ${response.statusText} - ${errorText}`);
+      throw new Error(`AI Vision API error: ${response.status} - ${errorText}`);
     }
 
     const result = await response.json();
     const analysis = result.data?.analysis?.responses;
+    const tokensUsed = result.limits?.usage?.count || 0; // (obtener los tokens utilizados)
 
     if (!analysis || !Array.isArray(analysis) || analysis.length < 2) {
       throw new Error('Unexpected AI Vision response format');
     }
 
-    const titleResponse = analysis[0].value;
-    const descriptionResponse = analysis[1].value;
+    const title = analysis[0]?.value?.trim() || 'Untitled Spooky Image';
+    const description = analysis[1]?.value?.trim() || 'Mysterious scene.';
 
-    const title = titleResponse.replace(/^"|"$/g, '').trim() || 'Untitled Spooky Image';
-    const description = descriptionResponse.replace(/^"|"$/g, '').trim() || 'An enigmatic scene';
-
-    return { title, description };
+    // respuestas concisas y tokens mínimos
+    return {
+      title: title.slice(0, 50),
+      description: description.slice(0, 100),
+      tokensUsed
+    };
   } catch (error) {
     console.error('Error analyzing image:', error);
-    throw error;
+    throw new Error('Image analysis failed. Please try again later.');
   }
 }
 

@@ -6,7 +6,7 @@ export function useAudio(src: string) {
   const play = useCallback(() => {
     if (!audioRef.current) {
       audioRef.current = new Audio(src)
-      audioRef.current.volume = 0.6
+      audioRef.current.volume = 0.5
     }
     audioRef.current.currentTime = 0
     audioRef.current.play()

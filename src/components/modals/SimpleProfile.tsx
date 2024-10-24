@@ -1,4 +1,4 @@
-/* funciona pero no se usa aun
+/* funciona pero no se usa aun (usar para chats)
 'use client'
 
 import { useState, useEffect } from 'react'

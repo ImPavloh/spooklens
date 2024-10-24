@@ -54,26 +54,30 @@ function HauntedCarousel() {
   const slides = [
     {
       image: '/images/screenshots/s1.jpg',
-      alt: 'SpookLens Uploader',
+      alt: 'SpookLens Finalist Project Hackathon 2024',
     },
     {
       image: '/images/screenshots/s2.jpg',
-      alt: 'SpookLens Hub',
+      alt: 'SpookLens Uploader',
     },
     {
       image: '/images/screenshots/s3.jpg',
-      alt: 'SpookLens Trick or Treat',
+      alt: 'SpookLens Hub',
     },
     {
       image: '/images/screenshots/s4.jpg',
-      alt: 'SpookLens Leaderboard',
+      alt: 'SpookLens Trick or Treat',
     },
     {
       image: '/images/screenshots/s5.jpg',
-      alt: 'SpookLens Profiles',
+      alt: 'SpookLens Leaderboard',
     },
     {
       image: '/images/screenshots/s6.jpg',
+      alt: 'SpookLens Profiles',
+    },
+    {
+      image: '/images/screenshots/s7.jpg',
       alt: 'SpookLens Store',
     },
   ]
@@ -83,12 +87,14 @@ function HauntedCarousel() {
   )
 
   useEffect(() => {
-    const timer = setInterval(
+    const timeForFirstSlide = currentSlide === 0 ? 8000 : 5000 // para destacar la primera imagen (finalista de la hackathon)
+    const timer = setTimeout(
       () => setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length),
-      5000,
+      timeForFirstSlide,
     )
-    return () => clearInterval(timer)
-  }, [slides.length])
+
+    return () => clearTimeout(timer)
+  }, [currentSlide, slides.length])
 
   const handleImageLoad = (index: number) => {
     setImagesLoaded((prev) => {
@@ -97,6 +103,7 @@ function HauntedCarousel() {
       return newState
     })
   }
+
 
   return (
     <div className="relative w-full max-w-4xl mx-auto aspect-video overflow-hidden rounded-lg shadow-2xl">
@@ -351,14 +358,14 @@ export default function Main() {
             >
               Pavloh
             </a>{' '}
-            for the{' '}
+            - Finalist project in the{' '}
             <a
               href="https://cloudinary.com/blog/cloudinary-cloudcreate-spooky-ai-hackathon"
               target="_blank"
               rel="noopener noreferrer"
               className="text-orange-400 hover:underline"
             >
-              MiduDev x Cloudinary Spooky AI Hackathon 2024
+              MiduDev x Cloudinary Hackathon 2024: Spooky AI Creations
             </a>
           </p>
           <div className="flex justify-center space-x-4 mb-6">

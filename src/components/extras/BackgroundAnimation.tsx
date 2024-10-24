@@ -10,7 +10,7 @@ interface BackgroundAnimationProps {
 }
 
 const BackgroundAnimation: React.FC<BackgroundAnimationProps> = ({
-  numWebs = 4,
+  numWebs = 6,
   webColor = 'text-purple-400',
   opacity = 0.3,
 }) => {

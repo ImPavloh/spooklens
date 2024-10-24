@@ -20,6 +20,7 @@ import {
   FaTwitter,
   FaHeart,
   FaCalendar,
+  FaTrophy,
 } from 'react-icons/fa6'
 
 interface AboutModalProps {
@@ -41,6 +42,10 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
       name: 'Cloudinary CloudCreate: Spooky AI Hackathon',
       date: 'October 8 - 22, 2024',
       organizer: 'MiduDev x Cloudinary',
+    },
+    finalist: {
+      status: true,
+      message: 'Finalist in the Cloudinary CloudCreate: Spooky AI Hackathon!',
     },
   }
 
@@ -74,11 +79,28 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
           >
             {appInfo.description}
           </motion.p>
+          {appInfo.finalist.status && (
+            <motion.div
+              className="flex flex-col items-center space-y-2"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2, type: 'spring', stiffness: 300, damping: 25 }}
+            >
+              <Badge
+                variant="secondary"
+                className="bg-yellow-500/20 text-yellow-300 flex items-center space-x-2"
+              >
+                <FaTrophy className="text-yellow-400" />
+                <span>Finalist Project</span>
+              </Badge>
+              <p className="text-sm text-center text-yellow-200">{appInfo.finalist.message}</p>
+            </motion.div>
+          )}
           <motion.div
             className="flex flex-col items-center space-y-2"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.3 }}
           >
             <Badge
               variant="secondary"
@@ -101,7 +123,7 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
             className="flex items-center justify-center space-x-2"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3 }}
+            transition={{ delay: 0.4 }}
           >
             <FaHeart className="text-red-500" />
             <span>Created by {appInfo.creator.name}</span>
@@ -175,7 +197,7 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
           initial={{ opacity: 0, rotate: -90 }}
           animate={{ opacity: 1, rotate: 0 }}
           transition={{
-            delay: 0.4,
+            delay: 0.5,
             type: 'spring',
             stiffness: 260,
             damping: 20,

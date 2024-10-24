@@ -1,3 +1,8 @@
+/*
+TODO:
+- permitir a los usuarios cambiar la visibilidad del perfil
+- arreglar profileVisibility -> profileVisible (estoy modificando un datos inexistente)
+*/
 'use client'
 
 import { useState, useEffect } from 'react'
