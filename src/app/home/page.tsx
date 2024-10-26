@@ -103,7 +103,7 @@ export default function Page() {
   return (
     <>
       <div
-        className={`min-h-screen flex flex-col ${backgroundClass} text-orange-200 overflow-hidden pt-16 ${hauntedClass}`}
+        className={`min-h-screen flex flex-col ${backgroundClass} text-orange-200 overflow-hidden pt-20 ${hauntedClass}`}
       >
         {!localSettings.disableBackgroundImage && (
           <BackgroundAnimation
@@ -121,7 +121,7 @@ export default function Page() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <h1 className="text-6xl lg:text-8xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-red-500 to-purple-600 animate-gradient-x drop-shadow-[0_5px_3px_rgba(0,0,0,0.4)]">
+              <h1 className="text-5xl sm:text-8xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-red-500 to-purple-600 animate-gradient-x drop-shadow-[0_5px_3px_rgba(0,0,0,0.4)]">
                 Social Hub
               </h1>
             </motion.div>

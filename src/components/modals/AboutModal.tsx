@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 import { motion } from 'framer-motion'
 import {
@@ -16,11 +17,11 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import {
   FaGithub,
-  FaXTwitter,
   FaTwitter,
   FaHeart,
   FaCalendar,
   FaTrophy,
+  FaCode,
 } from 'react-icons/fa6'
 
 interface AboutModalProps {
@@ -28,74 +29,53 @@ interface AboutModalProps {
   onClose: () => void
 }
 
-export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
-  const appInfo = {
-    name: 'SpookLens',
-    version: '0.1.0 - Beta',
-    description: 'A Halloween-themed social media app!',
-    creator: {
-      name: 'Pavloh',
-      twitter: 'impavloh',
-      github: 'impavloh',
-    },
-    hackathon: {
-      name: 'Cloudinary CloudCreate: Spooky AI Hackathon',
-      date: 'October 8 - 22, 2024',
-      organizer: 'MiduDev x Cloudinary',
-    },
-    finalist: {
-      status: true,
-      message: 'Finalist in the Cloudinary CloudCreate: Spooky AI Hackathon!',
-    },
-  }
+const appInfo = {
+  name: 'SpookLens',
+  version: '0.1.1 - Beta',
+  description: 'A Halloween-themed social media app with AI-powered features!',
+  creator: {
+    name: 'Pavloh',
+    twitter: 'impavloh',
+    github: 'impavloh',
+  },
+  hackathon: {
+    name: 'Cloudinary Spooky AI Creations Hackathon',
+    date: 'October 8 - 22, 2024',
+    organizer: 'MiduDev x Cloudinary',
+  },
+  repository: 'https://github.com/impavloh/spooklens',
+}
 
+export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent
-        closeOnOutsideClick={true}
-        className="sm:max-w-[425px] bg-gray-900 text-orange-200 border-2 border-orange-500 rounded-lg shadow-lg shadow-orange-500/20"
-      >
-        <DialogHeader>
-          <DialogTitle className="text-3xl font-halloween text-orange-500 flex items-center justify-center">
+      <DialogContent className="sm:max-w-[500px] w-[95vw] max-h-[90vh] overflow-y-auto bg-gradient-to-b from-gray-900 to-gray-800 text-orange-200 border-2 border-orange-500 rounded-lg shadow-lg shadow-orange-500/20">
+        <DialogHeader className="space-y-2">
+          <DialogTitle className="text-3xl sm:text-4xl font-halloween text-orange-500 flex items-center justify-center gap-2">
             <Image
               src="/images/logo2.png"
-              alt="SpookLens"
-              width={40}
-              height={40}
+              alt="SpookLens logo"
+              width={50}
+              height={50}
+              className="animate-pulse"
             />
-            {appInfo.name}
+            <span className="break-all">{appInfo.name}</span>
           </DialogTitle>
-          <DialogDescription className="text-orange-200 text-center">
+          <DialogDescription className="text-orange-200 text-center text-base sm:text-lg">
             Version {appInfo.version}
           </DialogDescription>
         </DialogHeader>
         <Separator className="bg-orange-500/50" />
-        <div className="space-y-4">
-          <motion.p
-            className="text-sm text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
+        <motion.div
+          className="space-y-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <p className="text-sm sm:text-base text-center">
             {appInfo.description}
-          </motion.p>
-          {appInfo.finalist.status && (
-            <motion.div
-              className="flex flex-col items-center space-y-2"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2, type: 'spring', stiffness: 300, damping: 25 }}
-            >
-              <Badge
-                variant="secondary"
-                className="bg-yellow-500/20 text-yellow-300 flex items-center space-x-2"
-              >
-                <FaTrophy className="text-yellow-400" />
-                <span>Finalist Project</span>
-              </Badge>
-              <p className="text-sm text-center text-yellow-200">{appInfo.finalist.message}</p>
-            </motion.div>
-          )}
+          </p>
+
           <motion.div
             className="flex flex-col items-center space-y-2"
             initial={{ opacity: 0, y: 20 }}
@@ -104,105 +84,121 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
           >
             <Badge
               variant="secondary"
-              className="bg-orange-500/20 text-orange-300"
+              className="bg-orange-500/20 text-orange-300 text-sm sm:text-base text-center px-2"
             >
               {appInfo.hackathon.name}
             </Badge>
-            <div className="flex items-center space-x-2 text-sm">
-              <FaCalendar className="h-4 w-4 text-orange-400" />
+            <Badge
+              variant="secondary"
+              className="bg-yellow-500/20 text-yellow-300 flex items-center space-x-2 text-sm sm:text-base px-2"
+            >
+              <FaTrophy className="text-yellow-400 mr-2" aria-hidden="true" />
+              <span>Finalist Project</span>
+            </Badge>
+            <div className="flex items-center space-x-2 text-sm sm:text-base">
+              <FaCalendar
+                className="h-4 w-4 sm:h-5 sm:w-5 text-orange-400"
+                aria-hidden="true"
+              />
               <span>{appInfo.hackathon.date}</span>
             </div>
-            <span className="text-xs text-orange-300">
+            <span className="text-sm text-orange-300 text-center">
               Organized by {appInfo.hackathon.organizer}
             </span>
           </motion.div>
-        </div>
+        </motion.div>
         <Separator className="bg-orange-500/50" />
-        <div className="space-y-4">
-          <motion.div
-            className="flex items-center justify-center space-x-2"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.4 }}
-          >
-            <FaHeart className="text-red-500" />
+        <motion.div
+          className="space-y-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+        >
+          <div className="flex items-center justify-center space-x-2 text-sm sm:text-base">
+            <FaHeart className="text-red-500" aria-hidden="true" />
             <span>Created by {appInfo.creator.name}</span>
-          </motion.div>
-          <div className="flex space-x-2">
+          </div>
+          <div className="flex justify-center items-center gap-2 w-full">
             <Button
               asChild
-              size="sm"
-              className="flex-1 bg-transparent border-orange-500 text-orange-300 hover:bg-orange-500/20"
+              size="icon"
+              variant="outline"
+              className="bg-transparent border-orange-500 text-orange-300 hover:bg-orange-500/20 transition-colors duration-200"
             >
-              <a
+              <Link
                 href={`https://twitter.com/${appInfo.creator.twitter}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={`${appInfo.creator.name}'s Twitter profile`}
               >
-                <FaTwitter className="mr-2 h-4 w-4" />
-                Twitter
-                <FaXTwitter className="ml-2 h-4 w-4" />
-              </a>
+                <FaTwitter className="h-4 w-4" />
+              </Link>
             </Button>
             <Button
               asChild
-              size="sm"
-              className="flex-1 bg-transparent border-orange-500 text-orange-300 hover:bg-orange-500/20"
+              variant="outline"
+              className="flex-1 max-w-[200px] bg-transparent border-orange-500 text-orange-300 hover:bg-orange-500/20 transition-colors duration-200"
             >
-              <a
-                href={`https://github.com/${appInfo.creator.github}`}
+              <Link
+                href={appInfo.repository}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <FaGithub className="mr-2 h-4 w-4" />
-                GitHub
-              </a>
+                <FaCode className="h-4 w-4 mr-2" aria-hidden="true" />
+                <span className="truncate">SpookLens Repository</span>
+              </Link>
+            </Button>
+            <Button
+              asChild
+              size="icon"
+              variant="outline"
+              className="bg-transparent border-orange-500 text-orange-300 hover:bg-orange-500/20 transition-colors duration-200"
+            >
+              <Link
+                href={`https://github.com/${appInfo.creator.github}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${appInfo.creator.name}'s GitHub profile`}
+              >
+                <FaGithub className="h-4 w-4" />
+              </Link>
             </Button>
           </div>
-          <Separator className="bg-orange-500/20" />
-          <p className="text-orange-200 text-xs text-center">
+        </motion.div>
+        <Separator className="bg-orange-500/50" />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+        >
+          <p className="text-orange-200 text-xs sm:text-sm text-center">
             User avatars designed by{' '}
-            <a
+            <Link
               href="https://www.freepik.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative inline-block"
+              className="underline hover:text-orange-400 transition-colors"
             >
               Freepik
-              <span className="absolute left-0 bottom-0 w-full h-px bg-orange-200 transform scale-x-0 transition-transform duration-300 ease-in-out group-hover:scale-x-100"></span>
-            </a>
+            </Link>
             <br />
             Music by{' '}
-            <a
+            <Link
               href="https://www.pixabay.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative inline-block"
+              className="underline hover:text-orange-400 transition-colors"
             >
               Pixabay
-              <span className="absolute left-0 bottom-0 w-full h-px bg-orange-200 transform scale-x-0 transition-transform duration-300 ease-in-out group-hover:scale-x-100"></span>
-            </a>
+            </Link>
           </p>
-        </div>
-        <div>
-          <Button
-            onClick={onClose}
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white transition-colors duration-200"
-          >
-            Close
-          </Button>
-        </div>
-        <motion.div
-          className="absolute top-2 right-2"
-          initial={{ opacity: 0, rotate: -90 }}
-          animate={{ opacity: 1, rotate: 0 }}
-          transition={{
-            delay: 0.5,
-            type: 'spring',
-            stiffness: 260,
-            damping: 20,
-          }}
-        ></motion.div>
+        </motion.div>
+        <Button
+          onClick={onClose}
+          className="w-full bg-orange-500 hover:bg-orange-600 text-white transition-colors duration-200 text-base"
+        >
+          Close
+        </Button>
       </DialogContent>
     </Dialog>
   )

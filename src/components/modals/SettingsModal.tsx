@@ -7,6 +7,7 @@ TODO:
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+
 import {
   Dialog,
   DialogContent,
@@ -30,14 +31,6 @@ import {
 } from 'react-icons/fa'
 import { GiPumpkin, GiSpiderWeb, GiMusicalNotes } from 'react-icons/gi'
 
-import { useAuth } from '@/hooks/useAuth'
-import { useFirestore } from '@/hooks/useFirestore'
-import { useToast } from '@/hooks/useToast'
-
-interface UserSettings {
-  profileVisibility: boolean
-}
-
 interface LocalSettings {
   disableBackgroundImage: boolean
   lowPerformanceMode: boolean
@@ -52,14 +45,6 @@ interface SettingsModalProps {
 }
 
 export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
-  const { user } = useAuth()
-  const { updateDocument, getDocument } = useFirestore()
-  const { toast } = useToast()
-
-  const [settings, setSettings] = useState<UserSettings>({
-    profileVisibility: true,
-  })
-
   const [localSettings, setLocalSettings] = useState<LocalSettings>(() => {
     if (typeof window !== 'undefined') {
       const savedSettings = localStorage.getItem('localSettings')
@@ -80,61 +65,11 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     }
   })
 
-  const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false)
-
-  useEffect(() => {
-    if (user) {
-      const fetchUserSettings = async () => {
-        try {
-          const userDoc = await getDocument('users', user.uid)
-          if (userDoc) {
-            setSettings({
-              profileVisibility: userDoc.profileVisibility ?? false,
-            })
-          }
-        } catch (error) {
-          console.error('Error fetching user settings:', error)
-        }
-      }
-      fetchUserSettings()
-    }
-  }, [user, getDocument])
-
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('localSettings', JSON.stringify(localSettings))
     }
   }, [localSettings])
-
-  const handleSettingChange = async (
-    setting: keyof UserSettings,
-    value: boolean,
-  ) => {
-    setIsUpdatingVisibility(true)
-    setSettings((prev) => ({ ...prev, [setting]: value }))
-    if (user) {
-      try {
-        await updateDocument('users', user.uid, { [setting]: value })
-        toast({
-          title: 'Settings Updated',
-          description: `Your ${setting} has been updated successfully.`,
-          duration: 3000,
-        })
-      } catch (error) {
-        console.error('Error updating user settings:', error)
-        toast({
-          title: 'Error',
-          description: 'Failed to update settings. Please try again.',
-          duration: 3000,
-        })
-        setSettings((prev) => ({ ...prev, [setting]: !value }))
-      } finally {
-        setIsUpdatingVisibility(false)
-      }
-    } else {
-      setIsUpdatingVisibility(false)
-    }
-  }
 
   const handleLocalSettingChange = (
     setting: keyof LocalSettings,
@@ -150,24 +85,24 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[450px] bg-gray-900 text-orange-200 border-2 border-orange-500 rounded-lg shadow-lg shadow-orange-500/20">
+      <DialogContent className="sm:max-w-[450px] w-[95vw] max-h-[90vh] overflow-y-auto bg-gray-900 text-orange-200 border-2 border-orange-500 rounded-lg shadow-lg shadow-orange-500/20">
         <DialogHeader>
-          <DialogTitle className="text-3xl font-halloween text-orange-500 flex items-center justify-center">
+          <DialogTitle className="text-2xl sm:text-3xl font-halloween text-orange-500 flex items-center justify-center">
             <motion.div
               animate={{ rotate: [0, 10, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              <FaGhost className="mr-2 h-8 w-8" />
+              <FaGhost className="mr-2 h-6 w-6 sm:h-8 sm:w-8" />
             </motion.div>
             Spooky Settings
             <motion.div
               animate={{ rotate: [0, -10, 0] }}
               transition={{ duration: 2, repeat: Infinity, delay: 1 }}
             >
-              <GiSpiderWeb className="ml-2 h-8 w-8" />
+              <GiSpiderWeb className="ml-2 h-6 w-6 sm:h-8 sm:w-8" />
             </motion.div>
           </DialogTitle>
-          <DialogDescription className="text-center text-orange-300">
+          <DialogDescription className="text-center text-orange-300 text-sm sm:text-base">
             Customize your haunted experience
           </DialogDescription>
         </DialogHeader>
@@ -175,23 +110,25 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           <TabsList className="grid w-full grid-cols-3 bg-gray-800 rounded-lg gap-1">
             <TabsTrigger
               value="general"
-              className="text-orange-200 data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-l-lg"
+              className="text-orange-200 data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-l-lg text-xs sm:text-sm"
             >
-              <FaUser className="mr-2" />
-              General
+              <FaUser className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">General</span>
+              <span className="sm:hidden">Gen</span>
             </TabsTrigger>
             <TabsTrigger
               value="notifications"
-              className="text-orange-200 data-[state=active]:bg-orange-500 data-[state=active]:text-white"
+              className="text-orange-200 data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs sm:text-sm"
             >
-              <FaBell className="mr-2" />
-              Notifications
+              <FaBell className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Notifications</span>
+              <span className="sm:hidden">Notif</span>
             </TabsTrigger>
             <TabsTrigger
               value="local"
-              className="text-orange-200 data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-r-lg"
+              className="text-orange-200 data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-r-lg text-xs sm:text-sm"
             >
-              <FaCog className="mr-2" />
+              <FaCog className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
               Local
             </TabsTrigger>
           </TabsList>
@@ -207,23 +144,14 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <div className="flex items-center justify-between">
                   <Label
                     htmlFor="profileVisibility"
-                    className="text-orange-300 flex items-center"
+                    className="text-orange-300 flex items-center text-sm sm:text-base"
                   >
-                    <FaEye className="mr-2" />
+                    <FaEye className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                     Profile Visibility
                   </Label>
-                  <Switch
-                    id="profileVisibility"
-                    checked
-                    /*checked={settings.profileVisibility}
-                    onCheckedChange={(checked) =>
-                      handleSettingChange('profileVisibility', checked)
-                    }
-                    disabled={isUpdatingVisibility}*/
-                    disabled
-                  />
+                  <Switch id="profileVisibility" checked disabled />
                 </div>
-                <p className="text-sm text-orange-200">
+                <p className="text-xs sm:text-sm text-orange-200">
                   Your profile is visible to other users. You can&apos;t change
                   this yet
                 </p>
@@ -243,9 +171,9 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   <div className="flex items-center justify-between">
                     <Label
                       htmlFor="notificationsEnabled"
-                      className="text-orange-300 flex items-center"
+                      className="text-orange-300 flex items-center text-sm sm:text-base"
                     >
-                      <GiPumpkin className="mr-2" />
+                      <GiPumpkin className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                       Enable Notifications
                     </Label>
                     <Switch id="notificationsEnabled" checked={false} />
@@ -253,15 +181,15 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   <div className="flex items-center justify-between mt-4">
                     <Label
                       htmlFor="emailNotifications"
-                      className="text-orange-300 flex items-center"
+                      className="text-orange-300 flex items-center text-sm sm:text-base"
                     >
-                      <FaEnvelope className="mr-2" />
+                      <FaEnvelope className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                       Email Notifications
                     </Label>
                     <Switch id="emailNotifications" checked={false} />
                   </div>
                 </div>
-                <p className="text-sm text-orange-400 italic mt-4">
+                <p className="text-xs sm:text-sm text-orange-400 italic mt-4">
                   Notifications coming soon! The ghosts are still learning how
                   to whisper...
                 </p>
@@ -280,9 +208,9 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <div className="flex items-center justify-between">
                   <Label
                     htmlFor="disableBackgroundImage"
-                    className="text-orange-300 flex items-center"
+                    className="text-orange-300 flex items-center text-sm sm:text-base"
                   >
-                    <FaImage className="mr-2" />
+                    <FaImage className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                     Disable Background Image
                   </Label>
                   <Switch
@@ -299,9 +227,9 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <div className="flex items-center justify-between">
                   <Label
                     htmlFor="disableMusicPlayerAnimations"
-                    className="text-orange-300 flex items-center"
+                    className="text-orange-300 flex items-center text-sm sm:text-base"
                   >
-                    <GiMusicalNotes className="mr-2" />
+                    <GiMusicalNotes className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                     Disable Music Player Animations
                   </Label>
                   <Switch
@@ -318,9 +246,9 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <div className="flex items-center justify-between">
                   <Label
                     htmlFor="disableChatBackgroundAnimations"
-                    className="text-orange-300 flex items-center"
+                    className="text-orange-300 flex items-center text-sm sm:text-base"
                   >
-                    <FaGhost className="mr-2" />
+                    <FaGhost className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                     Disable Chat Background Animations
                   </Label>
                   <Switch
@@ -337,9 +265,9 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <div className="space-y-2">
                   <Label
                     htmlFor="musicPlayerVolume"
-                    className="text-orange-300 flex items-center"
+                    className="text-orange-300 flex items-center text-sm sm:text-base"
                   >
-                    <FaVolumeUp className="mr-2" />
+                    <FaVolumeUp className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                     Default Music Player Volume
                   </Label>
                   <Slider
@@ -353,11 +281,11 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     }
                     className="w-full"
                   />
-                  <div className="text-sm text-orange-200 text-right">
+                  <div className="text-xs sm:text-sm text-orange-200 text-right">
                     {localSettings.musicPlayerVolume}%
                   </div>
                 </div>
-                <p className="text-sm text-orange-200">
+                <p className="text-xs sm:text-sm text-orange-200">
                   These settings are saved locally and will not sync across
                   devices. Restart the website to see the changes.
                 </p>

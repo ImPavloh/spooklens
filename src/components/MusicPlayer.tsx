@@ -187,9 +187,7 @@ const FloatingIcon: React.FC<FloatingIconProps> = ({ Icon, delay = 0 }) => (
 FloatingIcon.displayName = 'FloatingIcon'
 
 interface LocalSettings {
-  disableBackgroundImage: boolean
   disableMusicPlayerAnimations: boolean
-  disableChatBackgroundAnimations: boolean
   musicPlayerVolume: number
 }
 

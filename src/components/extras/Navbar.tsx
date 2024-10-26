@@ -4,24 +4,25 @@ import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter, usePathname } from 'next/navigation'
-import { auth, signOut, db } from '@/lib/firebase'
-import { doc, onSnapshot } from 'firebase/firestore'
+import dynamic from 'next/dynamic'
+
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   FaHome,
-  FaUser,
   FaCommentDots,
-  FaBars,
-  FaSignOutAlt,
-  FaGithub,
-  FaInfoCircle,
-  FaFlask,
   FaSkull,
   FaCandyCane,
+  FaUser,
   FaCog,
   FaBookReader,
+  FaInfoCircle,
+  FaSignOutAlt,
+  FaSignInAlt,
+  FaBars,
+  FaFlask,
+  FaTimes,
 } from 'react-icons/fa'
-import dynamic from 'next/dynamic'
-import { motion, AnimatePresence } from 'framer-motion'
+import { IconType } from 'react-icons'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -39,26 +40,23 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 
+import { auth, signOut, db } from '@/lib/firebase'
+import { doc, onSnapshot } from 'firebase/firestore'
+
 const AuthModal = dynamic(() => import('@/components/modals/AuthModal'), {
   ssr: false,
 })
 const NavbarInfoModal = dynamic(
   () => import('@/components/modals/AboutModal'),
-  {
-    ssr: false,
-  },
+  { ssr: false },
 )
 const SettingsModal = dynamic(
   () => import('@/components/modals/SettingsModal'),
-  {
-    ssr: false,
-  },
+  { ssr: false },
 )
 const TutorialModal = dynamic(
   () => import('@/components/modals/TutorialModal'),
-  {
-    ssr: false,
-  },
+  { ssr: false },
 )
 
 const navItems = [
@@ -68,7 +66,38 @@ const navItems = [
   { path: '/store', icon: FaCandyCane, label: 'Candy Store' },
 ]
 
-export default function Navbar() {
+interface MobileMenuItemProps {
+  icon: IconType
+  label: string
+  onClick: () => void
+  isActive?: boolean
+}
+
+const MobileMenuItem: React.FC<MobileMenuItemProps> = ({
+  icon: Icon,
+  label,
+  onClick,
+  isActive,
+}) => (
+  <motion.div
+    initial={{ opacity: 0, x: -20 }}
+    animate={{ opacity: 1, x: 0 }}
+    exit={{ opacity: 0, x: -20 }}
+    transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  >
+    <Button
+      onClick={onClick}
+      className={`w-full justify-start text-orange-200 hover:text-orange-100 hover:bg-orange-900/20 mb-2 ${
+        isActive ? 'bg-orange-900/30 text-orange-100' : ''
+      }`}
+    >
+      <Icon className="h-5 w-5 mr-3" aria-hidden="true" />
+      <span>{label}</span>
+    </Button>
+  </motion.div>
+)
+
+export default function Component() {
   const [isHovered, setIsHovered] = useState(false)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false)
@@ -143,6 +172,40 @@ export default function Navbar() {
 
   const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), [])
 
+  const menuVariants = {
+    open: {
+      opacity: 1,
+      height: 'auto',
+      transition: {
+        type: 'spring',
+        stiffness: 300,
+        damping: 30,
+        staggerChildren: 0.07,
+        delayChildren: 0.2,
+      },
+    },
+    closed: {
+      opacity: 0,
+      height: 0,
+      transition: {
+        type: 'spring',
+        stiffness: 300,
+        damping: 30,
+        staggerChildren: 0.05,
+        staggerDirection: -1,
+      },
+    },
+  }
+
+  const itemVariants = {
+    open: {
+      opacity: 1,
+      y: 0,
+      transition: { type: 'spring', stiffness: 300, damping: 24 },
+    },
+    closed: { opacity: 0, y: 20, transition: { duration: 0.2 } },
+  }
+
   const NavItem = useCallback(
     ({
       path,
@@ -150,7 +213,7 @@ export default function Navbar() {
       label,
     }: {
       path: string
-      icon: React.ComponentType
+      icon: IconType
       label: string
     }) => (
       <motion.div
@@ -165,9 +228,7 @@ export default function Navbar() {
           }`}
         >
           <Link href={path} className="flex items-center space-x-1">
-            <span className="h-4 w-4 mr-2">
-              <Icon aria-hidden="true" />
-            </span>
+            <Icon className="h-4 w-4 mr-2" aria-hidden="true" />
             <span>{label}</span>
           </Link>
         </Button>
@@ -185,7 +246,7 @@ export default function Navbar() {
         className="fixed top-4 transform -translate-x-1/2 w-11/12 max-w-7xl rounded-full z-50 bg-gray-900/60 backdrop-blur-md shadow-2xl shadow-black/50 border border-gray-700 inset-x-0 mx-auto space-x-6"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-12 sm:h-16">
             <div className="flex items-center">
               <Link
                 href="/"
@@ -200,7 +261,7 @@ export default function Navbar() {
                 >
                   <Image
                     src="/images/logo2.png"
-                    alt="SpookLens"
+                    alt="SpookLens logo"
                     draggable="false"
                     width={40}
                     height={40}
@@ -219,21 +280,30 @@ export default function Navbar() {
               ))}
             </div>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className="flex items-center space-x-2 bg-purple-900/50 rounded-full px-3 py-1">
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center space-x-1 sm:space-x-2 bg-purple-900/50 rounded-full px-2 sm:px-3 py-1"
+                    >
                       <FaCandyCane
-                        className="text-pink-400"
+                        className="text-pink-400 w-3 h-3 sm:w-4 sm:h-4"
                         aria-hidden="true"
                       />
-                      <span className="text-pink-400 font-bold">{candies}</span>
-                      <FaFlask className="text-green-400" aria-hidden="true" />
-                      <span className="text-green-400 font-bold">
+                      <span className="text-pink-400 font-bold text-xs sm:text-sm">
+                        {candies}
+                      </span>
+                      <FaFlask
+                        className="text-green-400 w-3 h-3 sm:w-4 sm:h-4"
+                        aria-hidden="true"
+                      />
+                      <span className="text-green-400 font-bold text-xs sm:text-sm">
                         {potions}
                       </span>
-                    </div>
+                    </motion.div>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>
@@ -245,7 +315,7 @@ export default function Navbar() {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button className="relative h-10 w-10 rounded-full overflow-hidden flex transition-all duration-200 border-2 border-orange-500 hover:border-orange-300 shadow-lg hover:shadow-orange-300/30">
+                  <Button className="relative h-8 w-8 sm:h-10 sm:w-10 rounded-full overflow-hidden hidden sm:flex transition-all duration-200 sm:border-2 border-orange-500 hover:border-orange-300 shadow-lg hover:shadow-orange-300/30">
                     <Avatar>
                       <AvatarImage
                         src={userAvatar || '/images/avatars/avatar1.png'}
@@ -259,14 +329,14 @@ export default function Navbar() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
-                  className="w-64 bg-gray-900/80 border border-orange-600 rounded-lg shadow-xl overflow-hidden"
+                  className="w-56 sm:w-64 bg-gray-900/80 border border-orange-600 rounded-lg shadow-xl overflow-hidden"
                   align="end"
                   forceMount
                 >
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-2 p-3">
                       <div className="flex items-center space-x-3">
-                        <Avatar className="h-10 w-10">
+                        <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
                           <AvatarImage
                             src={userAvatar || '/images/avatars/avatar1.png'}
                             alt="Profile"
@@ -277,10 +347,10 @@ export default function Navbar() {
                           </AvatarFallback>
                         </Avatar>
                         <div className="text-orange-200">
-                          <p className="text-sm font-semibold">
+                          <p className="text-xs sm:text-sm font-semibold">
                             {userName || 'Mysterious User'}
                           </p>
-                          <p className="text-xs">
+                          <p className="text-xs hidden sm:block">
                             {auth.currentUser?.email || 'No email provided'}
                           </p>
                         </div>
@@ -290,7 +360,7 @@ export default function Navbar() {
                   <DropdownMenuSeparator className="bg-orange-500/50" />
                   <DropdownMenuItem
                     onClick={openProfilePage}
-                    className="text-orange-200 hover:bg-orange-500/20 focus:bg-orange-500 focus:text-white"
+                    className="text-orange-200 hover:bg-orange-500/20 focus:bg-orange-500  focus:text-white"
                   >
                     <FaUser className="mr-2 h-4 w-4" aria-hidden="true" />
                     <span>Profile</span>
@@ -307,27 +377,14 @@ export default function Navbar() {
                     className="text-orange-200 hover:bg-orange-500/20 focus:bg-orange-500 focus:text-white"
                   >
                     <FaBookReader className="mr-2 h-4 w-4" aria-hidden="true" />
-                    <span>Tutorial</span>
+                    <span>Getting Started</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={openInfoModal}
                     className="text-orange-200 hover:bg-orange-500/20 focus:bg-orange-500 focus:text-white"
                   >
                     <FaInfoCircle className="mr-2 h-4 w-4" aria-hidden="true" />
-                    <span>About this web</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="text-orange-200 hover:bg-orange-500/20 focus:bg-orange-500 focus:text-white"
-                    asChild
-                  >
-                    <a
-                      href="https://github.com/impavloh/spooklens"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <FaGithub className="mr-2 h-4 w-4" aria-hidden="true" />
-                      <span>GitHub repository</span>
-                    </a>
+                    <span>About SpookLens</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-orange-500/50" />
                   {auth.currentUser && !auth.currentUser.isAnonymous ? (
@@ -346,11 +403,11 @@ export default function Navbar() {
                       onClick={handleLoginClick}
                       className="text-orange-200 hover:bg-orange-500/20 focus:bg-orange-500 focus:text-white"
                     >
-                      <FaSignOutAlt
+                      <FaSignInAlt
                         className="mr-2 h-4 w-4"
                         aria-hidden="true"
                       />
-                      <span>Log in</span>
+                      <span>Sign In</span>
                     </DropdownMenuItem>
                   )}
                 </DropdownMenuContent>
@@ -363,11 +420,21 @@ export default function Navbar() {
               >
                 <Button
                   onClick={toggleMenu}
-                  className="text-orange-300 hover:text-orange-100 hover:bg-orange-900/20"
+                  className="text-orange-300 hover:text-orange-100 hover:bg-orange-900/20 p-2"
                   aria-label="Toggle menu"
                   aria-expanded={isMenuOpen}
                 >
-                  <FaBars className="h-6 w-6" aria-hidden="true" />
+                  {isMenuOpen ? (
+                    <FaTimes
+                      className="h-5 w-5 sm:h-6 sm:w-6"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    <FaBars
+                      className="h-5 w-5 sm:h-6 sm:w-6"
+                      aria-hidden="true"
+                    />
+                  )}
                 </Button>
               </motion.div>
             </div>
@@ -377,36 +444,104 @@ export default function Navbar() {
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.2 }}
+              initial="closed"
+              animate="open"
+              exit="closed"
+              variants={menuVariants}
               className="absolute top-full left-0 right-0 mt-2 md:hidden"
             >
-              <div className="bg-gray-900/90 backdrop-blur-md border border-orange-500/30 rounded-2xl shadow-lg overflow-hidden mx-4">
-                {navItems.map(({ path, icon: Icon, label }, index) => (
-                  <motion.div
-                    key={path}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 * (index + 1) }}
-                  >
+              <div className="bg-gray-900/90 backdrop-blur-md border border-orange-500/30 rounded-2xl shadow-lg overflow-hidden p-4">
+                <motion.div variants={itemVariants}>
+                  <h3 className="text-orange-300 text-sm font-semibold m-2">
+                    Navigation
+                  </h3>
+                  {navItems.map(({ path, icon, label }) => (
+                    <MobileMenuItem
+                      key={path}
+                      icon={icon}
+                      label={label}
+                      onClick={() => {
+                        router.push(path)
+                        setIsMenuOpen(false)
+                      }}
+                      isActive={pathname === path}
+                    />
+                  ))}
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                  <h3 className="text-orange-300 text-sm font-semibold m-2">
+                    User Actions
+                  </h3>
+                  <div className="flex justify-around mb-4">
                     <Button
-                      asChild
-                      className={`w-full justify-start text-orange-200 hover:text-orange-100 hover:bg-orange-900/20 ${
-                        pathname === path
-                          ? 'bg-orange-900/30 text-orange-100'
-                          : ''
-                      }`}
-                      onClick={() => setIsMenuOpen(false)}
+                      onClick={() => {
+                        openSettingsModal()
+                        setIsMenuOpen(false)
+                      }}
+                      className="text-orange-200 hover:text-orange-100 hover:bg-orange-900/20"
                     >
-                      <Link href={path} className="flex items-center px-4 py-3">
-                        <Icon className="h-5 w-5 mr-3" aria-hidden="true" />
-                        <span>{label}</span>
-                      </Link>
+                      <FaCog className="h-5 w-5" aria-hidden="true" />
                     </Button>
-                  </motion.div>
-                ))}
+                    <Button
+                      onClick={() => {
+                        openTutorialModal()
+                        setIsMenuOpen(false)
+                      }}
+                      className="text-orange-200 hover:text-orange-100 hover:bg-orange-900/20"
+                    >
+                      <FaBookReader className="h-5 w-5" aria-hidden="true" />
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        openInfoModal()
+                        setIsMenuOpen(false)
+                      }}
+                      className="text-orange-200 hover:text-orange-100 hover:bg-orange-900/20"
+                    >
+                      <FaInfoCircle className="h-5 w-5" aria-hidden="true" />
+                    </Button>
+                  </div>
+                  <div className="flex justify-center">
+                    <Button
+                      onClick={() => {
+                        openProfilePage()
+                        setIsMenuOpen(false)
+                      }}
+                      className="text-orange-200 hover:text-orange-100 hover:bg-orange-900/20"
+                    >
+                      <FaUser className="h-5 w-5" aria-hidden="true" />
+                    </Button>
+                    {auth.currentUser && !auth.currentUser.isAnonymous ? (
+                      <Button
+                        onClick={() => {
+                          handleLogout()
+                          setIsMenuOpen(false)
+                        }}
+                        className="text-orange-200 hover:text-orange-100 hover:bg-orange-900/20"
+                      >
+                        <FaSignOutAlt
+                          className="h-5 w-5 mr-2"
+                          aria-hidden="true"
+                        />
+                        <span>Log out</span>
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => {
+                          handleLoginClick()
+                          setIsMenuOpen(false)
+                        }}
+                        className="text-orange-200 hover:text-orange-100 hover:bg-orange-900/20"
+                      >
+                        <FaSignInAlt
+                          className="h-5 w-5 mr-2"
+                          aria-hidden="true"
+                        />
+                        <span>Sign In</span>
+                      </Button>
+                    )}
+                  </div>
+                </motion.div>
               </div>
             </motion.div>
           )}

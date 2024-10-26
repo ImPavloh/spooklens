@@ -1,8 +1,6 @@
 import './globals.css'
-
 import { Metadata } from 'next'
 import { Bree_Serif } from 'next/font/google'
-
 import { LanguageProvider } from '@/utils/LanguageContext'
 import Navbar from '@/components/extras/Navbar'
 import ProtectedRoute from '@/components/extras/ProtectedRoute'
@@ -16,22 +14,31 @@ const breeSerif = Bree_Serif({
 })
 
 export const metadata: Metadata = {
-  title: 'SpookLens',
-  description: 'Finalist website in the 2024 Cloudinary + MiduDev Spooky AI Creations Hackathon.',
+  title: 'SpookLens | Spooky AI Social Media',
+  description:
+    'Finalist in the 2024 Cloudinary + MiduDev Spooky AI Hackathon. Join Halloween-themed social media with AI photo editing, achievements, and global chat!',
   keywords: [
     'SpookLens',
-    'Next.js',
-    'Tailwind CSS',
-    'Hackathon',
+    'Halloween app',
+    'AI-powered social media',
+    'photo editing',
+    'global chat',
     'Cloudinary',
     'MiduDev',
+    'hackathon finalist',
     'Pavloh',
-    'Halloween'
+    'Hackathon',
+    'Halloween',
+    'Spooky',
+    'Scary',
+    'Stories',
+    'Spookify',
   ],
-  authors: [{ name: 'Pavloh' }],
+  authors: [{ name: 'Pavloh', url: 'https://github.com/Pavloh' }],
   openGraph: {
-    title: 'SpookLens',
-    description: 'Finalist website in the 2024 Cloudinary + MiduDev Spooky AI Creations Hackathon.',
+    title: 'SpookLens - Spooky AI Social Media',
+    description:
+      'Finalist website in the 2024 Cloudinary + MiduDev Spooky AI Creations Hackathon with Halloween-themed social media interactions and photo editing.',
     url: 'https://spooklens.vercel.app',
     siteName: 'SpookLens',
     images: [
@@ -39,6 +46,7 @@ export const metadata: Metadata = {
         url: 'https://spooklens.vercel.app/images/screenshots/s3.jpg',
         width: 1200,
         height: 630,
+        alt: 'SpookLens app screenshot',
       },
     ],
     locale: 'es_ES',
@@ -46,9 +54,12 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'SpookLens',
-    description: 'Finalist website in the 2024 Cloudinary + MiduDev Spooky AI Creations Hackathon.v',
+    title: 'SpookLens - AI Social Media with Halloween Vibes',
+    description:
+      'Join SpookLens, a hackathon finalist in spooky AI social media with photo editing and global chat.',
     images: ['https://spooklens.vercel.app/images/screenshots/s3.jpg'],
+    site: '@SpookLens',
+    creator: '@impavloh',
   },
   icons: {
     icon: '/favicon.ico',
@@ -56,6 +67,27 @@ export const metadata: Metadata = {
     apple: '/images/logo.png',
   },
   manifest: '/manifest.json',
+  robots: 'index, follow',
+}
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  url: 'https://spooklens.vercel.app',
+  name: 'SpookLens',
+  author: {
+    '@type': 'Person',
+    name: 'Pavloh',
+    url: 'https://github.com/Pavloh',
+  },
+  description:
+    'Finalist in the 2024 Cloudinary + MiduDev Spooky AI Creations Hackathon with Halloween-themed interactions.',
+  image: 'https://spooklens.vercel.app/images/screenshots/s3.jpg',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: 'https://spooklens.vercel.app/search?q={search_term_string}',
+    'query-input': 'required name=search_term_string',
+  },
 }
 
 export default function RootLayout({
@@ -67,6 +99,11 @@ export default function RootLayout({
     <html lang="es" className={breeSerif.className}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="canonical" href="https://spooklens.vercel.app" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
       <body className="bg-gray-900 text-white">
         <ProtectedRoute>

@@ -4,8 +4,7 @@ import React, { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Skeleton } from '@/components/ui/skeleton'
+import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import {
   FiCamera,
@@ -16,6 +15,7 @@ import {
 import { FaTrophy, FaGithub, FaTwitter, FaCloudversify } from 'react-icons/fa'
 
 import ScrollIndicator from '@/components/extras/ScrollIndicator'
+import HauntedCarousel from '@/components/extras/HauntedCarousel'
 import BackgroundAnimation from '@/components/extras/BackgroundAnimation'
 
 const TutorialModal = dynamic(
@@ -40,120 +40,19 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay, duration: 0.5 }}
-    className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg shadow-lg border border-orange-500/20 hover:border-orange-500/50 transition-all duration-300 group"
+    className="bg-gray-800/50 backdrop-blur-sm p-4 sm:p-6 rounded-lg shadow-lg border border-orange-500/20 hover:border-orange-500/50 transition-all duration-300 group"
   >
-    <span className="flex items-center justify-center text-4xl text-orange-500 mb-4 group-hover:scale-110 transition-transform duration-300">
+    <span className="flex items-center justify-center text-3xl sm:text-4xl text-orange-500 mb-4 group-hover:scale-110 transition-transform duration-300">
       <Icon aria-hidden="true" />
     </span>
-    <h2 className="text-xl font-bold text-orange-400 mb-2">{title}</h2>
-    <p className="text-orange-200 text-sm">{description}</p>
+    <h2 className="text-lg sm:text-xl font-bold text-orange-400 mb-2">
+      {title}
+    </h2>
+    <p className="text-orange-200 text-xs sm:text-sm">{description}</p>
   </motion.div>
 )
 
-function HauntedCarousel() {
-  const slides = [
-    {
-      image: '/images/screenshots/s1.jpg',
-      alt: 'SpookLens Finalist Project Hackathon 2024',
-    },
-    {
-      image: '/images/screenshots/s2.jpg',
-      alt: 'SpookLens Uploader',
-    },
-    {
-      image: '/images/screenshots/s3.jpg',
-      alt: 'SpookLens Hub',
-    },
-    {
-      image: '/images/screenshots/s4.jpg',
-      alt: 'SpookLens Trick or Treat',
-    },
-    {
-      image: '/images/screenshots/s5.jpg',
-      alt: 'SpookLens Leaderboard',
-    },
-    {
-      image: '/images/screenshots/s6.jpg',
-      alt: 'SpookLens Profiles',
-    },
-    {
-      image: '/images/screenshots/s7.jpg',
-      alt: 'SpookLens Store',
-    },
-  ]
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const [imagesLoaded, setImagesLoaded] = useState<boolean[]>(
-    new Array(slides.length).fill(false),
-  )
-
-  useEffect(() => {
-    const timeForFirstSlide = currentSlide === 0 ? 8000 : 5000 // para destacar la primera imagen (finalista de la hackathon)
-    const timer = setTimeout(
-      () => setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length),
-      timeForFirstSlide,
-    )
-
-    return () => clearTimeout(timer)
-  }, [currentSlide, slides.length])
-
-  const handleImageLoad = (index: number) => {
-    setImagesLoaded((prev) => {
-      const newState = [...prev]
-      newState[index] = true
-      return newState
-    })
-  }
-
-
-  return (
-    <div className="relative w-full max-w-4xl mx-auto aspect-video overflow-hidden rounded-lg shadow-2xl">
-      <AnimatePresence initial={false}>
-        {slides.map((slide, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: currentSlide === index ? 1 : 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className="absolute inset-0"
-          >
-            {!imagesLoaded[index] && (
-              <Skeleton className="w-full h-full bg-gray-700 animate-pulse" />
-            )}
-            <Image
-              src={slide.image}
-              alt={slide.alt}
-              className={`object-cover transition-opacity duration-300 ${
-                imagesLoaded[index] ? 'opacity-100' : 'opacity-0'
-              }`}
-              draggable="false"
-              quality={85}
-              priority
-              fill
-              onLoad={() => handleImageLoad(index)}
-            />
-          </motion.div>
-        ))}
-      </AnimatePresence>
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            className={`w-3 h-3 rounded-full transition-colors duration-300 ${
-              index === currentSlide
-                ? 'bg-orange-500'
-                : 'bg-gray-400 hover:bg-orange-300'
-            }`}
-            onClick={() => setCurrentSlide(index)}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
-      </div>
-    </div>
-  )
-}
-
-export default function Main() {
+export default function Component() {
   const [isTutorialOpen, setIsTutorialOpen] = useState(false)
   const [disableBackgroundImage, setDisableBackgroundImage] = useState(false)
 
@@ -193,7 +92,7 @@ export default function Main() {
         onClose={() => setIsTutorialOpen(false)}
       />
 
-      <div className="container mx-auto px-4 pt-28">
+      <div className="container mx-auto px-4 pt-16 sm:pt-32">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -204,7 +103,7 @@ export default function Main() {
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="text-6xl md:text-7xl font-extrabold tracking-wider py-4 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-purple-600 mb-2 relative inline-block drop-shadow-[0_5px_3px_rgba(0,0,0,0.4)]"
+            className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-wider py-4 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-purple-600 mb-2 relative inline-block drop-shadow-[0_5px_3px_rgba(0,0,0,0.4)]"
           >
             SpookLens
             <motion.span
@@ -225,14 +124,15 @@ export default function Main() {
                   ease: 'easeInOut',
                 },
               }}
-              className="absolute -top-4 -right-16 text-5xl"
+              className="absolute sm:-top-4 -right-16 text-3xl sm:text-5xl"
             >
               <Image
                 src="/images/logo2.png"
                 alt="SpookLens Logo"
                 draggable="false"
-                width={80}
-                height={80}
+                width={60}
+                height={60}
+                className="sm:w-20 sm:h-20"
                 priority
               />
             </motion.span>
@@ -242,7 +142,7 @@ export default function Main() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.5 }}
-            className="text-xl md:text-2xl text-orange-300 mb-6 drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)]"
+            className="text-lg sm:text-xl md:text-2xl text-orange-300 mb-6 drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)]"
           >
             Unleash your inner ghoul in this bewitching Halloween social media
             app!
@@ -250,7 +150,7 @@ export default function Main() {
 
           <Button
             asChild
-            className="bg-gradient-to-r from-orange-500 to-purple-600 text-white hover:from-orange-600 hover:to-purple-700 text-lg md:text-xl py-2 md:py-6 px-6 md:px-8 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105"
+            className="bg-gradient-to-r from-orange-500 to-purple-600 text-white hover:from-orange-600 hover:to-purple-700 text-base sm:text-lg md:text-xl py-2 sm:py-3 md:py-4 px-4 sm:px-6 md:px-8 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105"
           >
             <Link href="/home">Step into the Shadows</Link>
           </Button>
@@ -260,14 +160,14 @@ export default function Main() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.5 }}
-          className="mb-4"
+          className="mb-8"
         >
           <HauntedCarousel />
         </motion.div>
 
         <ScrollIndicator />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-16">
           <FeatureCard
             icon={FiCamera}
             title="Spooktacular Snapshots"
@@ -310,9 +210,9 @@ export default function Main() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.5 }}
-          className="text-center bg-gray-800/30 backdrop-blur-sm p-8 rounded-lg shadow-lg border border-purple-500/20 mb-16"
+          className="text-center bg-gray-800/30 backdrop-blur-sm p-4 sm:p-8 rounded-lg shadow-lg border border-purple-500/20 mb-16"
         >
-          <h2 className="text-3xl font-halloween text-purple-400 mb-4">
+          <h2 className="text-2xl sm:text-3xl font-halloween text-purple-400 mb-4">
             Powered by Cloudinary
           </h2>
           <Image
@@ -320,17 +220,18 @@ export default function Main() {
             alt="Cloudinary Logo"
             className="mx-auto rounded-lg shadow-sm mb-6"
             draggable="false"
-            width={200}
-            height={50}
+            width={150}
+            height={38}
+            style={{ width: 'auto', height: 'auto' }}
             priority
           />
-          <p className="text-lg text-orange-300 mb-8">
+          <p className="text-base sm:text-lg text-orange-300 mb-8">
             Elevate your Halloween persona with AI-powered image editing and
             seamless media management.
           </p>
           <Button
             asChild
-            className="bg-gradient-to-r from-orange-500 to-purple-600 text-white hover:from-orange-600 hover:to-purple-700 text-lg py-2 px-6 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105"
+            className="bg-gradient-to-r from-orange-500 to-purple-600 text-white hover:from-orange-600 hover:to-purple-700 text-base sm:text-lg py-2 px-4 sm:px-6 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105"
           >
             <Link
               href="https://cloudinary.com/"
@@ -348,7 +249,7 @@ export default function Main() {
           transition={{ delay: 0.8, duration: 0.5 }}
           className="text-center text-orange-300 mt-16 pt-6 border-t border-orange-500/20"
         >
-          <p className="mb-4">
+          <p className="mb-4 text-sm sm:text-base">
             Made by{' '}
             <a
               href="https://www.x.com/impavloh"
@@ -376,7 +277,7 @@ export default function Main() {
               className="text-orange-400 hover:text-orange-500 transition-colors duration-300"
               aria-label="Follow Pavloh on Twitter"
             >
-              <FaTwitter className="w-6 h-6" />
+              <FaTwitter className="w-5 h-5 sm:w-6 sm:h-6" />
             </a>
             <a
               href="https://github.com/impavloh"
@@ -385,7 +286,7 @@ export default function Main() {
               className="text-orange-400 hover:text-orange-500 transition-colors duration-300"
               aria-label="View Pavloh's GitHub profile"
             >
-              <FaGithub className="w-6 h-6" />
+              <FaGithub className="w-5 h-5 sm:w-6 sm:h-6" />
             </a>
           </div>
         </motion.section>

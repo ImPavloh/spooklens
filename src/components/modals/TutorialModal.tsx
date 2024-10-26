@@ -163,25 +163,25 @@ export default function TutorialModal({ isOpen, onClose }: TutorialModalProps) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] w-[95vw] h-[60vh] max-h-[600px] p-0 bg-gray-900 text-orange-200 border-2 border-orange-500 rounded-lg shadow-lg shadow-orange-500/20 overflow-hidden">
         <div className="flex flex-col h-full">
-          <DialogHeader className="p-6 bg-gray-800 border-b border-orange-500/30">
-            <DialogTitle className="text-3xl font-halloween text-orange-500 flex items-center justify-center">
+          <DialogHeader className="p-4 sm:p-6 bg-gray-800 border-b border-orange-500/30">
+            <DialogTitle className="text-2xl sm:text-3xl font-halloween text-orange-500 flex items-center justify-center">
               <motion.div
                 animate={{ rotate: [0, 10, 0] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                <GiPumpkin className="mr-2 h-8 w-8" />
+                <GiPumpkin className="mr-2 h-6 w-6 sm:h-8 sm:w-8" />
               </motion.div>
               SpookLens Grimoire
               <motion.div
                 animate={{ rotate: [0, -10, 0] }}
                 transition={{ duration: 2, repeat: Infinity, delay: 1 }}
               >
-                <GiSpiderWeb className="ml-2 h-8 w-8" />
+                <GiSpiderWeb className="ml-2 h-6 w-6 sm:h-8 sm:w-8" />
               </motion.div>
             </DialogTitle>
           </DialogHeader>
 
-          <div className="flex-grow overflow-y-auto p-6">
+          <div className="flex-grow overflow-hidden p-4 sm:p-6">
             <AnimatePresence mode="wait">
               {currentFeature.isSeparator ? (
                 <motion.div
@@ -192,10 +192,10 @@ export default function TutorialModal({ isOpen, onClose }: TutorialModalProps) {
                   transition={{ duration: 0.3 }}
                   className="flex flex-col items-center justify-center h-full"
                 >
-                  <h2 className="text-3xl font-bold text-orange-400 mb-4 text-center">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-orange-400 mb-4 text-center">
                     {currentFeature.title}
                   </h2>
-                  <p className="text-orange-200 text-center max-w-md">
+                  <p className="text-sm sm:text-base text-orange-200 text-center max-w-md">
                     Behold the mystical features that await in the shadows.
                     These spectral wonders are still materializing, but will
                     soon haunt your SpookLens experience!
@@ -211,7 +211,7 @@ export default function TutorialModal({ isOpen, onClose }: TutorialModalProps) {
                   className="flex flex-col items-center justify-center h-full"
                 >
                   <motion.div
-                    className="mb-6 relative w-30 h-30 flex items-center justify-center"
+                    className="mb-4 sm:mb-6 relative w-24 h-24 sm:w-30 sm:h-30 flex items-center justify-center"
                     animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
                     transition={{ duration: 1, repeat: Infinity }}
                   >
@@ -219,20 +219,20 @@ export default function TutorialModal({ isOpen, onClose }: TutorialModalProps) {
                       <Image
                         src={currentFeature.image}
                         alt={currentFeature.title}
-                        width={180}
-                        height={180}
+                        width={150}
+                        height={150}
                         className="object-contain rounded-lg filter drop-shadow-[0_0_20px_rgba(255,165,0,0.5)]"
                       />
                     ) : currentFeature.icon ? (
                       <currentFeature.icon
-                        className={`text-7xl ${currentFeature.color}`}
+                        className={`text-5xl sm:text-7xl ${currentFeature.color}`}
                       />
                     ) : null}
                   </motion.div>
-                  <h3 className="text-2xl font-bold text-orange-400 mb-4 text-center">
+                  <h3 className="text-xl sm:text-2xl font-bold text-orange-400 mb-2 sm:mb-4 text-center">
                     {currentFeature.title}
                   </h3>
-                  <p className="text-orange-200 text-balance text-center max-w-md">
+                  <p className="text-sm sm:text-base text-orange-200 text-balance text-center max-w-md">
                     {currentFeature.description}
                   </p>
                 </motion.div>
@@ -240,13 +240,13 @@ export default function TutorialModal({ isOpen, onClose }: TutorialModalProps) {
             </AnimatePresence>
           </div>
 
-          <div className="p-6 bg-gray-800 border-t border-orange-500/30">
+          <div className="p-4 sm:p-6 bg-gray-800 border-t border-orange-500/30">
             <Progress value={progress} className="mb-4" />
             <div className="flex justify-between items-center">
               <Button
                 onClick={handlePrevious}
                 disabled={currentStep === 0}
-                className="bg-purple-600 hover:bg-purple-700 text-white transition-all duration-300 ease-in-out transform hover:scale-105"
+                className="bg-purple-600 hover:bg-purple-700 text-white transition-all duration-300 ease-in-out transform hover:scale-105 text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2"
               >
                 Previous
               </Button>
@@ -254,7 +254,7 @@ export default function TutorialModal({ isOpen, onClose }: TutorialModalProps) {
                 {allSteps.map((_, index) => (
                   <motion.div
                     key={index}
-                    className={`w-4 h-2 rounded-full mx-1 cursor-pointer ${
+                    className={`w-2 sm:w-4 h-1 sm:h-2 rounded-full mx-0.5 sm:mx-1 cursor-pointer ${
                       index === currentStep ? 'bg-orange-500' : 'bg-gray-600'
                     }`}
                     whileHover={{ scale: 1.2 }}
@@ -264,7 +264,7 @@ export default function TutorialModal({ isOpen, onClose }: TutorialModalProps) {
               </div>
               <Button
                 onClick={handleNext}
-                className="bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 ease-in-out transform hover:scale-105 min-w-[90px]"
+                className="bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 ease-in-out transform hover:scale-105 min-w-[60px] sm:min-w-[90px] text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2"
               >
                 {currentStep === allSteps.length - 1 ? 'Finish' : 'Next'}
               </Button>

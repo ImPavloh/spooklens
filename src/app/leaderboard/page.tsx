@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -9,8 +9,21 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { FaTrophy, FaCandyCane, FaMedal } from 'react-icons/fa'
-import { GiPumpkin, GiBat } from 'react-icons/gi'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
+
+import {
+  FaTrophy,
+  FaCandyCane,
+  FaMedal,
+  FaSearch,
+  FaSort,
+  FaSortUp,
+  FaSortDown,
+  FaUserCircle,
+} from 'react-icons/fa'
+import { GiPumpkin } from 'react-icons/gi'
 
 import { db } from '@/lib/firebase'
 import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore'
@@ -40,6 +53,16 @@ export default function ImprovedLeaderboardPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [activeCategory, setActiveCategory] = useState('candies')
   const [hoveredEntry, setHoveredEntry] = useState<string | null>(null)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof LeaderboardEntry
+    direction: 'asc' | 'desc'
+  }>({
+    key: 'rank',
+    direction: 'asc',
+  })
+  const [viewMode] = useState<'compact' | 'detailed'>('detailed')
+  const [userRank] = useState<LeaderboardEntry | null>(null)
   const [localSettings] = useState<LocalSettings>(() => {
     const savedSettings = localStorage.getItem('localSettings')
     return savedSettings
@@ -67,6 +90,7 @@ export default function ImprovedLeaderboardPage() {
           ),
           limit(100),
         )
+
         const querySnapshot = await getDocs(q)
         data[category.id] = querySnapshot.docs.map((doc, index) => ({
           id: doc.id,
@@ -85,26 +109,75 @@ export default function ImprovedLeaderboardPage() {
     fetchLeaderboardData()
   }, [])
 
+  /* añadir en el futuro el rango del usuario actual (solo registrados)
+  useEffect(() => {
+    const fetchUserRank = async () => {
+      const mockUserRank: LeaderboardEntry = {
+        id: 'current-user',
+        username: 'SpookyUser33',
+        avatar: '/placeholder.svg',
+        candies: 150,
+        spins: 75,
+        rank: 50,
+      }
+      setUserRank(mockUserRank)
+    }
+
+    fetchUserRank()
+  }, [])
+  */
+
   const getPositionIcon = (position: number) => {
     switch (position) {
       case 1:
-        return <FaTrophy className="text-yellow-400 h-8 w-8" />
+        return <FaTrophy className="text-yellow-400 h-6 w-6 sm:h-8 sm:w-8" />
       case 2:
-        return <FaMedal className="text-gray-400 h-7 w-7" />
+        return <FaMedal className="text-gray-400 h-5 w-5 sm:h-7 sm:w-7" />
       case 3:
-        return <FaMedal className="text-orange-400 h-6 w-6" />
+        return <FaMedal className="text-orange-400 h-4 w-4 sm:h-6 sm:w-6" />
       default:
-        return <FaCandyCane className="text-orange-200 h-5 w-5" />
+        return <FaCandyCane className="text-orange-200 h-3 w-3 sm:h-5 sm:w-5" />
     }
   }
 
+  const sortedData = useMemo(() => {
+    const dataToSort = [...(leaderboardData[activeCategory] || [])]
+    return dataToSort.sort((a, b) => {
+      if (a[sortConfig.key] < b[sortConfig.key]) {
+        return sortConfig.direction === 'asc' ? -1 : 1
+      }
+      if (a[sortConfig.key] > b[sortConfig.key]) {
+        return sortConfig.direction === 'asc' ? 1 : -1
+      }
+      return 0
+    })
+  }, [leaderboardData, activeCategory, sortConfig])
+
+  const filteredLeaderboardData = useMemo(() => {
+    return sortedData.filter((entry) =>
+      entry.username.toLowerCase().includes(searchTerm.toLowerCase()),
+    )
+  }, [sortedData, searchTerm])
+
+  const handleSort = (key: keyof LeaderboardEntry) => {
+    setSortConfig((prevConfig) => ({
+      key,
+      direction:
+        prevConfig.key === key && prevConfig.direction === 'asc'
+          ? 'desc'
+          : 'asc',
+    }))
+  }
+
+  const getSortIcon = (key: string) => {
+    if (sortConfig.key === key) {
+      return sortConfig.direction === 'asc' ? <FaSortUp /> : <FaSortDown />
+    }
+    return <FaSort />
+  }
+
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="min-h-screen pt-24 flex flex-col bg-gradient-to-b from-gray-900 via-purple-900 to-gray-900 text-orange-200 overflow-hidden pb-8 relative"
-    >
+    <div className="min-h-screen pt-20 sm:pt-24 flex flex-col bg-gradient-to-b from-gray-900 via-purple-900 to-gray-900 text-orange-200 overflow-hidden pb-8 relative">
       {!localSettings.disableBackgroundImage && (
         <BackgroundAnimation
           numWebs={20}
@@ -112,10 +185,10 @@ export default function ImprovedLeaderboardPage() {
           opacity={0.15}
         />
       )}
-      <main className="flex-grow flex flex-col items-center px-4 lg:px-0 relative">
-        <div className="w-full max-w-5xl">
+      <main className="flex-grow flex flex-col items-center px-4 lg:px-0 relative z-10">
+        <div className="w-full max-w-6xl">
           <motion.h1
-            className="mb-2 p-2 text-5xl lg:text-6xl font-extrabold tracking-wider text-center  text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-red-500 to-purple-600 animate-gradient-x drop-shadow-[0_5px_3px_rgba(0,0,0,0.4)]"
+            className="mb-2 p-2 text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-wider text-center text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-red-500 to-purple-600 animate-gradient-x drop-shadow-[0_5px_3px_rgba(0,0,0,0.4)]"
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -123,7 +196,7 @@ export default function ImprovedLeaderboardPage() {
             Spooky Leaderboard
           </motion.h1>
           <motion.p
-            className="mb-4 text-center text-xl lg:text-2xl text-orange-300"
+            className="mb-4 text-center text-lg sm:text-xl lg:text-2xl text-orange-300"
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
@@ -131,138 +204,239 @@ export default function ImprovedLeaderboardPage() {
             See who is haunting the top spots in our spine-chilling competition!
           </motion.p>
 
-          <Card className="h-[600px] bg-gradient-to-br from-[#1a1a1d] to-[#2c003e] border-orange-500 text-orange-200 overflow-hidden rounded-2xl shadow-2xl shadow-orange-500/30 transition-shadow duration-300">
-            <CardContent className="p-6">
+          <Card className="bg-gradient-to-br from-[#1a1a1d] to-[#2c003e] border-orange-500 text-orange-200 overflow-hidden rounded-2xl shadow-2xl shadow-orange-500/30 transition-shadow duration-300 hover:shadow-orange-500/50">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
+                <div className="relative w-full">
+                  <Input
+                    variant="orange"
+                    type="text"
+                    placeholder="Search users..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 bg-gray-800/50 text-orange-200 border-orange-500/50 focus:border-orange-500 rounded-full"
+                  />
+                  <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-500" />
+                </div>
+              </div>
+
               <Tabs
                 value={activeCategory}
                 onValueChange={setActiveCategory}
                 className="w-full"
               >
-                <TabsList className="grid w-full grid-cols-2 bg-gray-800/50 backdrop-blur-sm rounded-full p-1 gap-2 mb-8">
+                <TabsList className="grid w-full grid-cols-2 bg-gray-800/50 backdrop-blur-sm rounded-full p-1 gap-2 mb-4">
                   {leaderboardCategories.map((category) => (
                     <TabsTrigger
                       key={category.id}
                       value={category.id}
                       className="rounded-full data-[state=active]:bg-orange-500 data-[state=active]:text-white transition-all duration-300"
                     >
-                      <category.icon className="mr-2 h-5 w-5" />
-                      {category.name}
+                      <category.icon className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                      <span className="hidden sm:inline">{category.name}</span>
+                      <span className="sm:hidden">
+                        {category.id === 'candies' ? 'Candies' : 'Spins'}
+                      </span>
                     </TabsTrigger>
                   ))}
                 </TabsList>
+
                 {leaderboardCategories.map((category) => (
                   <TabsContent key={category.id} value={category.id}>
-                    <ScrollArea className="h-[450px] pr-4">
+                    <div className="sticky top-0 bg-orange-500/70 backdrop-blur-sm rounded-full mb-2 flex justify-between text-xs sm:text-sm">
+                      <Button
+                        variant="ghost"
+                        onClick={() => handleSort('rank')}
+                        className="flex items-center"
+                      >
+                        Rank {getSortIcon('rank')}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        onClick={() => handleSort('username')}
+                        className="flex items-center"
+                      >
+                        Username {getSortIcon('username')}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        onClick={() =>
+                          handleSort(category.id as keyof LeaderboardEntry)
+                        }
+                        className="flex items-center"
+                      >
+                        {category.id === 'candies' ? 'Candies' : 'Spins'}{' '}
+                        {getSortIcon(category.id)}
+                      </Button>
+                    </div>
+
+                    <ScrollArea className="h-[350px] sm:h-[400px] pr-2">
                       <AnimatePresence>
-                        {isLoading ? (
-                          <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="flex justify-center items-center h-full"
-                          >
-                            <motion.div
-                              animate={{ rotate: 360 }}
-                              transition={{
-                                duration: 2,
-                                repeat: Infinity,
-                                ease: 'linear',
-                              }}
-                            >
-                              <GiBat className="text-orange-500 h-16 w-16" />
-                            </motion.div>
-                          </motion.div>
-                        ) : (
-                          leaderboardData[category.id]?.map((entry, index) => (
-                            <motion.div
-                              key={entry.id}
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, y: -20 }}
-                              transition={{ delay: index * 0.05 }}
-                              onMouseEnter={() => setHoveredEntry(entry.id)}
-                              onMouseLeave={() => setHoveredEntry(null)}
-                            >
-                              <div className="mb-4 p-4 rounded-xl bg-purple-900/50 hover:bg-purple-800/50 transition-all duration-300 border border-orange-500/30 flex items-center gap-4 group relative overflow-hidden">
-                                <div className="flex-shrink-0 w-12 text-center">
-                                  {getPositionIcon(index + 1)}
+                        {isLoading
+                          ? Array.from({ length: 10 }).map((_, index) => (
+                              <div
+                                key={index}
+                                className="mb-4 p-4 rounded-xl bg-purple-900/50 flex items-center gap-4"
+                              >
+                                <Skeleton className="h-8 w-8 rounded-full" />
+                                <div className="space-y-2">
+                                  <Skeleton className="h-4 w-32" />
+                                  <Skeleton className="h-4 w-24" />
                                 </div>
-                                <div className="flex-shrink-0 w-16 h-16 rounded-full overflow-hidden border-2 border-orange-500 transition-transform duration-300 group-hover:scale-110">
-                                  <Image
-                                    src={entry.avatar || '/placeholder.svg'}
-                                    alt={entry.username}
-                                    width={64}
-                                    height={64}
-                                    className="w-full h-full object-cover"
-                                  />
-                                </div>
-                                <div className="flex-grow">
-                                  <h3 className="font-semibold text-orange-300 text-xl group-hover:text-orange-400 transition-colors duration-300">
-                                    <Link
-                                      href="/user/[username]"
-                                      as={`/user/${entry.username}`}
-                                    >
-                                      {entry.username}
-                                    </Link>
-                                  </h3>
-                                  <p className="text-sm text-orange-200 group-hover:text-orange-300 transition-colors duration-300">
-                                    {category.id === 'candies'
-                                      ? 'Candies'
-                                      : 'Spins'}
-                                    :{' '}
-                                    <span className="font-bold text-lg">
-                                      {category.id === 'candies'
-                                        ? entry.candies
-                                        : entry.spins}
-                                    </span>
-                                  </p>
-                                </div>
-                                <div className="flex-shrink-0 w-12 text-right">
-                                  <span className="text-2xl font-bold text-orange-400 group-hover:text-orange-500 transition-colors duration-300">
-                                    #{index + 1}
-                                  </span>
-                                </div>
-                                <motion.div
-                                  initial={{ x: '100%' }}
-                                  animate={{
-                                    x: hoveredEntry === entry.id ? 0 : '100%',
-                                  }}
-                                  transition={{
-                                    type: 'spring',
-                                    stiffness: 100,
-                                    damping: 15,
-                                  }}
-                                  className="absolute right-0 top-0 bottom-0 w-1/3 bg-orange-500 flex items-center justify-center"
+                              </div>
+                            ))
+                          : filteredLeaderboardData.map((entry, index) => (
+                              <motion.div
+                                key={entry.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ delay: index * 0.05 }}
+                                onMouseEnter={() => setHoveredEntry(entry.id)}
+                                onMouseLeave={() => setHoveredEntry(null)}
+                              >
+                                <div
+                                  className={`mb-4 p-2 sm:p-4 rounded-xl bg-purple-900/50 hover:bg-purple-800/50 transition-all duration-300 border border-orange-500/30 flex items-center gap-2 sm:gap-4 group relative overflow-hidden ${
+                                    viewMode === 'compact' ? 'h-16' : ''
+                                  }`}
                                 >
-                                  <div className="text-gray-900 font-bold text-center">
-                                    <p className="text-2xl">
+                                  <div className="flex-shrink-0 w-8 sm:w-12 text-center">
+                                    {getPositionIcon(entry.rank)}
+                                  </div>
+                                  <div
+                                    className={`flex-shrink-0 rounded-full overflow-hidden border-2 border-orange-500 transition-transform duration-300 group-hover:scale-110 ${
+                                      viewMode === 'compact'
+                                        ? 'w-8 h-8 sm:w-10 sm:h-10'
+                                        : 'w-10 h-10 sm:w-16 sm:h-16'
+                                    }`}
+                                  >
+                                    <Link href={`/user/${entry.username}`}>
+                                      <Image
+                                        src={entry.avatar || '/placeholder.svg'}
+                                        alt={entry.username}
+                                        width={64}
+                                        height={64}
+                                        className="w-full h-full object-cover"
+                                      />
+                                    </Link>
+                                  </div>
+                                  <div className="flex-grow">
+                                    <h3
+                                      className={`font-semibold text-orange-300 group-hover:text-orange-400 transition-colors duration-300 ${
+                                        viewMode === 'compact'
+                                          ? 'text-sm'
+                                          : 'text-sm sm:text-xl'
+                                      }`}
+                                    >
+                                      <Link href={`/user/${entry.username}`}>
+                                        {entry.username}
+                                      </Link>
+                                    </h3>
+                                    <p
+                                      className={`text-orange-200 group-hover:text-orange-300 transition-colors duration-300 ${
+                                        viewMode === 'compact'
+                                          ? 'text-xs'
+                                          : 'text-xs sm:text-sm'
+                                      }`}
+                                    >
                                       {category.id === 'candies'
-                                        ? entry.spins
-                                        : entry.candies}
-                                    </p>
-                                    <p className="text-sm">
-                                      {category.id === 'candies'
-                                        ? 'Spins'
-                                        : 'Candies'}
+                                        ? 'Candies'
+                                        : 'Spins'}
+                                      :{' '}
+                                      <span
+                                        className={`font-bold ${
+                                          viewMode === 'compact'
+                                            ? 'text-sm'
+                                            : 'text-sm sm:text-lg'
+                                        }`}
+                                      >
+                                        {category.id === 'candies'
+                                          ? entry.candies
+                                          : entry.spins}
+                                      </span>
                                     </p>
                                   </div>
-                                </motion.div>
-                              </div>
-                            </motion.div>
-                          ))
-                        )}
+                                  <div className="flex-shrink-0 w-8 sm:w-12 text-right">
+                                    <span
+                                      className={`font-bold text-orange-400 group-hover:text-orange-500 transition-colors duration-300 ${
+                                        viewMode === 'compact'
+                                          ? 'text-sm sm:text-lg'
+                                          : 'text-lg sm:text-2xl'
+                                      }`}
+                                    >
+                                      #{entry.rank}
+                                    </span>
+                                  </div>
+                                  {viewMode === 'detailed' && (
+                                    <motion.div
+                                      initial={{ x: '100%' }}
+                                      animate={{
+                                        x:
+                                          hoveredEntry === entry.id
+                                            ? 0
+                                            : '100%',
+                                      }}
+                                      transition={{
+                                        type: 'spring',
+                                        stiffness: 100,
+                                        damping: 15,
+                                      }}
+                                      className="absolute right-0 top-0 bottom-0 w-1/4 rounded-xl bg-orange-500 flex items-center justify-center"
+                                    >
+                                      <div className="text-gray-900 font-bold text-center">
+                                        <p className="text-sm sm:text-2xl">
+                                          {category.id === 'candies'
+                                            ? entry.spins
+                                            : entry.candies}
+                                        </p>
+                                        <p className="text-xs sm:text-sm">
+                                          {category.id === 'candies'
+                                            ? 'Spins'
+                                            : 'Candies'}
+                                        </p>
+                                      </div>
+                                    </motion.div>
+                                  )}
+                                </div>
+                              </motion.div>
+                            ))}
                       </AnimatePresence>
                     </ScrollArea>
                   </TabsContent>
                 ))}
               </Tabs>
+
+              {userRank && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="mt-4 p-4 rounded-xl bg-orange-500/20 border border-orange-500"
+                >
+                  <h3 className="text-lg font-semibold mb-2">Your Rank</h3>
+                  <div className="flex items-center gap-4">
+                    <FaUserCircle className="text-3xl text-orange-400" />
+                    <div>
+                      <p className="font-medium">{userRank.username}</p>
+                      <p className="text-sm">
+                        Rank:{' '}
+                        <span className="font-bold">#{userRank.rank}</span> |
+                        Candies:{' '}
+                        <span className="font-bold">{userRank.candies}</span> |
+                        Spins:{' '}
+                        <span className="font-bold">{userRank.spins}</span>
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
             </CardContent>
           </Card>
         </div>
       </main>
-      <p className="mt-8 text-center text-orange-300 z-10">
+      <p className="mt-8 text-center text-orange-200 animate-pulse z-10">
         Stay spooky and keep collecting those candies!
       </p>
-    </motion.div>
+    </div>
   )
 }

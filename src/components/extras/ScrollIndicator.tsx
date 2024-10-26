@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 
 import { FaChevronDown } from 'react-icons/fa'
 
-const ScrollIndicator = () => {
+export default function ScrollIndicator() {
   const [isVisible, setIsVisible] = useState(true)
   const lastScrollY = useRef(0)
 
@@ -37,5 +37,3 @@ const ScrollIndicator = () => {
     </motion.div>
   )
 }
-
-export default ScrollIndicator

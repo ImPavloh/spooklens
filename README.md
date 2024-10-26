@@ -1,4 +1,3 @@
-
 <p align="center">
   <img src="./public/images/logo.png" alt="SpookLens logo" height="150" width="150"/>
   <h1 align="center">🎃 SpookLens 👻</h1>
@@ -74,11 +73,11 @@
 
 ## 📱 **Responsive Design**
 
-| Device          | Status   |
-|-----------------|----------|
-| PC - Big Screen | ✅        |
+| Device          | Status         |
+| --------------- | -------------- |
+| PC - Big Screen | ✅             |
 | Tablets         | 🚧 Coming Soon |
-| Mobiles         | 🚧 Coming Soon |
+| Mobiles         | ☑️ In Progress |
 
 ## ©️ **Credits**
 
@@ -92,6 +91,12 @@
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/impavloh/spooklens/blob/main/LICENSE) for more details.
 
 <img src="./public/images/camera-logo.png" alt="Ruleta SpookLens"/>
+
+---
+
+### 🚀 Project Submission for Hackathon 2024
+
+The final project submitted for the Hackathon corresponds to this [commit](https://github.com/ImPavloh/spooklens/tree/f1720411db429c5b42dc7a3b4b0f097563089f3e). This commit marks the exact version of the project presented, which ended up being a finalist! 🎉
 
 > **Note:**  
 > I have many exciting ideas for the future of SpookLens! Stay tuned for more updates after the Hackathon.
