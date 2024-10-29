@@ -14,10 +14,11 @@ const breeSerif = Bree_Serif({
 })
 
 export const metadata: Metadata = {
-  title: 'SpookLens | Spooky AI Social Media',
+  title: 'SpookLens',
   description:
     'Finalist in the 2024 Cloudinary + MiduDev Spooky AI Hackathon. Join Halloween-themed social media with AI photo editing, achievements, and global chat!',
   keywords: [
+    'spooklens',
     'SpookLens',
     'Halloween app',
     'AI-powered social media',
@@ -27,16 +28,17 @@ export const metadata: Metadata = {
     'MiduDev',
     'hackathon finalist',
     'Pavloh',
-    'Hackathon',
+    'hackathon',
     'Halloween',
-    'Spooky',
-    'Scary',
-    'Stories',
+    'spooky',
+    'scary',
+    'stories',
+    'candies',
     'Spookify',
   ],
   authors: [{ name: 'Pavloh', url: 'https://github.com/Pavloh' }],
   openGraph: {
-    title: 'SpookLens - Spooky AI Social Media',
+    title: 'SpookLens',
     description:
       'Finalist website in the 2024 Cloudinary + MiduDev Spooky AI Creations Hackathon with Halloween-themed social media interactions and photo editing.',
     url: 'https://spooklens.vercel.app',
@@ -54,7 +56,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'SpookLens - AI Social Media with Halloween Vibes',
+    title: 'SpookLens',
     description:
       'Join SpookLens, a hackathon finalist in spooky AI social media with photo editing and global chat.',
     images: ['https://spooklens.vercel.app/images/screenshots/s3.jpg'],
@@ -96,7 +98,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es" className={breeSerif.className}>
+    <html className={breeSerif.className}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="canonical" href="https://spooklens.vercel.app" />

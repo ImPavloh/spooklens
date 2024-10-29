@@ -3,12 +3,15 @@
 import { useEffect, useState, useRef } from 'react'
 
 import { motion } from 'framer-motion'
-
 import { FaChevronDown } from 'react-icons/fa'
+
+import { useLanguage } from '@/utils/LanguageContext'
 
 export default function ScrollIndicator() {
   const [isVisible, setIsVisible] = useState(true)
   const lastScrollY = useRef(0)
+  const { language, translations } = useLanguage()
+  const t = translations[language].scrollIndicator
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,7 +30,7 @@ export default function ScrollIndicator() {
       transition={{ duration: 0.3 }}
       className="flex flex-col items-center text-orange-500"
     >
-      <p className="text-sm">Scroll down to uncover more...</p>
+      <p className="text-sm">{t.scrollMessage}</p>
       <motion.div
         animate={{ scale: [1, 1.2, 1] }}
         transition={{ repeat: Infinity, duration: 1 }}

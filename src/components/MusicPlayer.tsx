@@ -24,6 +24,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -31,6 +32,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
 import { useToast } from '@/hooks/useToast'
+import { useLanguage } from '@/utils/LanguageContext'
 
 const playlist = [
   {
@@ -217,6 +219,9 @@ const MusicPlayerSkeleton = () => (
 )
 
 export default function MusicPlayer({ localSettings }: MusicPlayerProps) {
+  const { language, translations } = useLanguage()
+  const t = translations[language].musicPlayer
+
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTrack, setCurrentTrack] = useState(0)
   const [progress, setProgress] = useState(0)
@@ -290,20 +295,22 @@ export default function MusicPlayer({ localSettings }: MusicPlayerProps) {
   const handleRepeat = useCallback(() => {
     setIsRepeat((prev) => !prev)
     toast({
-      title: isRepeat ? 'Repeat Off' : 'Repeat On',
-      description: isRepeat ? 'Track will not repeat' : 'Track will repeat',
+      title: isRepeat ? t.toasts.repeatOff.title : t.toasts.repeatOn.title,
+      description: isRepeat
+        ? t.toasts.repeatOff.description
+        : t.toasts.repeatOn.description,
     })
-  }, [isRepeat, toast])
+  }, [isRepeat, toast, t.toasts])
 
   const handleShuffle = useCallback(() => {
     setIsShuffle((prev) => !prev)
     toast({
-      title: isShuffle ? 'Shuffle Off' : 'Shuffle On',
+      title: isShuffle ? t.toasts.shuffleOff.title : t.toasts.shuffleOn.title,
       description: isShuffle
-        ? 'Tracks will play in order'
-        : 'Tracks will play randomly',
+        ? t.toasts.shuffleOff.description
+        : t.toasts.shuffleOn.description,
     })
-  }, [isShuffle, toast])
+  }, [isShuffle, toast, t.toasts])
 
   const formatTime = useCallback((time: number | undefined) => {
     if (typeof time !== 'number' || isNaN(time)) {
@@ -422,7 +429,7 @@ export default function MusicPlayer({ localSettings }: MusicPlayerProps) {
               >
                 <FaGhost className="mr-2 h-6 w-6" aria-hidden="true" />
               </motion.div>
-              Spooky Tunes
+              {t.title}
               <motion.div
                 animate={{ rotate: [0, -10, 0] }}
                 transition={{ duration: 2, repeat: Infinity, delay: 1 }}
@@ -433,7 +440,7 @@ export default function MusicPlayer({ localSettings }: MusicPlayerProps) {
           ) : (
             <>
               <FaGhost className="mr-2 h-6 w-6" aria-hidden="true" />
-              Spooky Tunes
+              {t.title}
               <GiCauldron className="ml-2 h-6 w-6" aria-hidden="true" />
             </>
           )}
@@ -513,7 +520,7 @@ export default function MusicPlayer({ localSettings }: MusicPlayerProps) {
             step={1}
             onValueChange={handleSliderChange}
             className="mb-4"
-            aria-label="Track progress"
+            aria-label={t.ariaLabels.trackProgress}
           />
 
           <div className="flex justify-center gap-4 mb-4 text-orange-300">
@@ -523,7 +530,9 @@ export default function MusicPlayer({ localSettings }: MusicPlayerProps) {
               className={`text-orange-500 hover:text-orange-600 hover:bg-orange-200/10 transition-colors ${
                 isShuffle ? 'bg-orange-500/20' : ''
               }`}
-              aria-label={isShuffle ? 'Shuffle on' : 'Shuffle off'}
+              aria-label={
+                isShuffle ? t.ariaLabels.shuffleOn : t.ariaLabels.shuffleOff
+              }
             >
               <FiShuffle className="h-4 w-4" />
             </Button>
@@ -531,7 +540,7 @@ export default function MusicPlayer({ localSettings }: MusicPlayerProps) {
               size="icon"
               onClick={handlePrevious}
               className="bg-orange-500 hover:bg-orange-600 text-white transition-colors"
-              aria-label="Previous track"
+              aria-label={t.ariaLabels.previousTrack}
             >
               <FiSkipBack className="h-4 w-4" />
             </Button>
@@ -539,7 +548,7 @@ export default function MusicPlayer({ localSettings }: MusicPlayerProps) {
               size="icon"
               onClick={handlePlayPause}
               className="bg-orange-500 hover:bg-orange-600 text-white transition-colors"
-              aria-label={isPlaying ? 'Pause' : 'Play'}
+              aria-label={isPlaying ? t.ariaLabels.pause : t.ariaLabels.play}
             >
               {isPlaying ? (
                 <FiPause className="h-4 w-4" />
@@ -552,7 +561,7 @@ export default function MusicPlayer({ localSettings }: MusicPlayerProps) {
                 <Button
                   size="icon"
                   className="bg-orange-500 hover:bg-orange-600 text-white transition-colors"
-                  aria-label="Open playlist"
+                  aria-label={t.ariaLabels.openPlaylist}
                 >
                   <FiList className="h-4 w-4" />
                 </Button>
@@ -560,56 +569,33 @@ export default function MusicPlayer({ localSettings }: MusicPlayerProps) {
               <DialogContent className="sm:max-w-[425px] bg-gradient-to-br from-[#1a1a1d] to-[#2c003e] border-orange-500 text-white">
                 <DialogHeader>
                   <DialogTitle className="text-3xl font-halloween text-orange-500 text-center mb-4">
-                    Spooky Playlist
-                    <span className="ml-2" role="img" aria-label="ghost">
-                      👻
-                    </span>
+                    {t.playlistTitle}
                   </DialogTitle>
+                  <DialogDescription className="flex justify-center">
+                    <motion.div
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                      }}
+                    >
+                      <FaGhost className="text-gray-300 text-2xl" />
+                    </motion.div>
+                  </DialogDescription>
                 </DialogHeader>
                 <ScrollArea className="h-[60vh] pr-4">
                   <ul className="space-y-2">
                     {playlist.map(renderPlaylistItem)}
                   </ul>
                 </ScrollArea>
-                <div className="mt-4 flex justify-center space-x-4">
-                  <motion.div
-                    animate={{ rotate: [0, 360] }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: 'linear',
-                    }}
-                  >
-                    <GiPumpkin className="text-orange-500 text-2xl" />
-                  </motion.div>
-                  <motion.div
-                    animate={{ y: [0, -10, 0] }}
-                    transition={{
-                      duration: 1.5,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    }}
-                  >
-                    <GiBat className="text-purple-500 text-2xl" />
-                  </motion.div>
-                  <motion.div
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    }}
-                  >
-                    <FaGhost className="text-gray-300 text-2xl" />
-                  </motion.div>
-                </div>
               </DialogContent>
             </Dialog>
             <Button
               size="icon"
               onClick={handleNext}
               className="bg-orange-500 hover:bg-orange-600 text-white transition-colors"
-              aria-label="Next track"
+              aria-label={t.ariaLabels.nextTrack}
             >
               <FiSkipForward className="h-4 w-4" />
             </Button>
@@ -619,7 +605,9 @@ export default function MusicPlayer({ localSettings }: MusicPlayerProps) {
               className={`text-orange-500 hover:text-orange-600 hover:bg-orange-200/10 transition-colors ${
                 isRepeat ? 'bg-orange-500/20' : ''
               }`}
-              aria-label={isRepeat ? 'Repeat on' : 'Repeat off'}
+              aria-label={
+                isRepeat ? t.ariaLabels.repeatOn : t.ariaLabels.repeatOff
+              }
             >
               <FiRepeat className="h-4 w-4" />
             </Button>
@@ -636,7 +624,7 @@ export default function MusicPlayer({ localSettings }: MusicPlayerProps) {
               step={1}
               onValueChange={handleVolumeChange}
               className="flex-grow"
-              aria-label="Volume"
+              aria-label={t.ariaLabels.volume}
             />
           </div>
 
@@ -650,7 +638,9 @@ export default function MusicPlayer({ localSettings }: MusicPlayerProps) {
               className="inline-block  mr-2 text-pink-400"
               aria-hidden="true"
             />
-            <span>{playlist.length} spooky tracks to haunt your ears</span>
+            <span>
+              {t.trackCount.replace('{count}', playlist.length.toString())}
+            </span>
             <FaSkull
               className="inline-block ml-2 text-gray-400"
               aria-hidden="true"
@@ -666,7 +656,7 @@ export default function MusicPlayer({ localSettings }: MusicPlayerProps) {
                 >
                   {playlist[currentTrack].credit.artist}
                 </Link>{' '}
-                from{' '}
+                {t.from}{' '}
                 <Link
                   href={playlist[currentTrack].credit.sourceUrl}
                   target="_blank"
@@ -686,6 +676,7 @@ export default function MusicPlayer({ localSettings }: MusicPlayerProps) {
           <FloatingIcon Icon={GiPumpkin} delay={1} />
           <FloatingIcon Icon={FaSpider} delay={2} />
           <FloatingIcon Icon={GiBat} delay={3} />
+          <FloatingIcon Icon={FaSkull} delay={4} />
         </div>
       )}
     </Card>

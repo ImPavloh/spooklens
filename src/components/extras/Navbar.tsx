@@ -21,6 +21,7 @@ import {
   FaBars,
   FaFlask,
   FaTimes,
+  FaLanguage,
 } from 'react-icons/fa'
 import { IconType } from 'react-icons'
 import { Button } from '@/components/ui/button'
@@ -42,6 +43,7 @@ import {
 
 import { auth, signOut, db } from '@/lib/firebase'
 import { doc, onSnapshot } from 'firebase/firestore'
+import { useLanguage } from '@/utils/LanguageContext'
 
 const AuthModal = dynamic(() => import('@/components/modals/AuthModal'), {
   ssr: false,
@@ -58,13 +60,6 @@ const TutorialModal = dynamic(
   () => import('@/components/modals/TutorialModal'),
   { ssr: false },
 )
-
-const navItems = [
-  { path: '/home', icon: FaHome, label: 'Home' },
-  { path: '/chats', icon: FaCommentDots, label: 'Chats' },
-  { path: '/leaderboard', icon: FaSkull, label: 'Leaderboard' },
-  { path: '/store', icon: FaCandyCane, label: 'Candy Store' },
-]
 
 interface MobileMenuItemProps {
   icon: IconType
@@ -110,6 +105,15 @@ export default function Component() {
   const [potions, setPotions] = useState(0)
   const router = useRouter()
   const pathname = usePathname()
+  const { language, setLanguage, translations } = useLanguage()
+  const t = translations[language]
+
+  const navItems = [
+    { path: '/home', icon: FaHome, label: t.navigation.home },
+    { path: '/chats', icon: FaCommentDots, label: t.navigation.chats },
+    { path: '/leaderboard', icon: FaSkull, label: t.navigation.leaderboard },
+    { path: '/store', icon: FaCandyCane, label: t.navigation.candyStore },
+  ]
 
   useEffect(() => {
     const hasSeenTutorial = localStorage.getItem('hasSeenTutorial')
@@ -171,6 +175,10 @@ export default function Component() {
   const openTutorialModal = useCallback(() => setIsTutorialModalOpen(true), [])
 
   const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), [])
+
+  const toggleLanguage = useCallback(() => {
+    setLanguage(language === 'en' ? 'es' : 'en')
+  }, [language, setLanguage])
 
   const menuVariants = {
     open: {
@@ -261,7 +269,7 @@ export default function Component() {
                 >
                   <Image
                     src="/images/logo2.png"
-                    alt="SpookLens logo"
+                    alt={t.common.logoAlt}
                     draggable="false"
                     width={40}
                     height={40}
@@ -281,6 +289,24 @@ export default function Component() {
             </div>
 
             <div className="flex items-center space-x-2 sm:space-x-4">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      onClick={toggleLanguage}
+                      className="text-orange-300 hover:text-orange-100 hover:bg-orange-900/20 p-2"
+                    >
+                      <FaLanguage
+                        className="h-5 w-5 sm:h-6 sm:w-6"
+                        aria-hidden="true"
+                      />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{t.common.languageSwitch}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -351,7 +377,7 @@ export default function Component() {
                             {userName || 'Mysterious User'}
                           </p>
                           <p className="text-xs hidden sm:block">
-                            {auth.currentUser?.email || 'No email provided'}
+                            {auth.currentUser?.email || 'No  email provided'}
                           </p>
                         </div>
                       </div>
@@ -360,31 +386,31 @@ export default function Component() {
                   <DropdownMenuSeparator className="bg-orange-500/50" />
                   <DropdownMenuItem
                     onClick={openProfilePage}
-                    className="text-orange-200 hover:bg-orange-500/20 focus:bg-orange-500  focus:text-white"
+                    className="text-orange-200 hover:bg-orange-500/20  focus:bg-orange-500  focus:text-white"
                   >
                     <FaUser className="mr-2 h-4 w-4" aria-hidden="true" />
-                    <span>Profile</span>
+                    <span>{t.navigation.profile}</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={openSettingsModal}
                     className="text-orange-200 hover:bg-orange-500/20 focus:bg-orange-500 focus:text-white"
                   >
                     <FaCog className="mr-2 h-4 w-4" aria-hidden="true" />
-                    <span>Settings</span>
+                    <span>{t.navigation.settings}</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={openTutorialModal}
                     className="text-orange-200 hover:bg-orange-500/20 focus:bg-orange-500 focus:text-white"
                   >
                     <FaBookReader className="mr-2 h-4 w-4" aria-hidden="true" />
-                    <span>Getting Started</span>
+                    <span>{t.navigation.gettingStarted}</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={openInfoModal}
                     className="text-orange-200 hover:bg-orange-500/20 focus:bg-orange-500 focus:text-white"
                   >
                     <FaInfoCircle className="mr-2 h-4 w-4" aria-hidden="true" />
-                    <span>About SpookLens</span>
+                    <span>{t.navigation.aboutSpookLens}</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-orange-500/50" />
                   {auth.currentUser && !auth.currentUser.isAnonymous ? (
@@ -396,7 +422,7 @@ export default function Component() {
                         className="mr-2 h-4 w-4"
                         aria-hidden="true"
                       />
-                      <span>Log out</span>
+                      <span>{t.navigation.logOut}</span>
                     </DropdownMenuItem>
                   ) : (
                     <DropdownMenuItem
@@ -407,7 +433,7 @@ export default function Component() {
                         className="mr-2 h-4 w-4"
                         aria-hidden="true"
                       />
-                      <span>Sign In</span>
+                      <span>{t.navigation.signIn}</span>
                     </DropdownMenuItem>
                   )}
                 </DropdownMenuContent>
@@ -453,7 +479,7 @@ export default function Component() {
               <div className="bg-gray-900/90 backdrop-blur-md border border-orange-500/30 rounded-2xl shadow-lg overflow-hidden p-4">
                 <motion.div variants={itemVariants}>
                   <h3 className="text-orange-300 text-sm font-semibold m-2">
-                    Navigation
+                    {t.navigation.title}
                   </h3>
                   {navItems.map(({ path, icon, label }) => (
                     <MobileMenuItem
@@ -470,7 +496,7 @@ export default function Component() {
                 </motion.div>
                 <motion.div variants={itemVariants}>
                   <h3 className="text-orange-300 text-sm font-semibold m-2">
-                    User Actions
+                    {t.navigation.userActions}
                   </h3>
                   <div className="flex justify-around mb-4">
                     <Button
@@ -490,6 +516,12 @@ export default function Component() {
                       className="text-orange-200 hover:text-orange-100 hover:bg-orange-900/20"
                     >
                       <FaBookReader className="h-5 w-5" aria-hidden="true" />
+                    </Button>
+                    <Button
+                      onClick={toggleLanguage}
+                      className="text-orange-200 hover:text-orange-100 hover:bg-orange-900/20"
+                    >
+                      <FaLanguage className="h-5 w-5" aria-hidden="true" />
                     </Button>
                     <Button
                       onClick={() => {
@@ -523,7 +555,7 @@ export default function Component() {
                           className="h-5 w-5 mr-2"
                           aria-hidden="true"
                         />
-                        <span>Log out</span>
+                        <span>{t.navigation.logOut}</span>
                       </Button>
                     ) : (
                       <Button
@@ -537,7 +569,7 @@ export default function Component() {
                           className="h-5 w-5 mr-2"
                           aria-hidden="true"
                         />
-                        <span>Sign In</span>
+                        <span>{t.navigation.signIn}</span>
                       </Button>
                     )}
                   </div>

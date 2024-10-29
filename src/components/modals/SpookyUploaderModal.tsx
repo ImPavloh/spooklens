@@ -3,8 +3,10 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react'
 import Image from 'next/image'
+
 import ReactCrop, { type Crop } from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
+
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Dialog,
@@ -50,10 +52,13 @@ import {
   FaSkull,
   FaSave,
 } from 'react-icons/fa'
+
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 import { useAuth } from '@/hooks/useAuth'
 import { useFirestore } from '@/hooks/useFirestore'
 import { storage } from '@/lib/firebase'
+
+import { useLanguage } from '@/utils/LanguageContext'
 
 interface SpookyUploaderModalProps {
   isOpen: boolean
@@ -66,22 +71,6 @@ interface SpookyUploaderModalProps {
   }) => void
 }
 
-const steps = [
-  { icon: FaGhost, title: 'Summon', description: 'Upload your spooky image' },
-  {
-    icon: FaCrop,
-    title: 'Frame',
-    description: 'Crop to vertical aspect ratio',
-  },
-  { icon: FaEdit, title: 'Enchant', description: 'Apply magical effects' },
-  {
-    icon: FaMagic,
-    title: 'Caption',
-    description: 'Add a haunting description',
-  },
-  { icon: FaSpider, title: 'Background', description: 'Set an eerie scene' },
-]
-
 const CloudinaryEdit = ({
   imageUrl,
   onImageEdited,
@@ -89,6 +78,9 @@ const CloudinaryEdit = ({
   imageUrl: string
   onImageEdited: (url: string) => void
 }) => {
+  const { language, translations } = useLanguage()
+  const t = translations[language].spookyUploader.cloudinaryEdit
+
   const [currentEffect, setCurrentEffect] = useState<string>('original')
   const [loading, setLoading] = useState<boolean>(false)
   const [imageLoaded, setImageLoaded] = useState<boolean>(false)
@@ -170,7 +162,7 @@ const CloudinaryEdit = ({
   return (
     <Card className="w-full max-w-sm mx-auto bg-background shadow-lg">
       <CardHeader>
-        <h3 className="text-lg font-semibold">Enchant Your Image</h3>
+        <h3 className="text-lg font-semibold">{t.title}</h3>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="relative aspect-[9/16] w-full overflow-hidden rounded-lg shadow-md max-w-64 max-h-96 mx-auto flex items-center">
@@ -190,7 +182,7 @@ const CloudinaryEdit = ({
                 layout="fill"
                 objectFit="cover"
                 className="rounded-lg"
-                alt="Edited image preview"
+                alt={t.imageAlt}
                 onLoad={() => setImageLoaded(true)}
               />
             </motion.div>
@@ -217,14 +209,18 @@ const CloudinaryEdit = ({
                     >
                       {effect.icon}
                       <span className="text-[10px] mt-1 font-medium">
-                        {effect.name.charAt(0).toUpperCase() +
-                          effect.name.slice(1)}
+                        {t.effects[effect.name]}
                       </span>
                     </motion.span>
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom">
-                  <p>Apply {effect.name} effect</p>
+                  <p>
+                    {t.effectTooltip.replace(
+                      '{effect}',
+                      t.effects[effect.name],
+                    )}
+                  </p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -234,7 +230,7 @@ const CloudinaryEdit = ({
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <label htmlFor="intensity" className="text-sm font-medium block">
-                Effect Intensity
+                {t.intensityLabel}
               </label>
               <Badge variant="secondary">{intensity}%</Badge>
             </div>
@@ -256,7 +252,7 @@ const CloudinaryEdit = ({
           className="w-full h-10 text-base duration-200 hover:bg-primary/90 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={loading || currentEffect === 'original'}
         >
-          {loading ? 'Saving...' : 'Save Changes'}
+          {loading ? t.savingButton : t.saveButton}
         </Button>
       </CardFooter>
     </Card>
@@ -272,8 +268,11 @@ interface CloudinaryBackgroundReplaceProps {
 const CloudinaryBackgroundReplace: React.FC<
   CloudinaryBackgroundReplaceProps
 > = ({ imageUrl, onBackgroundReplaced }) => {
+  const { language, translations } = useLanguage()
+  const t = translations[language].spookyUploader.cloudinaryBackgroundReplace
+
   const [backgroundReplaced, setBackgroundReplaced] = useState(false)
-  const [prompt, setPrompt] = useState<string>('a spooky scene')
+  const [prompt, setPrompt] = useState<string>(t.defaultPrompt)
   const [isLoading, setIsLoading] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -291,7 +290,7 @@ const CloudinaryBackgroundReplace: React.FC<
           prompt,
         )},c_fill,w_800/${imageUrl.split('/upload/')[1]}`
         setReplacedImageUrl(transformedUrl)
-      }, 12000)
+      }, 30000) // hay que mejorar esta parte para no tener que esperar tanto o al menos hacerlo mas eficiente
     }
   }, [imageUrl, prompt])
 
@@ -303,20 +302,18 @@ const CloudinaryBackgroundReplace: React.FC<
 
   const resetBackground = useCallback(() => {
     setBackgroundReplaced(false)
-    setPrompt('a spooky scene')
+    setPrompt(t.defaultPrompt)
     setImageLoaded(false)
     setError(null)
     setReplacedImageUrl(null)
-  }, [])
+  }, [t.defaultPrompt])
 
   const displayUrl = replacedImageUrl || imageUrl
 
   return (
     <Card className="w-full max-w-sm mx-auto bg-background shadow-lg">
       <CardHeader>
-        <h3 className="text-lg font-semibold text-center">
-          Set an Eerie Scene (wait ~1 minute)
-        </h3>
+        <h3 className="text-lg font-semibold text-center">{t.title}</h3>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="relative aspect-[9/16] w-64 h-96 overflow-hidden rounded-lg shadow-lg mx-auto">
@@ -336,7 +333,7 @@ const CloudinaryBackgroundReplace: React.FC<
                 layout="fill"
                 objectFit="cover"
                 className="rounded-lg"
-                alt="Image with replaced background"
+                alt={t.imageAlt}
                 onLoad={() => setImageLoaded(true)}
               />
             </motion.div>
@@ -352,7 +349,7 @@ const CloudinaryBackgroundReplace: React.FC<
           type="text"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          placeholder="Describe the new background"
+          placeholder={t.promptPlaceholder}
           className="w-full"
         />
 
@@ -367,21 +364,21 @@ const CloudinaryBackgroundReplace: React.FC<
           {[
             {
               icon: FaMagic,
-              text: 'Replace',
+              text: t.replaceButton,
               onClick: applyBackgroundReplace,
               disabled: isLoading,
               className: 'bg-primary hover:bg-primary/90',
             },
             {
               icon: FaSave,
-              text: 'Save',
+              text: t.saveButton,
               onClick: saveBackgroundReplace,
               disabled: !backgroundReplaced || isLoading,
               className: 'bg-green-600 hover:bg-green-700',
             },
             {
               icon: FaUndo,
-              text: 'Reset',
+              text: t.resetButton,
               onClick: resetBackground,
               disabled: !backgroundReplaced || isLoading,
               className: 'bg-destructive hover:bg-destructive/90',
@@ -403,7 +400,9 @@ const CloudinaryBackgroundReplace: React.FC<
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="right">
-                  <p>{text} background</p>
+                  <p>
+                    {t.buttonTooltip.replace('{action}', text.toLowerCase())}
+                  </p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -419,6 +418,9 @@ export default function SpookyUploader({
   onClose,
   onImageFinalized,
 }: SpookyUploaderModalProps) {
+  const { language, translations } = useLanguage()
+  const t = translations[language].spookyUploader
+
   const [activeStep, setActiveStep] = useState(0)
   const [image, setImage] = useState<File | null>(null)
   const [imageUrl, setImageUrl] = useState<string | null>(null)
@@ -439,7 +441,35 @@ export default function SpookyUploader({
   const fileInputRef = useRef<HTMLInputElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
   const { user } = useAuth()
-  const { addDocument, updateDocument } = useFirestore()
+  const { addDocument, updateDocument, getDocument } = useFirestore()
+
+  const steps = [
+    {
+      icon: FaGhost,
+      title: t.steps.summon.title,
+      description: t.steps.summon.description,
+    },
+    {
+      icon: FaCrop,
+      title: t.steps.frame.title,
+      description: t.steps.frame.description,
+    },
+    {
+      icon: FaEdit,
+      title: t.steps.enchant.title,
+      description: t.steps.enchant.description,
+    },
+    {
+      icon: FaMagic,
+      title: t.steps.caption.title,
+      description: t.steps.caption.description,
+    },
+    {
+      icon: FaSpider,
+      title: t.steps.background.title,
+      description: t.steps.background.description,
+    },
+  ]
 
   const resetModal = useCallback(() => {
     setActiveStep(0)
@@ -482,70 +512,74 @@ export default function SpookyUploader({
     [],
   )
 
-  const uploadToCloudinary = useCallback(async (base64Image: string) => {
-    try {
-      const uploadResponse = await fetch('/api/upload-cloudinary', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ image: base64Image }),
-      })
+  const uploadToCloudinary = useCallback(
+    async (base64Image: string) => {
+      try {
+        const uploadResponse = await fetch('/api/upload-cloudinary', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ image: base64Image }),
+        })
 
-      if (!uploadResponse.ok) {
-        const errorData = await uploadResponse.json()
-        throw new Error(
-          errorData.error || 'Failed to upload image to Cloudinary',
-        )
+        if (!uploadResponse.ok) {
+          const errorData = await uploadResponse.json()
+          throw new Error(errorData.error || t.errors.cloudinaryUpload)
+        }
+
+        const { url } = await uploadResponse.json()
+        return url
+      } catch (error) {
+        // console.error('Error uploading to Cloudinary:', error)
+        throw error
       }
+    },
+    [t.errors.cloudinaryUpload],
+  )
 
-      const { url } = await uploadResponse.json()
-      return url
-    } catch (error) {
-      console.error('Error uploading to Cloudinary:', error)
-      throw error
-    }
-  }, [])
+  const generateCaptions = useCallback(
+    async (imageUrl: string) => {
+      setIsCaptionLoading(true)
+      setError(null)
 
-  const generateCaptions = useCallback(async (imageUrl: string) => {
-    setIsCaptionLoading(true)
-    setError(null)
+      try {
+        const response = await fetch('/api/generate-captions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ imageUrl, t }),
+        })
 
-    try {
-      const response = await fetch('/api/generate-captions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ imageUrl }),
-      })
+        if (!response.ok) {
+          throw new Error(t.errors.captionGeneration)
+        }
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to generate captions')
-      }
+        const data = await response.json()
 
-      const data = await response.json()
+        if (data.error) {
+          throw new Error(data.error)
+        }
 
-      setTitle(data.title)
-      setDescription(data.description)
-
-      if (data.title.includes('Error') || data.description.includes('error')) {
+        setTitle(data.title || t.defaults.title)
+        setDescription(data.description || t.defaults.description)
+      } catch (error) {
+        // console.error('Error generating captions:', error)
         setError(
-          'There was an issue generating captions. Please try again or use a different image.',
+          error instanceof Error
+            ? t.errors.captionGenerationWithMessage.replace(
+                '{message}',
+                error.message,
+              )
+            : t.errors.captionGeneration,
         )
+      } finally {
+        setIsCaptionLoading(false)
       }
-    } catch (error) {
-      console.error('Error generating captions:', error)
-      setError(
-        error instanceof Error
-          ? `Failed to generate captions: ${error.message}`
-          : 'Failed to generate captions. Please try again.',
-      )
-    } finally {
-      setIsCaptionLoading(false)
-    }
-  }, [])
+    },
+    [t],
+  )
 
   useEffect(() => {
     if (cloudinaryUrl && activeStep === 3) {
@@ -566,17 +600,29 @@ export default function SpookyUploader({
           setCloudinaryUrl(cloudinaryUrl)
           setActiveStep(2)
         } else {
-          throw new Error('Failed to upload image to Cloudinary')
+          throw new Error(t.errors.cloudinaryUpload)
         }
       } catch (error) {
         setUploading(false)
-        setError(`Error uploading to Cloudinary: ${(error as Error).message}`)
-        console.error('Error uploading to Cloudinary:', error)
+        setError(
+          `${t.errors.cloudinaryUploadWithMessage}: ${
+            (error as Error).message
+          }`,
+        )
+        // console.error('Error uploading to Cloudinary:', error)
       }
     } else if (activeStep < steps.length - 1) {
       setActiveStep((prev) => prev + 1)
     }
-  }, [activeStep, imageUrl, croppedImageUrl, uploadToCloudinary])
+  }, [
+    activeStep,
+    imageUrl,
+    croppedImageUrl,
+    steps.length,
+    uploadToCloudinary,
+    t.errors.cloudinaryUpload,
+    t.errors.cloudinaryUploadWithMessage,
+  ])
 
   const handleRetake = useCallback(() => {
     if (fileInputRef.current) {
@@ -619,7 +665,7 @@ export default function SpookyUploader({
   const handleUploadToFirebase = useCallback(
     async (finalImageUrl: string) => {
       if (!user) {
-        setError('Please log in to upload your image.')
+        setError(t.errors.loginRequired)
         return
       }
 
@@ -642,8 +688,8 @@ export default function SpookyUploader({
             setUploadProgress(progress)
           },
           (error) => {
-            console.error('Upload error:', error)
-            setError('Failed to upload image. Please try again.')
+            // console.error('Upload error:', error)
+            setError(t.errors.imageUpload)
             setUploading(false)
           },
           async () => {
@@ -659,47 +705,66 @@ export default function SpookyUploader({
               })
 
               if (imageDoc && imageDoc.id) {
-                await updateDocument('users', user.uid, {
-                  imageHistory: {
+                const userDoc = await getDocument('users', user.uid)
+
+                if (userDoc) {
+                  const newImageHistory = {
                     [imageDoc.id]: {
                       imageUrl: downloadURL,
                       title,
                       description,
                       createdAt: new Date(),
                     },
-                  },
-                  profileImage: downloadURL, // modificar o quitar esto
-                })
+                  }
 
-                setUploading(false)
-                onImageFinalized({
-                  url: downloadURL,
-                  title,
-                  description,
-                  timestamp: new Date().toISOString(),
-                })
-                onClose()
+                  const updatedImageHistory = {
+                    ...(userDoc.imageHistory || {}),
+                    ...newImageHistory,
+                  }
+
+                  await updateDocument('users', user.uid, {
+                    imageHistory: updatedImageHistory,
+                    // profileImage: downloadURL,
+                  })
+
+                  setUploading(false)
+                  onImageFinalized({
+                    url: downloadURL,
+                    title,
+                    description,
+                    timestamp: new Date().toISOString(),
+                  })
+                  onClose()
+                } else {
+                  throw new Error(t.errors.imageDocumentAdd)
+                }
               } else {
-                throw new Error('Failed to add image document')
+                throw new Error(t.errors.imageDocumentAdd)
               }
             } catch (err) {
-              console.error('Firestore error:', err)
-              setError('Failed to save image information. Please try again.')
+              // console.error('Firestore error:', err)
+              setError(t.errors.imageSave)
               setUploading(false)
             }
           },
         )
       } catch (err) {
-        console.error('Error in upload process:', err)
-        setError('An error occurred. Please try again.')
+        // console.error('Error in upload process:', err)
+        setError(t.errors.general)
         setUploading(false)
       }
     },
     [
       user,
+      t.errors.loginRequired,
+      t.errors.imageUpload,
+      t.errors.imageDocumentAdd,
+      t.errors.imageSave,
+      t.errors.general,
+      addDocument,
       title,
       description,
-      addDocument,
+      getDocument,
       updateDocument,
       onImageFinalized,
       onClose,
@@ -715,13 +780,13 @@ export default function SpookyUploader({
     [handleUploadToFirebase],
   )
 
-  const handleSkip = useCallback(() => {
+  /*const handleSkip = useCallback(() => {
     if (activeStep === 2) {
       setActiveStep(3)
     } else if (activeStep === 4) {
       handleBackgroundReplaced(cloudinaryUrl || '')
     }
-  }, [activeStep, cloudinaryUrl, handleBackgroundReplaced])
+  }, [activeStep, cloudinaryUrl, handleBackgroundReplaced])*/
 
   const handleZoomChange = useCallback((value: number[]) => {
     setZoom(value[0])
@@ -734,11 +799,11 @@ export default function SpookyUploader({
           <Card className="w-full max-w-sm mx-auto bg-background shadow-lg">
             <CardHeader>
               <h3 className="text-lg font-semibold text-center">
-                Summon Your Image
+                {t.steps.summon.title}
               </h3>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="relative w-64 h-96 mx-auto">
+            <CardContent className="space-y-4">
+              <div className="relative w-full h-64 sm:h-96 mx-auto">
                 <label
                   htmlFor="file-upload"
                   className="cursor-pointer rounded-lg bg-gray-800 hover:bg-gray-700 border-2 border-dashed border-orange-500 h-full w-full flex flex-col items-center justify-center transition-all relative overflow-hidden"
@@ -746,7 +811,7 @@ export default function SpookyUploader({
                   {imageUrl ? (
                     <Image
                       src={imageUrl}
-                      alt="Spooky preview"
+                      alt={t.imagePreviewAlt}
                       fill
                       className="object-cover"
                     />
@@ -760,16 +825,16 @@ export default function SpookyUploader({
                     >
                       <Image
                         src="/images/camera-logo2.png"
-                        alt="SpookLens Camera"
+                        alt={t.cameraLogoAlt}
                         width={160}
                         height={160}
                         priority
                       />
-                      <span className="text-orange-300 text-sm">
-                        Click to Capture
+                      <span className="text-orange-300 text-sm text-center px-4">
+                        {t.clickToCapture}
                       </span>
-                      <span className="text-orange-300 text-xs mt-2">
-                        Vertical images preferred
+                      <span className="text-orange-300 text-xs mt-2 text-center px-4">
+                        {t.verticalPreferred}
                       </span>
                     </motion.div>
                   )}
@@ -784,7 +849,7 @@ export default function SpookyUploader({
                 </label>
               </div>
 
-              <div className="flex space-x-4 w-full">
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full">
                 <Button
                   onClick={handleNext}
                   disabled={!imageUrl}
@@ -795,7 +860,7 @@ export default function SpookyUploader({
                   ) : (
                     <FaUpload className="mr-2 h-4 w-4" />
                   )}
-                  Next Step
+                  {t.nextStepButton}
                 </Button>
 
                 {imageUrl && (
@@ -804,7 +869,7 @@ export default function SpookyUploader({
                     className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-all"
                   >
                     <FaCamera className="mr-2 h-4 w-4" />
-                    Retake
+                    {t.retakeButton}
                   </Button>
                 )}
               </div>
@@ -826,11 +891,11 @@ export default function SpookyUploader({
           <Card className="w-full max-w-sm mx-auto bg-background shadow-lg">
             <CardHeader>
               <h3 className="text-lg font-semibold text-center">
-                Click to adjust crop
+                {t.steps.frame.title}
               </h3>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="relative max-w-64 max-h-96 mx-auto flex items-center">
+            <CardContent className="space-y-4">
+              <div className="relative w-full h-64 sm:h-96 mx-auto flex items-center justify-center">
                 <ReactCrop
                   crop={crop}
                   onChange={(_, percentCrop) => setCrop(percentCrop)}
@@ -840,7 +905,7 @@ export default function SpookyUploader({
                   <Image
                     ref={imageRef}
                     src={imageUrl || '/images/placeholder916.jpg'}
-                    alt="Crop preview"
+                    alt={t.cropPreviewAlt}
                     width={400}
                     height={400}
                     className="max-w-full h-auto"
@@ -858,7 +923,7 @@ export default function SpookyUploader({
                     htmlFor="zoom"
                     className="text-sm font-medium text-foreground"
                   >
-                    Zoom
+                    {t.zoomLabel}
                   </label>
                   <div className="flex items-center space-x-2">
                     <Button
@@ -885,21 +950,21 @@ export default function SpookyUploader({
                   className="w-full"
                 />
               </div>
-              <div className="flex justify-between items-center space-x-4">
+              <div className="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0 sm:space-x-4">
                 <Button
                   onClick={() => setActiveStep((prev) => Math.max(prev - 1, 0))}
-                  className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-all"
+                  className="w-full sm:w-auto bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-all"
                 >
                   <FaArrowLeft className="mr-2 h-4 w-4" />
-                  Back
+                  {t.backButton}
                 </Button>
                 <Button
                   onClick={handleNext}
                   disabled={!croppedImageUrl}
-                  className="flex-grow bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full sm:w-auto flex-grow bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <FaCheck className="mr-2 h-4 w-4" />
-                  Apply Crop
+                  {t.applyCropButton}
                 </Button>
               </div>
             </CardContent>
@@ -912,25 +977,22 @@ export default function SpookyUploader({
               imageUrl={cloudinaryUrl}
               onImageEdited={handleImageEdited}
             />
-            {/*<Button onClick={handleSkip} className="w-full mt-4">
-              Skip Editing
-            </Button>*/}
           </div>
         ) : (
-          <div>Error: No Cloudinary URL available</div>
+          <div>{t.errors.noCloudinaryUrl}</div>
         )
       case 3:
         return (
           <Card className="w-full max-w-sm mx-auto bg-gray-900 shadow-lg border-orange-500 border">
             <CardHeader>
               <h3 className="text-lg font-semibold text-orange-300">
-                Describe Your Spooky Creation
+                {t.steps.caption.title}
               </h3>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
                 <Label htmlFor="title" className="text-orange-300">
-                  Haunting Title
+                  {t.titleLabel}
                 </Label>
                 <Input
                   id="title"
@@ -938,8 +1000,8 @@ export default function SpookyUploader({
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder={
                     isCaptionLoading
-                      ? 'Summoning title from the beyond...'
-                      : 'Enter a spine-chilling title'
+                      ? t.titleLoadingPlaceholder
+                      : t.titlePlaceholder
                   }
                   className="bg-gray-800 text-white border-orange-500 focus:ring-orange-500 placeholder-gray-500"
                   disabled={isCaptionLoading}
@@ -947,7 +1009,7 @@ export default function SpookyUploader({
               </div>
               <div>
                 <Label htmlFor="description" className="text-orange-300">
-                  Eerie Description
+                  {t.descriptionLabel}
                 </Label>
                 <Textarea
                   id="description"
@@ -955,8 +1017,8 @@ export default function SpookyUploader({
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder={
                     isCaptionLoading
-                      ? 'Channeling spectral descriptions...'
-                      : 'Describe your haunting image in gruesome detail'
+                      ? t.descriptionLoadingPlaceholder
+                      : t.descriptionPlaceholder
                   }
                   className="bg-gray-800 text-white border-orange-500 focus:ring-orange-500 placeholder-gray-500 resize-none"
                   rows={3}
@@ -965,7 +1027,7 @@ export default function SpookyUploader({
               </div>
               {isCaptionLoading && (
                 <div className="text-center text-sm text-orange-300 animate-pulse">
-                  Conjuring spooky captions from the netherworld...
+                  {t.captionLoadingMessage}
                 </div>
               )}
             </CardContent>
@@ -980,11 +1042,11 @@ export default function SpookyUploader({
                 {isCaptionLoading ? (
                   <>
                     <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
-                    Generating...
+                    {t.generatingButton}
                   </>
                 ) : (
                   <>
-                    Next Step <FaArrowRight className="ml-2 h-4 w-4" />
+                    {t.nextStepButton} <FaArrowRight className="ml-2 h-4 w-4" />
                   </>
                 )}
               </Button>
@@ -998,27 +1060,27 @@ export default function SpookyUploader({
               imageUrl={cloudinaryUrl}
               onBackgroundReplaced={handleBackgroundReplaced}
             />
-            {/*<Button onClick={handleSkip} className="w-full mt-4">
-              Skip Background Replacement
-            </Button>*/}
           </div>
         ) : (
-          <div>Error: No Cloudinary URL available</div>
+          <div>{t.errors.noCloudinaryUrl}</div>
         )
       case 5:
         return (
           <Card className="w-full max-w-sm mx-auto bg-gray-900 shadow-lg border-orange-500 border">
             <CardHeader>
               <h3 className="text-lg font-semibold text-orange-300">
-                Uploading Your Spooky Creation
+                {t.uploadingTitle}
               </h3>
             </CardHeader>
             <CardContent className="space-y-4">
               <Progress value={uploadProgress} className="w-full" />
               <p className="text-center text-gray-300">
                 {uploadProgress < 100
-                  ? `Uploading: ${Math.round(uploadProgress)}%`
-                  : 'Upload complete!'}
+                  ? t.uploadingProgress.replace(
+                      '{progress}',
+                      Math.round(uploadProgress).toString(),
+                    )
+                  : t.uploadComplete}
               </p>
             </CardContent>
           </Card>
@@ -1045,22 +1107,22 @@ export default function SpookyUploader({
     description,
     handleBackgroundReplaced,
     uploadProgress,
+    t,
   ])
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-gradient-to-b from-black from-0% via-purple-800 via-30% to-gray-900 to-100% text-gray-100 shadow-2xl shadow-purple-700/30 [box-shadow:rgba(128,0,128,0.6)_0px_0px_10px_3px,rgba(128,0,128,0.3)_0px_4px,rgba(128,0,128,0.2)_0px_8px,rgba(128,0,128,0.1)_0px_11px,rgba(128,0,128,0.05)_0px_18px] backdrop-blur-sm border border-purple-700 ">
+      <DialogContent className="bg-gradient-to-b from-black from-0% via-purple-800 via-30% to-gray-900 to-100% text-gray-100 shadow-2xl shadow-purple-700/30 [box-shadow:rgba(128,0,128,0.6)_0px_0px_10px_3px,rgba(128,0,128,0.3)_0px_4px,rgba(128,0,128,0.2)_0px_8px,rgba(128,0,128,0.1)_0px_11px,rgba(128,0,128,0.05)_0px_18px] backdrop-blur-sm border border-purple-700 max-w-sm sm:max-w-md md:max-w-lg w-full">
         <DialogHeader className="text-center">
-          <DialogTitle className="text-3xl text-orange-500 font-black">
-            🧙‍♂️ Spooky Uploader
+          <DialogTitle className="text-2xl sm:text-3xl text-orange-500 font-black">
+            {t.modalTitle}
           </DialogTitle>
-          <DialogDescription className="text-gray-300">
-            {steps[activeStep]?.description ||
-              'Preparing your spooky creation...'}
+          <DialogDescription className="text-gray-300 text-sm sm:text-base">
+            {steps[activeStep]?.description || t.preparingMessage}
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex justify-center mb-6">
+        <div className="flex justify-center mb-4 sm:mb-6 overflow-x-auto">
           {steps.map((step, index) => (
             <div
               key={step.title}
@@ -1069,13 +1131,13 @@ export default function SpookyUploader({
               }`}
             >
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center ${
                   index <= activeStep
                     ? 'bg-orange-500 text-white'
                     : 'bg-gray-700 text-gray-400'
                 }`}
               >
-                <step.icon />
+                <step.icon className="w-3 h-3 sm:w-4 sm:h-4" />
               </div>
               {index < steps.length - 1 && (
                 <div

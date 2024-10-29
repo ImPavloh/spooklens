@@ -120,7 +120,7 @@ export default function UserProfileWrapper({
   }, [params])
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return null
   }
 
   if (error === 'not-found') {

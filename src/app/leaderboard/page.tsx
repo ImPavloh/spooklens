@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import BackgroundAnimation from '@/components/extras/BackgroundAnimation'
+
 import { motion, AnimatePresence } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -12,7 +13,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-
 import {
   FaTrophy,
   FaCandyCane,
@@ -28,6 +28,8 @@ import { GiPumpkin } from 'react-icons/gi'
 import { db } from '@/lib/firebase'
 import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore'
 
+import { useLanguage } from '@/utils/LanguageContext'
+
 interface LeaderboardEntry {
   id: string
   username: string
@@ -37,16 +39,22 @@ interface LeaderboardEntry {
   rank: number
 }
 
-const leaderboardCategories = [
-  { id: 'candies', name: 'Top Candies', icon: FaCandyCane },
-  { id: 'spins', name: 'Top Spins', icon: GiPumpkin },
-]
-
 interface LocalSettings {
   disableBackgroundImage: boolean
 }
 
-export default function ImprovedLeaderboardPage() {
+export default function Leaderboard() {
+  const { language, translations } = useLanguage()
+  const t = translations[language].leaderboard
+
+  const leaderboardCategories = useMemo(
+    () => [
+      { id: 'candies', name: t.categories.candies, icon: FaCandyCane },
+      { id: 'spins', name: t.categories.spins, icon: GiPumpkin },
+    ],
+    [t.categories.candies, t.categories.spins],
+  )
+
   const [leaderboardData, setLeaderboardData] = useState<{
     [key: string]: LeaderboardEntry[]
   }>({})
@@ -64,68 +72,57 @@ export default function ImprovedLeaderboardPage() {
   const [viewMode] = useState<'compact' | 'detailed'>('detailed')
   const [userRank] = useState<LeaderboardEntry | null>(null)
   const [localSettings] = useState<LocalSettings>(() => {
-    const savedSettings = localStorage.getItem('localSettings')
-    return savedSettings
-      ? JSON.parse(savedSettings)
-      : {
-          disableBackgroundImage: false,
-        }
+    if (typeof window !== 'undefined') {
+      const savedSettings = localStorage.getItem('localSettings')
+      return savedSettings
+        ? JSON.parse(savedSettings)
+        : {
+            disableBackgroundImage: false,
+          }
+    }
+    return {
+      disableBackgroundImage: false,
+    }
   })
 
   useEffect(() => {
-    localStorage.setItem('localSettings', JSON.stringify(localSettings))
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('localSettings', JSON.stringify(localSettings))
+    }
   }, [localSettings])
 
-  useEffect(() => {
-    const fetchLeaderboardData = async () => {
-      setIsLoading(true)
-      const data: { [key: string]: LeaderboardEntry[] } = {}
+  const fetchLeaderboardData = useCallback(async () => {
+    setIsLoading(true)
+    const data: { [key: string]: LeaderboardEntry[] } = {}
 
-      for (const category of leaderboardCategories) {
-        const q = query(
-          collection(db, 'users'),
-          orderBy(
-            category.id === 'candies' ? 'totalCandies' : 'totalSpins',
-            'desc',
-          ),
-          limit(100),
-        )
+    for (const category of leaderboardCategories) {
+      const q = query(
+        collection(db, 'users'),
+        orderBy(
+          category.id === 'candies' ? 'totalCandies' : 'totalSpins',
+          'desc',
+        ),
+        limit(100),
+      )
 
-        const querySnapshot = await getDocs(q)
-        data[category.id] = querySnapshot.docs.map((doc, index) => ({
-          id: doc.id,
-          username: doc.data().username,
-          avatar: doc.data().avatar,
-          candies: doc.data().totalCandies || 0,
-          spins: doc.data().totalSpins || 0,
-          rank: index + 1,
-        }))
-      }
-
-      setLeaderboardData(data)
-      setIsLoading(false)
+      const querySnapshot = await getDocs(q)
+      data[category.id] = querySnapshot.docs.map((doc, index) => ({
+        id: doc.id,
+        username: doc.data().username,
+        avatar: doc.data().avatar,
+        candies: doc.data().totalCandies || 0,
+        spins: doc.data().totalSpins || 0,
+        rank: index + 1,
+      }))
     }
 
+    setLeaderboardData(data)
+    setIsLoading(false)
+  }, [leaderboardCategories])
+
+  useEffect(() => {
     fetchLeaderboardData()
-  }, [])
-
-  /* añadir en el futuro el rango del usuario actual (solo registrados)
-  useEffect(() => {
-    const fetchUserRank = async () => {
-      const mockUserRank: LeaderboardEntry = {
-        id: 'current-user',
-        username: 'SpookyUser33',
-        avatar: '/placeholder.svg',
-        candies: 150,
-        spins: 75,
-        rank: 50,
-      }
-      setUserRank(mockUserRank)
-    }
-
-    fetchUserRank()
-  }, [])
-  */
+  }, [fetchLeaderboardData])
 
   const getPositionIcon = (position: number) => {
     switch (position) {
@@ -193,7 +190,7 @@ export default function ImprovedLeaderboardPage() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            Spooky Leaderboard
+            {t.title}
           </motion.h1>
           <motion.p
             className="mb-4 text-center text-lg sm:text-xl lg:text-2xl text-orange-300"
@@ -201,7 +198,7 @@ export default function ImprovedLeaderboardPage() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            See who is haunting the top spots in our spine-chilling competition!
+            {t.subtitle}
           </motion.p>
 
           <Card className="bg-gradient-to-br from-[#1a1a1d] to-[#2c003e] border-orange-500 text-orange-200 overflow-hidden rounded-2xl shadow-2xl shadow-orange-500/30 transition-shadow duration-300 hover:shadow-orange-500/50">
@@ -211,7 +208,7 @@ export default function ImprovedLeaderboardPage() {
                   <Input
                     variant="orange"
                     type="text"
-                    placeholder="Search users..."
+                    placeholder={t.searchPlaceholder}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-10 bg-gray-800/50 text-orange-200 border-orange-500/50 focus:border-orange-500 rounded-full"
@@ -235,7 +232,9 @@ export default function ImprovedLeaderboardPage() {
                       <category.icon className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                       <span className="hidden sm:inline">{category.name}</span>
                       <span className="sm:hidden">
-                        {category.id === 'candies' ? 'Candies' : 'Spins'}
+                        {category.id === 'candies'
+                          ? t.categories.candiesShort
+                          : t.categories.spinsShort}
                       </span>
                     </TabsTrigger>
                   ))}
@@ -249,14 +248,14 @@ export default function ImprovedLeaderboardPage() {
                         onClick={() => handleSort('rank')}
                         className="flex items-center"
                       >
-                        Rank {getSortIcon('rank')}
+                        {t.rank} {getSortIcon('rank')}
                       </Button>
                       <Button
                         variant="ghost"
                         onClick={() => handleSort('username')}
                         className="flex items-center"
                       >
-                        Username {getSortIcon('username')}
+                        {t.username} {getSortIcon('username')}
                       </Button>
                       <Button
                         variant="ghost"
@@ -265,7 +264,9 @@ export default function ImprovedLeaderboardPage() {
                         }
                         className="flex items-center"
                       >
-                        {category.id === 'candies' ? 'Candies' : 'Spins'}{' '}
+                        {category.id === 'candies'
+                          ? t.categories.candies
+                          : t.categories.spins}{' '}
                         {getSortIcon(category.id)}
                       </Button>
                     </div>
@@ -340,8 +341,8 @@ export default function ImprovedLeaderboardPage() {
                                       }`}
                                     >
                                       {category.id === 'candies'
-                                        ? 'Candies'
-                                        : 'Spins'}
+                                        ? t.categories.candies
+                                        : t.categories.spins}
                                       :{' '}
                                       <span
                                         className={`font-bold ${
@@ -391,8 +392,8 @@ export default function ImprovedLeaderboardPage() {
                                         </p>
                                         <p className="text-xs sm:text-sm">
                                           {category.id === 'candies'
-                                            ? 'Spins'
-                                            : 'Candies'}
+                                            ? t.categories.spins
+                                            : t.categories.candies}
                                         </p>
                                       </div>
                                     </motion.div>
@@ -413,17 +414,17 @@ export default function ImprovedLeaderboardPage() {
                   transition={{ delay: 0.5 }}
                   className="mt-4 p-4 rounded-xl bg-orange-500/20 border border-orange-500"
                 >
-                  <h3 className="text-lg font-semibold mb-2">Your Rank</h3>
+                  <h3 className="text-lg font-semibold mb-2">{t.yourRank}</h3>
                   <div className="flex items-center gap-4">
                     <FaUserCircle className="text-3xl text-orange-400" />
                     <div>
                       <p className="font-medium">{userRank.username}</p>
                       <p className="text-sm">
-                        Rank:{' '}
+                        {t.rank}:{' '}
                         <span className="font-bold">#{userRank.rank}</span> |
-                        Candies:{' '}
+                        {t.categories.candies}:{' '}
                         <span className="font-bold">{userRank.candies}</span> |
-                        Spins:{' '}
+                        {t.categories.spins}:{' '}
                         <span className="font-bold">{userRank.spins}</span>
                       </p>
                     </div>
@@ -435,7 +436,7 @@ export default function ImprovedLeaderboardPage() {
         </div>
       </main>
       <p className="mt-8 text-center text-orange-200 animate-pulse z-10">
-        Stay spooky and keep collecting those candies!
+        {t.footer}
       </p>
     </div>
   )

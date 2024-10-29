@@ -13,6 +13,7 @@ import {
   FiShoppingBag,
 } from 'react-icons/fi'
 import { FaTrophy, FaGithub, FaTwitter, FaCloudversify } from 'react-icons/fa'
+import { useLanguage } from '@/utils/LanguageContext'
 
 import ScrollIndicator from '@/components/extras/ScrollIndicator'
 import HauntedCarousel from '@/components/extras/HauntedCarousel'
@@ -55,6 +56,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
 export default function Component() {
   const [isTutorialOpen, setIsTutorialOpen] = useState(false)
   const [disableBackgroundImage, setDisableBackgroundImage] = useState(false)
+  const { language, translations } = useLanguage()
 
   useEffect(() => {
     const hasSeenTutorial = localStorage.getItem('hasSeenTutorial')
@@ -76,6 +78,8 @@ export default function Component() {
       JSON.stringify({ disableBackgroundImage }),
     )
   }, [disableBackgroundImage])
+
+  const t = translations[language]
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-900 via-purple-900 to-gray-900 text-orange-100">
@@ -128,7 +132,7 @@ export default function Component() {
             >
               <Image
                 src="/images/logo2.png"
-                alt="SpookLens Logo"
+                alt={t.common.logoAlt}
                 draggable="false"
                 width={60}
                 height={60}
@@ -144,15 +148,14 @@ export default function Component() {
             transition={{ delay: 0.3, duration: 0.5 }}
             className="text-lg sm:text-xl md:text-2xl text-orange-300 mb-6 drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)]"
           >
-            Unleash your inner ghoul in this bewitching Halloween social media
-            app!
+            {t.landing.tagline}
           </motion.p>
 
           <Button
             asChild
             className="bg-gradient-to-r from-orange-500 to-purple-600 text-white hover:from-orange-600 hover:to-purple-700 text-base sm:text-lg md:text-xl py-2 sm:py-3 md:py-4 px-4 sm:px-6 md:px-8 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105"
           >
-            <Link href="/home">Step into the Shadows</Link>
+            <Link href="/home">{t.landing.ctaButton}</Link>
           </Button>
         </motion.div>
 
@@ -168,42 +171,24 @@ export default function Component() {
         <ScrollIndicator />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-16">
-          <FeatureCard
-            icon={FiCamera}
-            title="Spooktacular Snapshots"
-            description="Share your most haunting looks and eerie moments. Earn candy for the best costume!"
-            delay={0.2}
-          />
-          <FeatureCard
-            icon={FiMessageSquare}
-            title="Phantom Chat"
-            description="Connect with fellow spirits in our global chat or send spine-chilling private messages."
-            delay={0.4}
-          />
-          <FeatureCard
-            icon={FaTrophy}
-            title="Candy Leaderboard"
-            description="Climb the ranks with your bone-chilling content and become the Halloween legend!"
-            delay={0.6}
-          />
-          <FeatureCard
-            icon={FiMusic}
-            title="Haunted Jukebox"
-            description="Set the perfect eerie atmosphere with our curated playlist of spooky tunes."
-            delay={0.8}
-          />
-          <FeatureCard
-            icon={FiShoppingBag}
-            title="Cursed Candy Store"
-            description="Trade your hard-earned candy for exclusive items and supernatural surprises."
-            delay={1.0}
-          />
-          <FeatureCard
-            icon={FaCloudversify}
-            title="Cloudinary Sorcery"
-            description="Enhance your creepy captures with AI-powered image editing, courtesy of Cloudinary."
-            delay={1.2}
-          />
+          {t.features.map((feature, index) => (
+            <FeatureCard
+              key={index}
+              icon={
+                [
+                  FiCamera,
+                  FiMessageSquare,
+                  FaTrophy,
+                  FiMusic,
+                  FiShoppingBag,
+                  FaCloudversify,
+                ][index]
+              }
+              title={feature.title}
+              description={feature.description}
+              delay={0.2 * (index + 1)}
+            />
+          ))}
         </div>
 
         <motion.section
@@ -213,11 +198,11 @@ export default function Component() {
           className="text-center bg-gray-800/30 backdrop-blur-sm p-4 sm:p-8 rounded-lg shadow-lg border border-purple-500/20 mb-16"
         >
           <h2 className="text-2xl sm:text-3xl font-halloween text-purple-400 mb-4">
-            Powered by Cloudinary
+            {t.cloudinary.title}
           </h2>
           <Image
             src="/images/cloudinary-logo.png"
-            alt="Cloudinary Logo"
+            alt={t.cloudinary.logoAlt}
             className="mx-auto rounded-lg shadow-sm mb-6"
             draggable="false"
             width={150}
@@ -226,8 +211,7 @@ export default function Component() {
             priority
           />
           <p className="text-base sm:text-lg text-orange-300 mb-8">
-            Elevate your Halloween persona with AI-powered image editing and
-            seamless media management.
+            {t.cloudinary.description}
           </p>
           <Button
             asChild
@@ -238,19 +222,19 @@ export default function Component() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Uncover Cloudinary&apos;s Magic
+              {t.cloudinary.ctaButton}
             </Link>
           </Button>
         </motion.section>
 
-        <motion.section
+        <motion.footer
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.5 }}
           className="text-center text-orange-300 mt-16 pt-6 border-t border-orange-500/20"
         >
           <p className="mb-4 text-sm sm:text-base">
-            Made by{' '}
+            {t.footer.madeBy}{' '}
             <a
               href="https://www.x.com/impavloh"
               target="_blank"
@@ -259,14 +243,14 @@ export default function Component() {
             >
               Pavloh
             </a>{' '}
-            - Finalist project in the{' '}
+            - {t.footer.finalistProject}{' '}
             <a
               href="https://cloudinary.com/blog/cloudinary-cloudcreate-spooky-ai-hackathon"
               target="_blank"
               rel="noopener noreferrer"
               className="text-orange-400 hover:underline"
             >
-              MiduDev x Cloudinary Hackathon 2024: Spooky AI Creations
+              {t.footer.hackathonName}
             </a>
           </p>
           <div className="flex justify-center space-x-4 mb-6">
@@ -275,7 +259,7 @@ export default function Component() {
               target="_blank"
               rel="noopener noreferrer"
               className="text-orange-400 hover:text-orange-500 transition-colors duration-300"
-              aria-label="Follow Pavloh on Twitter"
+              aria-label={t.footer.twitterAria}
             >
               <FaTwitter className="w-5 h-5 sm:w-6 sm:h-6" />
             </a>
@@ -284,12 +268,12 @@ export default function Component() {
               target="_blank"
               rel="noopener noreferrer"
               className="text-orange-400 hover:text-orange-500 transition-colors duration-300"
-              aria-label="View Pavloh's GitHub profile"
+              aria-label={t.footer.githubAria}
             >
               <FaGithub className="w-5 h-5 sm:w-6 sm:h-6" />
             </a>
           </div>
-        </motion.section>
+        </motion.footer>
       </div>
     </main>
   )

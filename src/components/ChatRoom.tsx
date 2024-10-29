@@ -39,6 +39,8 @@ import {
   getDocs,
 } from 'firebase/firestore'
 
+import { useLanguage } from '@/utils/LanguageContext'
+
 interface Message {
   id: string
   text: string
@@ -65,10 +67,12 @@ const MemoizedMessageBubble = memo(
     message,
     isCurrentUser,
     index,
+    t,
   }: {
     message: Message
     isCurrentUser: boolean
     index: number
+    t: any
   }) => (
     <motion.div
       initial={{ opacity: 0, y: 50, scale: 0.8 }}
@@ -101,7 +105,7 @@ const MemoizedMessageBubble = memo(
           whileHover={{ boxShadow: '0px 0px 8px rgba(255,165,0,0.5)' }}
         >
           <p className="font-semibold font-halloween mb-1">
-            {isCurrentUser ? 'You' : message.username}
+            {isCurrentUser ? t.you : message.username}
           </p>
           <p className="text-sm">{message.text}</p>
         </motion.div>
@@ -155,6 +159,9 @@ export default function ChatRoom({
   localSettings,
   isPrivateChat = false,
 }: ChatRoomProps) {
+  const { language, translations } = useLanguage()
+  const t = translations[language].chatRoom
+
   const [messages, setMessages] = useState<Message[]>([])
   const [newMessage, setNewMessage] = useState('')
   const [loading, setLoading] = useState(true)
@@ -178,7 +185,7 @@ export default function ChatRoom({
     if (!isPrivateChat) return 'global-chat'
 
     if (!currentUser) {
-      setError('You must be logged in to start a private chat.')
+      setError(t.errors.loginRequired)
       openAuthModal()
       return null
     }
@@ -188,13 +195,13 @@ export default function ChatRoom({
     const querySnapshot = await getDocs(q)
 
     if (querySnapshot.empty) {
-      setError('User not found.')
+      setError(t.errors.userNotFound)
       return null
     }
 
     const otherUserId = querySnapshot.docs[0].id
     return [currentUser.uid, otherUserId].sort().join('_')
-  }, [isPrivateChat, currentUser, username, openAuthModal])
+  }, [isPrivateChat, currentUser, username, openAuthModal, t.errors])
 
   const loadMessages = useCallback(async () => {
     const id = await getChatId()
@@ -261,14 +268,14 @@ export default function ChatRoom({
         text: filteredMessage,
         sender: currentUser.uid,
         createdAt: new Date(),
-        username: userData?.username || 'Anonymous Ghost',
+        username: userData?.username || t.anonymousGhost,
         avatar: userData?.avatar || '',
       })
 
       setNewMessage('')
     } catch (error) {
       console.error('Error sending message:', error)
-      setError('A dark force prevented your message. Try again.')
+      setError(t.errors.sendingFailed)
     } finally {
       setIsSending(false)
     }
@@ -288,7 +295,7 @@ export default function ChatRoom({
           >
             <Image
               src="/images/sad-logo2.png"
-              alt="SpookLens"
+              alt={t.altTexts.spookLens}
               className="mx-auto mb-4 filter drop-shadow-[0_0_20px_rgba(255,165,0,0.7)]"
               width={160}
               height={160}
@@ -300,8 +307,7 @@ export default function ChatRoom({
             transition={{ duration: 0.5 }}
             className="text-center text-orange-300 font-halloween text-lg"
           >
-            No spirits have spoken yet. <br /> Be the first to break the
-            silence!
+            {t.noMessages}
           </motion.p>
         </div>
       ) : (
@@ -312,11 +318,12 @@ export default function ChatRoom({
               message={msg}
               isCurrentUser={msg.sender === currentUser?.uid}
               index={index}
+              t={t}
             />
           ))}
         </AnimatePresence>
       ),
-    [messages, currentUser],
+    [messages, currentUser, t],
   )
 
   const SkeletonMessage = memo(
@@ -362,6 +369,7 @@ export default function ChatRoom({
     ),
     [SkeletonMessage],
   )
+
   return (
     <Card className="h-full w-full max-w-lg flex flex-col bg-gradient-to-br from-[#1a1a1d] to-[#2c003e] border-orange-500 shadow-xl [box-shadow:rgba(255,165,0,0.2)_-5px_5px,rgba(255,165,0,0.15)_-10px_10px,rgba(255,165,0,0.1)_-15px_15px,rgba(255,165,0,0.05)_-20px_20px,rgba(255,165,0,0.025)_-25px_25px] overflow-hidden relative">
       <CardHeader className="bg-gradient-to-r from-orange-500 to-purple-600 p-4 relative z-10">
@@ -373,8 +381,8 @@ export default function ChatRoom({
             <FaSpider className="mr-2 h-6 w-6" aria-hidden="true" />
           </motion.div>
           {isPrivateChat
-            ? `Spooky Chat with ${username}`
-            : 'Haunted Global Chat'}
+            ? t.privateChatTitle.replace('{username}', username)
+            : t.globalChatTitle}
           <motion.div
             animate={{ rotate: [0, -10, 0] }}
             transition={{ duration: 2, repeat: Infinity, delay: 1 }}
@@ -416,7 +424,7 @@ export default function ChatRoom({
               >
                 <FaGhost className="mr-2 h-5 w-5" />
               </motion.div>
-              Sign Up / Log In to Chat
+              {t.signUpToChat}
             </Button>
           </motion.div>
         ) : (
@@ -431,14 +439,14 @@ export default function ChatRoom({
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 className="w-full border-2 border-orange-500 text-orange-300 bg-gray-800 placeholder-orange-400 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300 pr-10"
-                placeholder="Speak to the spirits..."
-                aria-label="Message input"
+                placeholder={t.placeholders.messageInput}
+                aria-label={t.ariaLabels.messageInput}
               />
               <Button
                 type="button"
                 onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent hover:bg-transparent p-1"
-                aria-label="Toggle emoji picker"
+                aria-label={t.ariaLabels.toggleEmojiPicker}
               >
                 <FaSmile className="text-orange-500 h-5 w-5" />
               </Button>
@@ -473,7 +481,11 @@ export default function ChatRoom({
                 type="submit"
                 disabled={isSending}
                 className="bg-gradient-to-r from-orange-500 to-purple-600 hover:from-orange-600 hover:to-purple-700 text-white rounded-lg shadow-lg shadow-orange-500/30 transition-all duration-300 relative overflow-hidden"
-                aria-label={isSending ? 'Sending message' : 'Send message'}
+                aria-label={
+                  isSending
+                    ? t.ariaLabels.sendingMessage
+                    : t.ariaLabels.sendMessage
+                }
               >
                 <AnimatePresence mode="wait">
                   {isSending ? (
@@ -503,7 +515,7 @@ export default function ChatRoom({
                         animate={{ width: 'auto', opacity: 1 }}
                         transition={{ delay: 0.1 }}
                       >
-                        Send
+                        {t.buttons.send}
                       </motion.span>
                     </motion.div>
                   )}

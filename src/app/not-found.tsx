@@ -1,12 +1,15 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+
 import { motion } from 'framer-motion'
 import { FaLock, FaHome } from 'react-icons/fa'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import Image from 'next/image'
+
+import { useLanguage } from '@/utils/LanguageContext'
 
 export default function ErrorPage({
   isPrivate = false,
@@ -15,6 +18,8 @@ export default function ErrorPage({
 }) {
   const router = useRouter()
   const [isShaking, setIsShaking] = useState(false)
+  const { language, translations } = useLanguage()
+  const t = translations[language].errorPage
 
   useEffect(() => {
     if (!isPrivate) {
@@ -72,7 +77,9 @@ export default function ErrorPage({
             ) : (
               <span className="text-6xl">404</span>
             )}
-            <span>{isPrivate ? 'Private Profile' : 'Page Not Found'}</span>
+            <span>
+              {isPrivate ? t.privateProfileTitle : t.pageNotFoundTitle}
+            </span>
           </CardTitle>
         </CardHeader>
         <CardContent className="text-center">
@@ -84,39 +91,37 @@ export default function ErrorPage({
               <Image
                 src="/images/sad-logo2.png"
                 className="h-32 w-32 mx-auto mb-8"
-                alt="SpookLens"
+                alt={t.logoAlt}
                 width={128}
                 height={128}
                 priority
               />
             </motion.div>
             <p className="text-xl mb-4">
-              {isPrivate
-                ? 'Oops! This profile is hidden in the shadows.'
-                : 'Oops! This page has vanished into the spirit realm.'}
+              {isPrivate ? t.privateProfileMessage : t.pageNotFoundMessage}
             </p>
             <p className="text-orange-300 mb-6">
               {isPrivate
-                ? "The user has chosen to keep their profile private. Only the bravest of ghosts can see what's behind this veil of mystery!"
-                : "Don't worry, you'll be transported back to the mortal world in 5 seconds..."}
+                ? t.privateProfileDescription
+                : t.pageNotFoundDescription}
             </p>
             <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
               {isPrivate && (
                 <Button
                   onClick={handleShake}
                   className="bg-orange-500 hover:bg-orange-600 text-gray-900"
-                  aria-label="Attempt to reveal profile"
+                  aria-label={t.revealButtonAriaLabel}
                 >
-                  Try to Reveal
+                  {t.revealButtonText}
                 </Button>
               )}
               <Button
                 onClick={() => router.push('/')}
                 className="bg-orange-500 hover:bg-orange-600 text-gray-900"
-                aria-label="Go to home page"
+                aria-label={t.homeButtonAriaLabel}
               >
                 <FaHome className="mr-2" />
-                {isPrivate ? 'Go Home' : 'Return to the Haunted Homepage'}
+                {isPrivate ? t.homeButtonTextPrivate : t.homeButtonTextPublic}
               </Button>
             </div>
           </motion.div>

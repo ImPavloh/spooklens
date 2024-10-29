@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 
 import { FaEye, FaHome, FaComments } from 'react-icons/fa'
 import { GiCandleSkull, GiPumpkin } from 'react-icons/gi'
+import { useLanguage } from '@/utils/LanguageContext'
 
 interface ComingSoonModalProps {
   isOpen: boolean
@@ -27,6 +28,8 @@ export default function ComingSoonModal({
   page,
 }: ComingSoonModalProps) {
   const router = useRouter()
+  const { language, translations } = useLanguage()
+  const t = translations[language].comingSoonModal[page]
 
   const getModalContent = () => {
     switch (page) {
@@ -35,16 +38,15 @@ export default function ComingSoonModal({
           icon: (
             <GiCandleSkull className="text-5xl sm:text-6xl text-orange-500" />
           ),
-          title: 'Store Coming Soon!',
-          description:
-            'Our spectral shopkeepers are still brewing up the Spooky Candy Store. Dare to peek inside, or haunt us again later for a spine-chilling shopping spree!',
+          title: t.title,
+          description: t.description,
           primaryButton: {
-            text: 'Sneak a Peek',
+            text: t.primaryButton,
             icon: <FaEye className="mr-2" />,
             action: () => onClose(),
           },
           secondaryButton: {
-            text: 'Return Home',
+            text: t.secondaryButton,
             icon: <FaHome className="mr-2" />,
             action: () => router.push('/'),
           },
@@ -52,11 +54,10 @@ export default function ComingSoonModal({
       case 'chats':
         return {
           icon: <FaComments className="text-5xl sm:text-6xl text-orange-500" />,
-          title: 'Chats Coming Soon!',
-          description:
-            'Our phantom programmers are setting up the haunted chat rooms. For now, you can join the Global Haunted Chat!',
+          title: t.title,
+          description: t.description,
           primaryButton: {
-            text: 'Join Global Chat',
+            text: t.primaryButton,
             icon: <GiPumpkin className="mr-2" />,
             action: () => router.push('/home'),
           },

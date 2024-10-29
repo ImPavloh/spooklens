@@ -19,9 +19,10 @@ async function analyzeImageWithAIVision(imageUrl: string): Promise<AIResponse> {
 
   const payload = {
     source: { uri: imageUrl },
+    // traducir en un futuro
     prompts: [
-      "Create a spooky title for this eerie image in five words or less",
-      "Briefly describe this image in ten words or less"
+      "Spooky title, five words max",
+      "Describe briefly, ten words max"
     ]
   };
 
@@ -40,46 +41,37 @@ async function analyzeImageWithAIVision(imageUrl: string): Promise<AIResponse> {
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`AI Vision API error: ${response.status} - ${errorText}`);
+      throw new Error(`API error: ${response.status}`);
     }
 
     const result = await response.json();
     const analysis = result.data?.analysis?.responses;
-    const tokensUsed = result.limits?.usage?.count || 0; // (obtener los tokens utilizados)
-
-    if (!analysis || !Array.isArray(analysis) || analysis.length < 2) {
-      throw new Error('Unexpected AI Vision response format');
-    }
-
-    const title = analysis[0]?.value?.trim() || 'Untitled Spooky Image';
-    const description = analysis[1]?.value?.trim() || 'Mysterious scene.';
+    const tokensUsed = result.limits?.usage?.count || 0;
 
     // respuestas concisas y tokens mínimos
     return {
-      title: title.slice(0, 50),
-      description: description.slice(0, 100),
+      title: analysis[0]?.value?.slice(0, 50) || 'Untitled Image',
+      description: analysis[1]?.value?.slice(0, 100) || 'No description available.',
       tokensUsed
     };
-  } catch (error) {
-    console.error('Error analyzing image:', error);
-    throw new Error('Image analysis failed. Please try again later.');
+  } catch {
+    // console.error('Error analyzing image:', error);
+    throw new Error('Analysis failed.');
   }
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
-    const body = await request.json();
-    const { imageUrl } = body;
+    const { imageUrl } = await request.json();
 
     if (!imageUrl || typeof imageUrl !== 'string') {
-      return NextResponse.json({ error: 'Invalid or missing image URL' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid image URL' }, { status: 400 });
     }
 
     const aiResponse = await analyzeImageWithAIVision(imageUrl);
     return NextResponse.json<AIResponse>(aiResponse);
-  } catch (error) {
-    console.error('API error:', error);
-    return NextResponse.json({ error: 'Failed to generate image analysis' }, { status: 500 });
+  } catch {
+    // console.error('API error:', error);
+    return NextResponse.json({ error: 'Analysis error' }, { status: 500 });
   }
 }

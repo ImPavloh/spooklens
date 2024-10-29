@@ -1,0 +1,8 @@
+# Allow all bots to crawl the site
+User-agent: *
+
+# Allow indexing of all content, but exclude the following:
+Disallow: /api/
+
+# Allow indexing of all other paths
+Allow: /

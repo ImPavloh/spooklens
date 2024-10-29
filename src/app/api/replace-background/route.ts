@@ -20,7 +20,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ transformedImageUrl }, { status: 200 });
   } catch (error) {
-    console.error('Error generating background:', error);
+    // console.error('Error generating background:', error);
     return NextResponse.json({ error: 'Error generating background' }, { status: 500 });
   }
 }

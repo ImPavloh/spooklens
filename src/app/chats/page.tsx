@@ -29,7 +29,7 @@ interface Chat {
 
 const chatIcons = [FaGhost, GiBat, GiPumpkin, GiCauldron]
 
-export default function ImprovedChatsPage() {
+export default function Chats() {
   const [chats, setChats] = useState<Chat[]>([])
   const [filteredChats, setFilteredChats] = useState<Chat[]>([])
   const [searchTerm, setSearchTerm] = useState('')

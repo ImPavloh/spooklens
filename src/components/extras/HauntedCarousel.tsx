@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Skeleton } from '@/components/ui/skeleton'
 import { IoChevronBackOutline, IoChevronForwardOutline } from 'react-icons/io5'
 
+import { useLanguage } from '@/utils/LanguageContext'
+
 interface Slide {
   image: string
   alt: string
@@ -25,6 +27,9 @@ const slides: Slide[] = [
 ]
 
 export default function HauntedCarousel() {
+  const { language, translations } = useLanguage()
+  const t = translations[language].hauntedCarousel
+
   const [currentSlide, setCurrentSlide] = useState(0)
   const [imagesLoaded, setImagesLoaded] = useState<boolean[]>(
     new Array(slides.length).fill(false),
@@ -74,7 +79,7 @@ export default function HauntedCarousel() {
             )}
             <Image
               src={slide.image}
-              alt={slide.alt}
+              alt={t.slideAlts[index] || slide.alt}
               className={`object-cover transition-opacity duration-300 ${
                 imagesLoaded[index] ? 'opacity-100' : 'opacity-0'
               }`}
@@ -82,6 +87,7 @@ export default function HauntedCarousel() {
               quality={85}
               priority
               fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               onLoad={() => handleImageLoad(index)}
             />
           </motion.div>
@@ -91,7 +97,7 @@ export default function HauntedCarousel() {
       <button
         onClick={() => navigate('prev')}
         className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/75 transition-colors"
-        aria-label="Previous slide"
+        aria-label={t.prevSlideAriaLabel}
       >
         <IoChevronBackOutline className="w-6 h-6" />
       </button>
@@ -99,7 +105,7 @@ export default function HauntedCarousel() {
       <button
         onClick={() => navigate('next')}
         className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/75 transition-colors"
-        aria-label="Next slide"
+        aria-label={t.nextSlideAriaLabel}
       >
         <IoChevronForwardOutline className="w-6 h-6" />
       </button>
@@ -114,7 +120,10 @@ export default function HauntedCarousel() {
                 : 'bg-gray-400/80 hover:bg-orange-300/80'
             }`}
             onClick={() => setCurrentSlide(index)}
-            aria-label={`Go to slide ${index + 1}`}
+            aria-label={t.goToSlideAriaLabel.replace(
+              '{index}',
+              (index + 1).toString(),
+            )}
           />
         ))}
       </div>

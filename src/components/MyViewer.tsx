@@ -11,15 +11,30 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 import { GiSpiderWeb, GiPumpkin, GiCandleSkull } from 'react-icons/gi'
-import { FaDownload, FaLink, FaCamera } from 'react-icons/fa'
+import { FaDownload, FaLink, FaCamera, FaShare, FaTrash } from 'react-icons/fa'
+
 import confetti from 'canvas-confetti'
+
+import { useLanguage } from '@/utils/LanguageContext'
 
 interface MyViewerProps {
   imageUrl?: string
   title?: string
   description?: string
   lastPhotoTimestamp?: string
+  onDelete?: () => void
 }
 
 const cardVariants = {
@@ -29,23 +44,29 @@ const cardVariants = {
 
 export default function MyViewer({
   imageUrl,
-  title = 'Spooky Image',
-  description = 'A haunting visual from the beyond...',
+  title,
+  description,
   lastPhotoTimestamp,
+  onDelete,
 }: MyViewerProps) {
+  const { language, translations } = useLanguage()
+  const t = translations[language].myViewer
+
   const [showConfetti, setShowConfetti] = useState(false)
   const [notification, setNotification] = useState<{
     message: string
     type: 'success' | 'error'
   } | null>(null)
+  const [isImageLoaded, setIsImageLoaded] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   const triggerConfetti = useCallback(() => {
     setShowConfetti(true)
     confetti({
-      particleCount: 75,
-      spread: 75,
+      particleCount: 100,
+      spread: 70,
       origin: { y: 0.6 },
-      colors: ['#f97316', '#7c3aed', '#fbbf24'],
+      colors: ['#f97316', '#7c3aed', '#fbbf24', '#10b981', '#ef4444'],
     })
     setTimeout(() => setShowConfetti(false), 3000)
   }, [])
@@ -77,30 +98,66 @@ export default function MyViewer({
         window.URL.revokeObjectURL(url)
 
         triggerConfetti()
-        showNotification('Image saved to your downloads folder!', 'success')
+        showNotification(t.notifications.downloadSuccess, 'success')
       } catch (error) {
         console.error('Download failed:', error)
-        showNotification('The spooky image escaped! Please try again.', 'error')
+        showNotification(t.notifications.downloadError, 'error')
       }
     }
-  }, [imageUrl, triggerConfetti, showNotification])
+  }, [imageUrl, triggerConfetti, showNotification, t.notifications])
 
   const handleCopyUrl = useCallback(() => {
     if (imageUrl) {
       navigator.clipboard
         .writeText(imageUrl)
         .then(() => {
-          showNotification(
-            'Image URL has been copied to your clipboard!',
-            'success',
-          )
+          showNotification(t.notifications.copySuccess, 'success')
         })
         .catch((error) => {
           console.error('Copy failed:', error)
-          showNotification('Please try again.', 'error')
+          showNotification(t.notifications.copyError, 'error')
         })
     }
-  }, [imageUrl, showNotification])
+  }, [imageUrl, showNotification, t.notifications])
+  const handleShare = useCallback(async () => {
+    if (imageUrl && navigator.share) {
+      try {
+        const response = await fetch(
+          `/api/download-image?imageUrl=${encodeURIComponent(imageUrl)}`,
+        )
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch image for sharing')
+        }
+
+        const blob = await response.blob()
+
+        const file = new File([blob], 'spooklens-image.jpg', {
+          type: 'image/jpeg',
+        })
+
+        await navigator.share({
+          title: title || t.defaultImageTitle,
+          text: description || t.defaultImageDescription,
+          files: [file],
+        })
+
+        showNotification(t.notifications.shareSuccess, 'success')
+      } catch (error) {
+        console.error('Share failed:', error)
+        showNotification(t.notifications.shareError, 'error')
+      }
+    } else {
+      showNotification(t.notifications.shareNotSupported, 'error')
+    }
+  }, [imageUrl, title, description, showNotification, t])
+
+  const handleDelete = useCallback(() => {
+    if (onDelete) {
+      onDelete()
+      showNotification(t.notifications.deleteSuccess, 'success')
+    }
+  }, [onDelete, showNotification, t.notifications])
 
   useEffect(() => {
     if (showConfetti) {
@@ -110,14 +167,14 @@ export default function MyViewer({
   }, [showConfetti])
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full rounded-lg shadow-lg">
       <CardHeader className="p-2 sm:p-4">
         <CardTitle className="text-xl sm:text-2xl font-bold text-orange-300 flex items-center justify-center font-halloween">
           <GiPumpkin
             className="mr-2 h-5 w-5 sm:h-6 sm:w-6 text-orange-500"
             aria-hidden="true"
           />
-          <span>Spooky Viewer</span>
+          <span>{t.title}</span>
           <GiCandleSkull
             className="ml-2 h-5 w-5 sm:h-6 sm:w-6 text-orange-500"
             aria-hidden="true"
@@ -148,18 +205,21 @@ export default function MyViewer({
               <>
                 <Image
                   src={imageUrl}
-                  alt={title}
+                  alt={title || t.defaultImageTitle}
                   fill
-                  className="object-cover"
+                  className={`object-cover transition-opacity duration-300 ${
+                    isImageLoaded ? 'opacity-100' : 'opacity-0'
+                  }`}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  onLoad={() => setIsImageLoaded(true)}
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/30" />
                 <div className="absolute top-0 left-0 w-full p-2 sm:p-4 text-center z-10">
                   <h3 className="text-base sm:text-lg font-bold text-orange-300 line-clamp-1">
-                    {title}
+                    {title || t.defaultImageTitle}
                   </h3>
                   <p className="text-xs sm:text-sm text-orange-200 mt-1 line-clamp-2">
-                    {description}
+                    {description || t.defaultImageDescription}
                   </p>
                 </div>
               </>
@@ -171,18 +231,18 @@ export default function MyViewer({
                 >
                   <Image
                     src="/images/sad-logo.png"
-                    alt="SpookLens"
+                    alt={t.altTexts.logo}
                     width={150}
                     height={150}
                     className="mb-2 sm:mb-4 filter drop-shadow-[0_0_20px_rgba(255,255,255,0.7)]"
                     draggable={false}
                   />
                 </motion.div>
-                <p className="text-lg sm:text-xl font-halloween text-center">
-                  No spooky image yet!
+                <p className="text-lg sm:text-xl font-halloween text-center text-orange-300">
+                  {t.noImageYet}
                 </p>
-                <p className="text-sm sm:text-base mt-1 text-orange-300 text-center">
-                  Try Trick or Treat first!
+                <p className="text-sm sm:text-base mt-1 text-orange-200 text-center">
+                  {t.tryTrickOrTreat}
                 </p>
               </div>
             )}
@@ -199,8 +259,8 @@ export default function MyViewer({
                   </TooltipTrigger>
                   <TooltipContent side="left">
                     <p className="text-xs sm:text-sm">
-                      Last photo:{' '}
-                      {new Date(lastPhotoTimestamp).toLocaleString()}
+                      {t.lastPhoto}{' '}
+                      {new Date(lastPhotoTimestamp).toLocaleString(language)}
                     </p>
                   </TooltipContent>
                 </Tooltip>
@@ -211,41 +271,83 @@ export default function MyViewer({
         <div className="flex justify-center items-center space-x-2 mt-auto">
           <Button
             onClick={handleDownload}
-            className="text-orange-300 bg-purple-800/50 hover:bg-purple-700 transition-all duration-300 text-xs sm:text-sm py-1 h-8 sm:h-9"
+            className="text-orange-300 bg-green-600/50 hover:bg-green-800 transition-all duration-300 text-xs sm:text-sm py-1 h-8 sm:h-9"
             disabled={!imageUrl}
-            aria-label="Download image"
+            aria-label={t.ariaLabels.download}
           >
-            <FaDownload
-              className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4"
-              aria-hidden="true"
-            />
-            <span className="hidden sm:inline">Download</span>
+            <FaDownload className="h-4 w-4" aria-hidden="true" />
           </Button>
           <Button
             onClick={handleCopyUrl}
             className="text-orange-300 bg-purple-800/50 hover:bg-purple-700 transition-all duration-300 text-xs sm:text-sm py-1 h-8 sm:h-9"
             disabled={!imageUrl}
-            aria-label="Copy URL"
+            aria-label={t.ariaLabels.copyUrl}
           >
-            <FaLink
-              className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4"
-              aria-hidden="true"
-            />
-            <span className="hidden sm:inline">Copy URL</span>
+            <FaLink className="h-4 w-4" aria-hidden="true" />
           </Button>
+          <Button
+            onClick={handleShare}
+            className="text-orange-300 bg-purple-800/50 hover:bg-purple-700 transition-all duration-300 text-xs sm:text-sm py-1 h-8 sm:h-9"
+            disabled={!imageUrl || !navigator.share}
+            aria-label={t.ariaLabels.share}
+          >
+            <FaShare className="h-4 w-4" aria-hidden="true" />
+          </Button>
+          <AlertDialog
+            open={showDeleteConfirm}
+            onOpenChange={setShowDeleteConfirm}
+          >
+            <AlertDialogTrigger asChild>
+              <Button
+                className="text-orange-300 bg-red-800/50 hover:bg-red-700 transition-all duration-300 text-xs sm:text-sm py-1 h-8 sm:h-9"
+                disabled={!imageUrl}
+                aria-label={t.ariaLabels.delete}
+              >
+                <FaTrash className="h-4 w-4" aria-hidden="true" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="bg-gradient-to-b from-gray-900 to-gray-800 text-orange-200 border-2 border-orange-500 rounded-lg shadow-lg shadow-orange-500/20">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-2xl font-halloween text-orange-500">
+                  {t.deleteConfirmTitle}
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-orange-200">
+                  {t.deleteConfirmDescription}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="bg-transparent border-orange-500 text-orange-300 hover:bg-orange-500/20">
+                  {t.cancel}
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDelete}
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                >
+                  {t.delete}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </CardContent>
-      {notification && (
-        <div className="fixed inset-0 flex items-center justify-center">
-          <div
-            className={`p-4 rounded-md shadow-lg text-center text-sm ${
-              notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
-            } text-white`}
+      <AnimatePresence>
+        {notification && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="fixed bottom-4 right-4 z-50"
           >
-            {notification.message}
-          </div>
-        </div>
-      )}
+            <div
+              className={`p-4 rounded-md shadow-lg text-center text-sm ${
+                notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+              } text-white`}
+            >
+              {notification.message}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

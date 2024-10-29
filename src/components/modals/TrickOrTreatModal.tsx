@@ -13,6 +13,7 @@ import { auth, db } from '@/lib/firebase'
 import { doc, updateDoc, increment, getDoc } from 'firebase/firestore'
 
 import { useAudio } from '@/hooks/useAudio'
+import { useLanguage } from '@/utils/LanguageContext'
 
 interface TrickOrTreatModalProps {
   isOpen: boolean
@@ -25,6 +26,9 @@ export default function TrickOrTreatModal({
   onClose,
   onOpenUploadModal,
 }: TrickOrTreatModalProps) {
+  const { language, translations } = useLanguage()
+  const t = translations[language].trickOrTreatModal
+
   const [result, setResult] = useState<'trick' | 'treat' | null>(null)
   const [cooldown, setCooldown] = useState(0)
   const [isSpinning, setIsSpinning] = useState(false)
@@ -152,7 +156,7 @@ export default function TrickOrTreatModal({
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="bg-gradient-to-br from-purple-900 to-gray-900 text-white p-0 border-2 border-orange-500 shadow-xl shadow-orange-500/20 max-w-[95vw] sm:max-w-md w-full">
-        <DialogTitle className="sr-only">Trick or Treat</DialogTitle>
+        <DialogTitle className="sr-only">{t.title}</DialogTitle>
         <AnimatePresence mode="wait">
           <motion.div
             key={result === null ? 'initial' : 'result'}
@@ -174,9 +178,10 @@ export default function TrickOrTreatModal({
               updateUserCandies={updateUserCandies}
               showTrickWarning={showTrickWarning}
               isUserRegistered={isUserRegistered}
+              t={t}
             />
             <CooldownBar cooldown={cooldown} />
-            <SpinCount />
+            <SpinCount t={t} />
           </motion.div>
         </AnimatePresence>
       </DialogContent>
@@ -196,6 +201,7 @@ interface ModalContentProps {
   updateUserCandies: (candies: number) => Promise<void>
   showTrickWarning: boolean
   isUserRegistered: boolean
+  t: any
 }
 
 const ModalContent = React.memo(
@@ -211,6 +217,7 @@ const ModalContent = React.memo(
     updateUserCandies,
     showTrickWarning,
     isUserRegistered,
+    t,
   }: ModalContentProps) => (
     <div className="flex flex-col sm:flex-row items-center justify-center sm:space-x-4 space-y-4 sm:space-y-0">
       <div className="text-center space-y-4 sm:space-y-6 flex-1 order-2 sm:order-1">
@@ -220,6 +227,7 @@ const ModalContent = React.memo(
             isSpinning={isSpinning}
             handleTrickOrTreat={handleTrickOrTreat}
             isUserRegistered={isUserRegistered}
+            t={t}
           />
         ) : (
           <ResultContent
@@ -229,10 +237,11 @@ const ModalContent = React.memo(
             candiesWon={candiesWon}
             updateUserCandies={updateUserCandies}
             showTrickWarning={showTrickWarning}
+            t={t}
           />
         )}
       </div>
-      {showWheel && <SpinningWheel isSpinning={isSpinning} />}
+      {showWheel && <SpinningWheel isSpinning={isSpinning} t={t} />}
     </div>
   ),
 )
@@ -244,6 +253,7 @@ interface InitialContentProps {
   isSpinning: boolean
   handleTrickOrTreat: () => Promise<void>
   isUserRegistered: boolean
+  t: any
 }
 
 const InitialContent = React.memo(
@@ -252,6 +262,7 @@ const InitialContent = React.memo(
     isSpinning,
     handleTrickOrTreat,
     isUserRegistered,
+    t,
   }: InitialContentProps) => (
     <>
       <motion.p
@@ -260,13 +271,14 @@ const InitialContent = React.memo(
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
-        Dare to tempt the spirits?
+        {t.dareToTempt}
       </motion.p>
       <SpinButton
         cooldown={cooldown}
         isSpinning={isSpinning}
         onClick={handleTrickOrTreat}
         isUserRegistered={isUserRegistered}
+        t={t}
       />
     </>
   ),
@@ -279,20 +291,21 @@ interface SpinButtonProps {
   isSpinning: boolean
   onClick: () => Promise<void>
   isUserRegistered: boolean
+  t: any
 }
 
 const SpinButton = React.memo(
-  ({ cooldown, isSpinning, onClick, isUserRegistered }: SpinButtonProps) => (
+  ({ cooldown, isSpinning, onClick, isUserRegistered, t }: SpinButtonProps) => (
     <Button
       onClick={onClick}
       disabled={cooldown > 0 || isSpinning || !isUserRegistered}
       className="group relative overflow-hidden rounded-full bg-gradient-to-r from-orange-500 via-red-500 to-purple-600 p-[2px] focus:outline-none hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
       aria-label={
         !isUserRegistered
-          ? 'You must be registered to spin'
+          ? t.registerToSpin
           : cooldown > 0
-          ? `Wait ${cooldown} seconds`
-          : 'Spin the Wheel'
+          ? t.waitSeconds.replace('{seconds}', cooldown.toString())
+          : t.spinTheWheel
       }
     >
       <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2C9FB_0%,#A5B4FC_50%,#818CF8_100%)]" />
@@ -312,10 +325,10 @@ const SpinButton = React.memo(
             className="w-full sm:w-[150px] text-center inline-block"
           >
             {!isUserRegistered
-              ? 'Register to Spin'
+              ? t.registerToSpin
               : cooldown > 0
-              ? `Wait ${cooldown}s`
-              : 'Spin the Wheel!'}
+              ? t.waitSeconds.replace('{seconds}', cooldown.toString())
+              : t.spinTheWheel}
           </motion.span>
         </AnimatePresence>
       </span>
@@ -332,6 +345,7 @@ interface ResultContentProps {
   candiesWon: number
   updateUserCandies: (candies: number) => Promise<void>
   showTrickWarning: boolean
+  t: any
 }
 
 const ResultContent = React.memo(
@@ -342,6 +356,7 @@ const ResultContent = React.memo(
     candiesWon,
     updateUserCandies,
     showTrickWarning,
+    t,
   }: ResultContentProps) => (
     <motion.div
       className="text-center space-y-4 sm:space-y-6"
@@ -354,12 +369,14 @@ const ResultContent = React.memo(
           onClose={onClose}
           candiesWon={candiesWon}
           updateUserCandies={updateUserCandies}
+          t={t}
         />
       ) : (
         <TrickResult
           onOpenUploadModal={onOpenUploadModal}
           onClose={onClose}
           showTrickWarning={showTrickWarning}
+          t={t}
         />
       )}
     </motion.div>
@@ -372,10 +389,11 @@ interface TreatResultProps {
   onClose: () => void
   candiesWon: number
   updateUserCandies: (candies: number) => Promise<void>
+  t: any
 }
 
 const TreatResult = React.memo(
-  ({ onClose, candiesWon, updateUserCandies }: TreatResultProps) => (
+  ({ onClose, candiesWon, updateUserCandies, t }: TreatResultProps) => (
     <div className="text-green-400 space-y-2 sm:space-y-4">
       <motion.div
         initial={{ rotate: 0 }}
@@ -393,7 +411,7 @@ const TreatResult = React.memo(
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
-        You got a treat!
+        {t.youGotTreat}
       </motion.p>
       <motion.p
         className="mt-2 text-base  sm:text-lg"
@@ -401,8 +419,7 @@ const TreatResult = React.memo(
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.3 }}
       >
-        Lucky you! You can win {candiesWon}{' '}
-        {candiesWon === 1 ? 'candy' : 'candies'}!
+        {t.luckyYou.replace('{candies}', candiesWon.toString())}
       </motion.p>
       <motion.div
         initial={{ y: 20, opacity: 0 }}
@@ -417,7 +434,7 @@ const TreatResult = React.memo(
           className="mt-2 sm:mt-4 bg-green-600 hover:bg-green-700 text-white py-2 px-4 sm:px-6 rounded-full text-base sm:text-lg transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
         >
           <FaCandyCane className="inline-block mr-2" aria-hidden="true" />
-          Claim Your Treat
+          {t.claimYourTreat}
         </Button>
       </motion.div>
     </div>
@@ -430,10 +447,11 @@ interface TrickResultProps {
   onOpenUploadModal: () => void
   onClose: () => void
   showTrickWarning: boolean
+  t: any
 }
 
 const TrickResult = React.memo(
-  ({ onOpenUploadModal, onClose, showTrickWarning }: TrickResultProps) => (
+  ({ onOpenUploadModal, onClose, showTrickWarning, t }: TrickResultProps) => (
     <div className="text-red-400 space-y-2 sm:space-y-4">
       <motion.div
         initial={{ scale: 0 }}
@@ -455,7 +473,7 @@ const TrickResult = React.memo(
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
-        You have been tricked!
+        {t.youHaveBeenTricked}
       </motion.p>
       <motion.p
         className="mt-2 text-base sm:text-lg"
@@ -463,7 +481,7 @@ const TrickResult = React.memo(
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.3 }}
       >
-        The spirits weren&apos;t in your favor this time...
+        {t.spiritsNotInFavor}
       </motion.p>
       {showTrickWarning && (
         <motion.p
@@ -472,7 +490,7 @@ const TrickResult = React.memo(
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.4 }}
         >
-          Quick! Click the button or lose a candy in 10 seconds!
+          {t.quickClickWarning}
         </motion.p>
       )}
       <motion.div
@@ -488,7 +506,7 @@ const TrickResult = React.memo(
           className="mt-2 sm:mt-4 bg-red-600 hover:bg-red-700 text-white py-2 px-4 sm:px-6 rounded-full text-base sm:text-lg transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
         >
           <FaGhost className="inline-block mr-2" aria-hidden="true" />
-          Spook one photo
+          {t.spookOnePhoto}
         </Button>
       </motion.div>
     </div>
@@ -497,26 +515,28 @@ const TrickResult = React.memo(
 
 TrickResult.displayName = 'TrickResult'
 
-const SpinningWheel = React.memo(({ isSpinning }: { isSpinning: boolean }) => (
-  <motion.div
-    className="w-24 h-24 sm:w-32 sm:h-32 relative order-1 sm:order-2"
-    initial={{ opacity: 1 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    transition={{
-      duration: 0.3,
-    }}
-  >
-    <Image
-      src={isSpinning ? '/images/ruleta.gif' : '/images/ruleta.png'}
-      alt={isSpinning ? 'Spinning wheel' : 'Wheel'}
-      layout="fill"
-      draggable={false}
-      quality={90}
-      priority
-    />
-  </motion.div>
-))
+const SpinningWheel = React.memo(
+  ({ isSpinning, t }: { isSpinning: boolean; t: any }) => (
+    <motion.div
+      className="w-24 h-24 sm:w-32 sm:h-32 relative order-1 sm:order-2"
+      initial={{ opacity: 1 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{
+        duration: 0.3,
+      }}
+    >
+      <Image
+        src={isSpinning ? '/images/ruleta.gif' : '/images/ruleta.png'}
+        alt={isSpinning ? t.spinningWheelAlt : t.wheelAlt}
+        layout="fill"
+        draggable={false}
+        quality={90}
+        priority
+      />
+    </motion.div>
+  ),
+)
 
 SpinningWheel.displayName = 'SpinningWheel'
 
@@ -537,7 +557,7 @@ const CooldownBar = React.memo(({ cooldown }: { cooldown: number }) =>
 
 CooldownBar.displayName = 'CooldownBar'
 
-const SpinCount = React.memo(() => {
+const SpinCount = React.memo(({ t }: { t: any }) => {
   const [totalSpins, setTotalSpins] = useState(0)
 
   useEffect(() => {
@@ -557,7 +577,7 @@ const SpinCount = React.memo(() => {
 
   return (
     <div className="mt-2 sm:mt-4 text-xs sm:text-sm text-gray-400">
-      Total spins: {totalSpins}
+      {t.totalSpins.replace('{count}', totalSpins.toString())}
     </div>
   )
 })

@@ -1,0 +1,1290 @@
+{
+  "en": {
+    "common": {
+      "languageSwitch": "Switch to Español",
+      "logoAlt": "SpookLens Logo"
+    },
+    "navigation": {
+      "title": "Navigation",
+      "userActions": "User Actions",
+      "home": "Home",
+      "chats": "Chats",
+      "leaderboard": "Leaderboard",
+      "candyStore": "Candy Store",
+      "profile": "Profile",
+      "settings": "Settings",
+      "gettingStarted": "Getting Started",
+      "aboutSpookLens": "About SpookLens",
+      "logOut": "Log out",
+      "signIn": "Sign In"
+    },
+    "errorPage": {
+      "privateProfileTitle": "Private Profile",
+      "pageNotFoundTitle": "Page Not Found",
+      "logoAlt": "SpookLens",
+      "privateProfileMessage": "Oops! This profile is hidden in the shadows.",
+      "pageNotFoundMessage": "Oops! This page has vanished into the spirit realm.",
+      "privateProfileDescription": "The user has chosen to keep their profile private. Only the bravest of ghosts can see what's behind this veil of mystery!",
+      "pageNotFoundDescription": "Don't worry, you'll be transported back to the mortal world in 5 seconds...",
+      "revealButtonAriaLabel": "Attempt to reveal profile",
+      "revealButtonText": "Try to Reveal",
+      "homeButtonAriaLabel": "Go to home page",
+      "homeButtonTextPrivate": "Go Home",
+      "homeButtonTextPublic": "Return to the Haunted Homepage"
+    },
+    "usernameValidator": {
+      "errorCheckingUsername": "Error checking username:",
+      "failedToCheckUsername": "Failed to check username availability",
+      "emptyUsername": "Username cannot be empty.",
+      "usernameLengthError": "Username must be between 3 and 20 characters long.",
+      "usernameCharactersError": "Username can only contain letters, numbers, and underscores.",
+      "reservedUsernameError": "This username is reserved and cannot be used.",
+      "usernameTakenError": "This username is already taken."
+    },
+    "page": {
+      "title": "Social Hub",
+      "trickOrTreatButton": "TRICK OR TREAT"
+    },
+    "leaderboard": {
+      "title": "Spooky Leaderboard",
+      "subtitle": "See who is haunting the top spots in our spine-chilling competition!",
+      "searchPlaceholder": "Search users...",
+      "categories": {
+        "candies": "Top Candies",
+        "spins": "Top Spins",
+        "candiesShort": "Candies",
+        "spinsShort": "Spins"
+      },
+      "rank": "Rank",
+      "username": "Username",
+      "yourRank": "Your Rank",
+      "footer": "Stay spooky and keep collecting those candies!"
+    },
+    "landing": {
+      "tagline": "Unleash your inner ghoul in this bewitching Halloween social media app!",
+      "ctaButton": "Step into the Shadows"
+    },
+    "features": [
+      {
+        "title": "Spooktacular Snapshots",
+        "description": "Share your most haunting looks and eerie moments. Earn candy for the best costume!"
+      },
+      {
+        "title": "Phantom Chat",
+        "description": "Connect with fellow spirits in our global chat or send spine-chilling private messages."
+      },
+      {
+        "title": "Candy Leaderboard",
+        "description": "Climb the ranks with your bone-chilling content and become the Halloween legend!"
+      },
+      {
+        "title": "Haunted Jukebox",
+        "description": "Set the perfect eerie atmosphere with our curated playlist of spooky tunes."
+      },
+      {
+        "title": "Cursed Candy Store",
+        "description": "Trade your hard-earned candy for exclusive items and supernatural surprises."
+      },
+      {
+        "title": "Cloudinary Sorcery",
+        "description": "Enhance your creepy captures with AI-powered image editing, courtesy of Cloudinary."
+      }
+    ],
+    "hauntedCarousel": {
+      "slideAlts": [
+        "SpookLens Finalist Project Hackathon 2024",
+        "SpookLens Uploader",
+        "SpookLens Hub",
+        "SpookLens Trick or Treat",
+        "SpookLens Leaderboard",
+        "SpookLens Profiles",
+        "SpookLens Store"
+      ],
+      "prevSlideAriaLabel": "Previous slide",
+      "nextSlideAriaLabel": "Next slide",
+      "goToSlideAriaLabel": "Go to slide {index}"
+    },
+    "cloudinary": {
+      "title": "Powered by Cloudinary",
+      "logoAlt": "Cloudinary Logo",
+      "description": "Elevate your Halloween persona with AI-powered image editing and seamless media management.",
+      "ctaButton": "Uncover Cloudinary's Magic"
+    },
+    "footer": {
+      "madeBy": "Made by",
+      "finalistProject": "Finalist project in the",
+      "hackathonName": "MiduDev x Cloudinary Hackathon 2024: Spooky AI Creations",
+      "twitterAria": "Follow Pavloh on Twitter",
+      "githubAria": "View Pavloh's GitHub profile"
+    },
+    "settings": {
+      "title": "Spooky Settings",
+      "description": "Customize your haunted experience",
+      "general": "General",
+      "notifications": "Notifications",
+      "local": "Local",
+      "language": "Language",
+      "profileVisibility": "Profile Visibility",
+      "profileVisibilityDescription": "Your profile is visible to other users. You can't change this yet",
+      "enableNotifications": "Enable Notifications",
+      "emailNotifications": "Email Notifications",
+      "notificationsComingSoon": "Notifications coming soon! The ghosts are still learning how to whisper...",
+      "disableBackgroundImage": "Disable Background Image",
+      "disableMusicPlayerAnimations": "Disable Music Player Animations",
+      "disableChatBackgroundAnimations": "Disable Chat Background Animations",
+      "defaultMusicPlayerVolume": "Default Music Player Volume",
+      "localSettingsDescription": "These settings are saved locally and will not sync across devices. Restart the website to see the changes.",
+      "languageDescription": "Choose your preferred language for the SpookLens experience",
+      "english": "English",
+      "spanish": "Español"
+    },
+    "aboutModal": {
+      "version": "Version",
+      "description": "A Halloween-themed social media app with AI-powered features!",
+      "hackathonName": "Cloudinary Spooky AI Creations Hackathon",
+      "finalistProject": "Finalist Project",
+      "hackathonDate": "October 8 - 22, 2024",
+      "organizedBy": "Organized by",
+      "createdBy": "Created by",
+      "repository": "SpookLens Repository",
+      "avatarCredits": "User avatars designed by",
+      "musicCredits": "Music by",
+      "close": "Close"
+    },
+    "comingSoonModal": {
+      "store": {
+        "title": "Store Coming Soon!",
+        "description": "Our spectral shopkeepers are still brewing up the Spooky Candy Store. Dare to peek inside, or haunt us again later for a spine-chilling shopping spree!",
+        "primaryButton": "Sneak a Peek",
+        "secondaryButton": "Return Home"
+      },
+      "chats": {
+        "title": "Chats Coming Soon!",
+        "description": "Our phantom programmers are setting up the haunted chat rooms. For now, you can join the Global Haunted Chat!",
+        "primaryButton": "Join Global Chat"
+      }
+    },
+    "tutorialModal": {
+      "title": "SpookLens Grimoire",
+      "comingAttractions": "Coming Attractions",
+      "comingAttractionsDescription": "Behold the mystical features that await in the shadows. These spectral wonders are still materializing, but will soon haunt your SpookLens experience!",
+      "previous": "Previous",
+      "next": "Next",
+      "finish": "Finish",
+      "welcome": {
+        "title": "Welcome to SpookLens!",
+        "description": "Prepare for a spine-tingling Halloween adventure! Let's uncover the eerie features of our haunted app."
+      },
+      "trickOrTreat": {
+        "title": "Trick or Treat",
+        "description": "Engage in our spooky 'Trick or Treat' feature! Choose 'Treat' for a chance to earn candies or even a rare potion. Pick 'Trick' to transform your photo with haunting effects!"
+      },
+      "captureGhostlyGlamour": {
+        "title": "Capture Your Ghostly Glamour",
+        "description": "Snap a photo of your Halloween transformation. Our AI-powered Cloudinary editor adds an extra layer of fright to your look!"
+      },
+      "globalCovenChat": {
+        "title": "Global Coven Chat",
+        "description": "Join our worldwide witches brew of conversation. Share your Halloween escapades with fellow creatures of the night from every dark corner of the globe!"
+      },
+      "candyCauldronLeaderboard": {
+        "title": "Candy Cauldron Leaderboard",
+        "description": "Compete in a global ranking to see who's the true Halloween champion!"
+      },
+      "spookyProfiles": {
+        "title": "Spooky Profiles",
+        "description": "Discover spooky profiles from fellow spirits and see what they're up to!"
+      },
+      "brewMagicalPotions": {
+        "title": "Brew Magical Potions",
+        "description": "In the future, you will collect candy to concoct powerful potions. These elixirs will enhance your photos with supernatural effects or unlock hidden features."
+      },
+      "hauntedCandyStore": {
+        "title": "Haunted Candy Store",
+        "description": "I'm preparing to stock shelves with otherworldly treats. In the future, you will exchange your hard-earned candy for potions, spells and exclusive prizes."
+      },
+      "seanceChats": {
+        "title": "Séance Chats",
+        "description": "I'm working on private chats! Soon, you will be able to commune with other spirits in one-on-one conversations, forging alliances with fellow Halloween enthusiasts."
+      },
+      "evolveInnerMonster": {
+        "title": "Evolve Your Inner Monster",
+        "description": "As SpookLens grows, you will unlock new ranks and levels. Each milestone will bring you closer to becoming the ultimate creature of the night. Stay tuned for this exciting feature!"
+      },
+      "sweetBeginnings": {
+        "title": "Sweet Beginnings",
+        "description": "As a special welcome, when you register for SpookLens, you will receive 10 candies to start your spooky journey! Begin collecting treats and casting tricks right away!"
+      }
+    },
+    "trickOrTreatModal": {
+      "title": "Trick or Treat",
+      "dareToTempt": "Dare to tempt the spirits?",
+      "registerToSpin": "Register to Spin",
+      "waitSeconds": "Wait {seconds}s",
+      "spinTheWheel": "Spin the Wheel!",
+      "youGotTreat": "You got a treat!",
+      "luckyYou": "Lucky you! You can win {candies}!",
+      "claimYourTreat": "Claim Your Treat",
+      "youHaveBeenTricked": "You have been tricked!",
+      "spiritsNotInFavor": "The spirits weren't in your favor this time...",
+      "quickClickWarning": "Quick! Click the button or lose a candy in 10 seconds!",
+      "spookOnePhoto": "Spook one photo",
+      "spinningWheelAlt": "Spinning wheel",
+      "wheelAlt": "Wheel",
+      "totalSpins": "Total spins: {count}"
+    },
+    "authModal": {
+      "titles": {
+        "signUp": "Join the Haunt",
+        "signIn": "Enter the Crypt",
+        "forgotPassword": "Invoke a Password"
+      },
+      "labels": {
+        "email": "Email Address",
+        "username": "Username (This will be your @handle)",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "chooseAvatar": "Choose your spectral form",
+        "bio": "Biography",
+        "emailOrUsername": "Email address"
+      },
+      "placeholders": {
+        "email": "example@ghost.com",
+        "username": "MidnightWhisper",
+        "password": "Your secret spell",
+        "confirmPassword": "Repeat your secret spell",
+        "bio": "Tell us about your spectral self...",
+        "emailOrUsername": "example@ghost.com"
+      },
+      "buttons": {
+        "back": "Back",
+        "next": "Next",
+        "signUp": "Become a Member!",
+        "signIn": "Step into the Shadows",
+        "resetPassword": "Send a Reset Spell",
+        "loading": "Casting Spell...",
+        "guestSignIn": "Try as a Ghost! (Anonymous)",
+        "guestSignInLoading": "Summoning..."
+      },
+      "links": {
+        "alreadyMember": "Already a Ghost? Log In!",
+        "notMember": "Not a Ghost Yet?",
+        "forgotPassword": "Forgot Your Spell?"
+      },
+      "errors": {
+        "invalidEmail": "Please enter a valid ethereal address (email).",
+        "passwordMismatch": "Your incantations do not match. Try again, apprentice.",
+        "passwordTooShort": "Your spell must be at least 6 characters long to be effective.",
+        "guestSignInFailed": "The spirits reject your ghostly presence. Try again later.",
+        "genericError": "An error occurred. Please try again."
+      },
+      "alerts": {
+        "passwordResetSent": "A spectral raven has been dispatched with your password reset scroll."
+      },
+      "passwordStrength": "Password strength",
+      "passwordStrengthLevels": {
+        "weak": "Weak",
+        "medium": "Medium",
+        "strong": "Strong"
+      },
+      "or": "OR",
+      "altTexts": {
+        "logo": "SpookLens",
+        "userAvatar": "User avatar"
+      }
+    },
+    "spookyUploader": {
+      "modalTitle": "🧙‍♂️ Spooky Uploader",
+      "preparingMessage": "Preparing your spooky creation...",
+      "steps": {
+        "summon": {
+          "title": "Summon",
+          "description": "Upload your spooky image"
+        },
+        "frame": {
+          "title": "Frame",
+          "description": "Crop to vertical aspect ratio"
+        },
+        "enchant": {
+          "title": "Enchant",
+          "description": "Apply magical effects"
+        },
+        "caption": {
+          "title": "Caption",
+          "description": "Add a haunting description"
+        },
+        "background": {
+          "title": "Background",
+          "description": "Set an eerie scene"
+        }
+      },
+      "cropPreviewAlt": "Spooky crop preview",
+      "imagePreviewAlt": "Spooky preview",
+      "cameraLogoAlt": "SpookLens Camera",
+      "clickToCapture": "Click to Capture",
+      "verticalPreferred": "Vertical images preferred",
+      "nextStepButton": "Next Step",
+      "retakeButton": "Retake",
+      "backButton": "Back",
+      "applyCropButton": "Apply Crop",
+      "zoomLabel": "Zoom",
+      "titleLabel": "Haunting Title",
+      "descriptionLabel": "Eerie Description",
+      "titlePlaceholder": "Enter a spine-chilling title",
+      "descriptionPlaceholder": "Describe your haunting image in gruesome detail",
+      "titleLoadingPlaceholder": "Summoning title from the beyond...",
+      "descriptionLoadingPlaceholder": "Channeling spectral descriptions...",
+      "captionLoadingMessage": "Conjuring spooky captions from the netherworld...",
+      "generatingButton": "Generating...",
+      "uploadingTitle": "Uploading Your Spooky Creation",
+      "uploadingProgress": "Uploading: {progress}%",
+      "uploadComplete": "Upload complete!",
+      "errors": {
+        "cloudinaryUpload": "Failed to upload image to Cloudinary",
+        "cloudinaryUploadWithMessage": "Error uploading to Cloudinary",
+        "captionGeneration": "Failed to generate captions. Please try again.",
+        "captionGenerationIssue": "There was an issue generating captions. Please try again or use a different image.",
+        "captionGenerationWithMessage": "Failed to generate captions: {message}",
+        "loginRequired": "Please log in to upload your image.",
+        "imageUpload": "Failed to upload image. Please try again.",
+        "imageDocumentAdd": "Failed to add image document",
+        "imageSave": "Failed to save image information. Please try again.",
+        "general": "An error occurred. Please try again.",
+        "noCloudinaryUrl": "Error: No Cloudinary URL available"
+      },
+      "cloudinaryEdit": {
+        "title": "Enchant Your Image",
+        "imageAlt": "Edited image preview",
+        "effects": {
+          "original": "Original",
+          "sepia": "Sepia",
+          "cartoonify": "Cartoon",
+          "vignette": "Vignette",
+          "spooky": "Spooky"
+        },
+        "effectTooltip": "Apply {effect} effect",
+        "intensityLabel": "Effect Intensity",
+        "savingButton": "Saving...",
+        "saveButton": "Save Changes"
+      },
+      "cloudinaryBackgroundReplace": {
+        "title": "Set an Eerie Scene (wait ~1 minute)",
+        "imageAlt": "Image with replaced background",
+        "defaultPrompt": "a spooky scene",
+        "promptPlaceholder": "Describe the new background",
+        "replaceButton": "Replace",
+        "saveButton": "Save",
+        "resetButton": "Reset",
+        "buttonTooltip": "{action} background"
+      },
+    "defaults": {
+      "title": "Spooky Untitled",
+      "description": "A mysterious image awaits your description..."
+      }
+    },
+    "chatRoom": {
+      "you": "You",
+      "anonymousGhost": "Anonymous Ghost",
+      "errors": {
+        "loginRequired": "You must be logged in to start a private chat.",
+        "userNotFound": "User not found.",
+        "sendingFailed": "A dark force prevented your message. Try again."
+      },
+      "altTexts": {
+        "spookLens": "SpookLens"
+      },
+      "noMessages": "No spirits have spoken yet. Be the first to break the silence!",
+      "privateChatTitle": "Spooky Chat with {username}",
+      "globalChatTitle": "Haunted Global Chat",
+      "signUpToChat": "Sign Up / Log In to Chat",
+      "placeholders": {
+        "messageInput": "Speak to the spirits..."
+      },
+      "ariaLabels": {
+        "messageInput": "Message input",
+        "toggleEmojiPicker": "Toggle emoji picker",
+        "sendingMessage": "Sending message",
+        "sendMessage": "Send message"
+      },
+      "buttons": {
+        "send": "Send"
+      }
+    },
+    "musicPlayer": {
+      "title": "Spooky Tunes",
+      "playlistTitle": "Haunted Playlist",
+      "trackCount": "{count} Spooky Tracks",
+      "from": "from",
+      "ariaLabels": {
+        "trackProgress": "Track progress",
+        "shuffleOn": "Shuffle is on",
+        "shuffleOff": "Shuffle is off",
+        "previousTrack": "Previous track",
+        "pause": "Pause",
+        "play": "Play",
+        "openPlaylist": "Open playlist",
+        "nextTrack": "Next track",
+        "repeatOn": "Repeat is on",
+        "repeatOff": "Repeat is off",
+        "volume": "Volume"
+      },
+      "toasts": {
+        "repeatOn": {
+          "title": "Repeat On",
+          "description": "The current track will repeat endlessly"
+        },
+        "repeatOff": {
+          "title": "Repeat Off",
+          "description": "Tracks will play in sequence"
+        },
+        "shuffleOn": {
+          "title": "Shuffle On",
+          "description": "Tracks will play in random order"
+        },
+        "shuffleOff": {
+          "title": "Shuffle Off",
+          "description": "Tracks will play in original order"
+        }
+      }
+    },
+    "scrollIndicator": {
+      "scrollMessage": "Scroll down to uncover more..."
+    },
+    "userProfilePage": {
+      "title": "{username}'s Haunted Profile",
+      "subtitle": "Explore your spectral achievements and customize your ghostly presence!",
+      "tabs": {
+        "profile": "Profile",
+        "photos": "Spooky Pics",
+        "stats": "Haunting Stats"
+      },
+      "profileView": {
+        "bioTitle": "Spectral Biography",
+        "visibleStatus": "Visible to other spirits",
+        "hiddenStatus": "Hidden from mortal eyes",
+        "editButton": "Edit Profile"
+      },
+      "profileEdit": {
+        "bioLabel": "Spectral Biography",
+        "updateButton": "Update Profile",
+        "deleteButton": "Banish Your Spectral Presence"
+      },
+      "credentialChange": {
+        "title": "Change Spectral Credentials",
+        "currentPasswordLabel": "Current Incantation",
+        "newPasswordLabel": "New Secret Incantation",
+        "changeButton": "Cast New Spell"
+      },
+      "deleteDialog": {
+        "title": "Confirm Spectral Banishment",
+        "description": "This dark ritual will permanently erase your presence from this haunted realm. All your data, including candies and photos, will be lost to the void.",
+        "confirmationLabel": "Type your username to confirm:",
+        "passwordLabel": "Enter your password:",
+        "cancelButton": "Cancel",
+        "confirmButton": "Confirm Banishment",
+        "banishingButton": "Banishing..."
+      },
+      "alerts": {
+        "notOwnProfile": "You can only change credentials for your own profile.",
+        "emailChangeSuccess": "Your new spectral address has been conjured successfully!",
+        "passwordChangeSuccess": "Your new secret password has been conjured successfully!",
+        "emailChangeError": "The spirits rejected your new address. Check your current password and try again.",
+        "passwordChangeError": "The dark forces rejected your new incantation. Verify your current password and try again.",
+        "profileUpdateSuccess": "The spectral profile has been updated successfully!",
+        "profileUpdateError": "The spirits were unable to update the profile. Please try again.",
+        "deleteConfirmationMismatch": "The username confirmation does not match. Your account remains intact.",
+        "accountDeleteSuccess": "Your spectral presence has been banished from this realm.",
+        "accountDeleteError": "Failed to delete account. Please check your password and try again.",
+        "errorTitle": "Dark Omen",
+        "successTitle": "Mystical Success"
+      },
+      "stats": {
+        "hauntingSince": "Haunting Since",
+        "totalCandies": "Total Candies Collected",
+        "totalSpins": "Total Spins",
+        "magicalPotions": "Magical Potions"
+      }
+    },
+    "myViewer": {
+      "title": "Spooky Viewer",
+      "defaultImageTitle": "Spooky Image",
+      "defaultImageDescription": "A haunting visual from the beyond...",
+      "noImageYet": "No spooky image yet!",
+      "tryTrickOrTreat": "Try Trick or Treat first!",
+      "lastPhoto": "Last photo:",
+      "ariaLabels": {
+        "download": "Download image",
+        "copyUrl": "Copy image URL",
+        "share": "Share image",
+        "delete": "Delete image"
+      },
+      "notifications": {
+        "downloadSuccess": "Spooky image downloaded successfully!",
+        "downloadError": "Oops! The ghost escaped. Download failed.",
+        "copySuccess": "Image URL copied to clipboard!",
+        "copyError": "The spirits interfered. Copying failed.",
+        "shareSuccess": "You've shared the spookiness!",
+        "shareError": "The darkness prevented sharing.",
+        "shareNotSupported": "Sharing is not supported on this device.",
+        "deleteSuccess": "The spooky image has vanished into thin air!",
+        "deleteError": "The image resisted deletion. Try again if you dare!"
+      },
+      "altTexts": {
+        "logo": "SpookLens"
+      },
+      "deleteConfirmTitle": "Banish this Spooky Image?",
+      "deleteConfirmDescription": "Are you sure you want to send this haunting image back to the spirit realm? This action cannot be undone!",
+      "cancel": "Keep it",
+      "delete": "Banish it"
+    },
+    "photoGallery": {
+      "title": "Spooky Photo Gallery",
+      "viewInfo": "View Info",
+      "downloadPhoto": "Download Photo",
+      "deletePhoto": "Delete Photo",
+      "deleteConfirmTitle": "Are you sure?",
+      "deleteConfirmDescription": "This action cannot be undone. This will permanently delete the photo.",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "lastPhoto": "Last photo taken:",
+      "noPhotosFound": "No spooky photos found!",
+      "noSearchResults": "No spooky photos match your search!",
+      "searchPlaceholder": "Search for spooky photos...",
+      "altTexts": {
+        "logo": "Sad ghost logo"
+      },
+      "notifications": {
+        "deleteSuccess": "Photo deleted successfully!",
+        "deleteError": "Error deleting photo. Please try again.",
+        "downloadSuccess": "Photo downloaded successfully!",
+        "downloadError": "Error downloading photo. Please try again."
+      }
+    },
+    "candyStore": {
+      "title": "Spooky Candy Store",
+      "subtitle": "Buy special treats and upgrades using your candies and potions!",
+      "resources": {
+        "candies": "Candies",
+        "potions": "Potions"
+      },
+      "categories": {
+        "all": "All Items",
+        "consumables": "Consumables",
+        "cosmetics": "Cosmetics",
+        "upgrades": "Upgrades",
+        "music": "Music"
+      },
+      "purchaseButton": "Purchase",
+      "confirmPurchase": "Confirm Purchase",
+      "confirmPurchaseDescription": "Are you sure you want to purchase {itemName}?",
+      "confirmPurchaseButton": "Confirm Purchase",
+      "items": {
+        "ghostGummies": {
+          "name": "Ghost Gummies",
+          "description": "Boost your visibility for 24 hours"
+        },
+        "pumpkinPotion": {
+          "name": "Pumpkin Potion",
+          "description": "Double your likes for your next post"
+        },
+        "batWings": {
+          "name": "Bat Wings",
+          "description": "Fly to the top of the feed for 1 hour"
+        },
+        "spiderSilk": {
+          "name": "Spider Silk",
+          "description": "Catch 5 random users attention"
+        },
+        "witchsBroom": {
+          "name": "Witch's Broom",
+          "description": "Unlock special profile animations"
+        },
+        "wizardHat": {
+          "name": "Wizard Hat",
+          "description": "Add a magical hat to your profile picture"
+        },
+        "skullAmulet": {
+          "name": "Skull Amulet",
+          "description": "Intimidate other users with this spooky accessory"
+        },
+        "spellBook": {
+          "name": "Spell Book",
+          "description": "Learn new spells to cast on your photos"
+        },
+        "cauldronUpgrade": {
+          "name": "Cauldron Upgrade",
+          "description": "Increase your potion brewing capacity"
+        },
+        "newSong": {
+          "name": "1 new song",
+          "description": "Add a new song to your spooky playlist!"
+        },
+        "newPlaylist": {
+          "name": "1 new playlist",
+          "description": "Add a new playlist to your account!"
+        }
+      }
+    },
+    "cloudinaryAIVision": {
+      "errors": {
+        "invalidImageUrl": "Invalid or missing image URL",
+        "analysisFailure": "Image analysis failed. Please try again later.",
+        "unexpectedResponseFormat": "Unexpected AI Vision response format",
+        "apiError": "AI Vision API error: {status} - {errorText}",
+        "generateFailed": "Failed to generate image analysis"
+      },
+      "defaults": {
+        "title": "Untitled Spooky Image",
+        "description": "Mysterious scene."
+      },
+      "prompts": {
+        "title": "Create a spooky title for this eerie image in five words or less",
+        "description": "Briefly describe this image in ten words or less"
+      }
+    }
+  },
+  "es": {
+    "common": {
+      "languageSwitch": "Switch to English",
+      "logoAlt": "Logo de SpookLens"
+    },
+    "navigation": {
+      "title": "Navegación",
+      "userActions": "Acciones del usuario",
+      "home": "Inicio",
+      "chats": "Chats",
+      "leaderboard": "Clasificación",
+      "candyStore": "Tienda",
+      "profile": "Perfil",
+      "settings": "Ajustes",
+      "gettingStarted": "Comenzar",
+      "aboutSpookLens": "Acerca de SpookLens",
+      "logOut": "Cerrar sesión",
+      "signIn": "Iniciar sesión"
+    },
+    "errorPage": {
+      "privateProfileTitle": "Perfil Privado",
+      "pageNotFoundTitle": "Página No Encontrada",
+      "logoAlt": "SpookLens",
+      "privateProfileMessage": "¡Ups! Este perfil está oculto en las sombras.",
+      "pageNotFoundMessage": "¡Ups! Esta página se ha desvanecido en el reino de los espíritus.",
+      "privateProfileDescription": "El usuario ha elegido mantener su perfil privado. ¡Solo los fantasmas más valientes pueden ver lo que hay detrás de este velo de misterio!",
+      "pageNotFoundDescription": "No te preocupes, serás transportado de vuelta al mundo mortal en 5 segundos...",
+      "revealButtonAriaLabel": "Intentar revelar el perfil",
+      "revealButtonText": "Intentar revelar",
+      "homeButtonAriaLabel": "Ir a la página de inicio",
+      "homeButtonTextPrivate": "Ir a inicio",
+      "homeButtonTextPublic": "Volver a la página de inicio embrujada"
+    },
+    "usernameValidator": {
+      "errorCheckingUsername": "Error al verificar el nombre de usuario:",
+      "failedToCheckUsername": "No se pudo verificar la disponibilidad del nombre de usuario",
+      "emptyUsername": "El nombre de usuario no puede estar vacío.",
+      "usernameLengthError": "El nombre de usuario debe tener entre 3 y 20 caracteres.",
+      "usernameCharactersError": "El nombre de usuario solo puede contener letras, números y guiones bajos.",
+      "reservedUsernameError": "Este nombre de usuario está reservado y no se puede utilizar.",
+      "usernameTakenError": "Este nombre de usuario ya está en uso."
+    },
+    "page": {
+      "title": "Punto de encuentro",
+      "trickOrTreatButton": "TRUCO O TRATO"
+    },
+    "leaderboard": {
+      "title": "Tabla de clasificación espeluznante",
+      "subtitle": "¡Mira quién está encantando los primeros puestos en nuestra escalofriante competición!",
+      "searchPlaceholder": "Buscar usuarios...",
+      "categories": {
+        "candies": "Mejores caramelos",
+        "spins": "Mejores giros",
+        "candiesShort": "Caramelos",
+        "spinsShort": "Giros"
+      },
+      "rank": "Posición",
+      "username": "Usuario",
+      "yourRank": "Tu Posición",
+      "footer": "¡Mantente espeluznante y sigue recolectando esos caramelos!"
+    },
+    "landing": {
+      "tagline": "¡Libera tu espíritu en esta encantadora aplicación de redes sociales de Halloween!",
+      "ctaButton": "Adéntrate en las sombras"
+    },
+    "features": [
+      {
+        "title": "Fotos espeluznantes",
+        "description": "Comparte tus looks más escalofriantes y momentos siniestros. ¡Gana caramelos por el mejor disfraz!"
+      },
+      {
+        "title": "Chat fantasma",
+        "description": "Conéctate con otros espíritus en nuestro chat global o envía mensajes privados escalofriantes."
+      },
+      {
+        "title": "Tabla de clasificación",
+        "description": "¡Escala posiciones con tu contenido espeluznante y conviértete en la leyenda de Halloween!"
+      },
+      {
+        "title": "Música embrujada",
+        "description": "Crea la atmósfera perfecta con nuestra lista de reproducción de melodías espeluznantes."
+      },
+      {
+        "title": "Tienda de caramelos malditos",
+        "description": "Intercambia tus caramelos ganados por artículos exclusivos y sorpresas sobrenaturales."
+      },
+      {
+        "title": "Hechicería de Cloudinary",
+        "description": "Mejora tus capturas espeluznantes con edición de imágenes impulsada por IA, cortesía de Cloudinary."
+      }
+    ],
+    "hauntedCarousel": {
+      "slideAlts": [
+        "Proyecto finalista SpookLens Hackathon 2024",
+        "Cargador de SpookLens",
+        "Centro de SpookLens",
+        "Truco o Trato de SpookLens",
+        "Tabla de clasificación de SpookLens",
+        "Perfiles de SpookLens",
+        "Tienda de SpookLens"
+      ],
+      "prevSlideAriaLabel": "Diapositiva anterior",
+      "nextSlideAriaLabel": "Siguiente diapositiva",
+      "goToSlideAriaLabel": "Ir a la diapositiva {index}"
+    },
+    "cloudinary": {
+      "title": "Impulsado por Cloudinary",
+      "logoAlt": "Logo de Cloudinary",
+      "description": "Eleva tu persona de Halloween con edición de imágenes impulsada por IA y gestión de medios sin problemas.",
+      "ctaButton": "Descubre la magia de Cloudinary"
+    },
+    "footer": {
+      "madeBy": "Hecho por",
+      "finalistProject": "Proyecto finalista en el",
+      "hackathonName": "Hackathon MiduDev x Cloudinary 2024: Creaciones espeluznantes con IA",
+      "twitterAria": "Sigue a Pavloh en Twitter",
+      "githubAria": "Ver el perfil de GitHub de Pavloh"
+    },
+    "settings": {
+      "title": "Configuración",
+      "description": "Personaliza tu experiencia embrujada",
+      "general": "General",
+      "notifications": "Notificaciones",
+      "local": "Local",
+      "language": "Idioma",
+      "profileVisibility": "Visibilidad del perfil",
+      "profileVisibilityDescription": "Tu perfil es visible para otros usuarios. Aún no puedes cambiar esto",
+      "enableNotifications": "Activar notificaciones",
+      "emailNotifications": "Notificaciones por correo",
+      "notificationsComingSoon": "¡Notificaciones próximamente! Los fantasmas aún están aprendiendo a susurrar...",
+      "disableBackgroundImage": "Desactivar imagen de fondo",
+      "disableMusicPlayerAnimations": "Desactivar animaciones del reproductor de música",
+      "disableChatBackgroundAnimations": "Desactivar animaciones de fondo del chat",
+      "defaultMusicPlayerVolume": "Volumen predeterminado del reproductor de música",
+      "localSettingsDescription": "Estas configuraciones se guardan localmente y no se sincronizarán entre dispositivos. Reinicia el sitio web para ver los cambios.",
+      "languageDescription": "Elige tu idioma preferido para la experiencia SpookLens",
+      "english": "English",
+      "spanish": "Español"
+    },
+    "aboutModal": {
+      "version": "Versión",
+      "description": "¡Una aplicación de redes sociales temática de Halloween con funciones impulsadas por IA!",
+      "hackathonName": "Hackathon de Creaciones Espeluznantes de IA de Cloudinary",
+      "finalistProject": "Proyecto finalista",
+      "hackathonDate": "8 - 22 de octubre de 2024",
+      "organizedBy": "Organizado por",
+      "createdBy": "Creado por",
+      "repository": "Repositorio SpookLens",
+      "avatarCredits": "Avatares de usuario diseñados por",
+      "musicCredits": "Música por",
+      "close": "Cerrar"
+    },
+    "comingSoonModal": {
+      "store": {
+        "title": "¡Tienda próximamente!",
+        "description": "Nuestros tenderos espectrales aún están preparando la Tienda de Dulces Espeluznantes. ¡Atrévete a echar un vistazo o visítanos más tarde para una compra escalofriante!",
+        "primaryButton": "Echar un vistazo",
+        "secondaryButton": "Volver al inicio"
+      },
+      "chats": {
+        "title": "¡Chats próximamente!",
+        "description": "Nuestros programadores fantasma están configurando las salas de chat embrujadas. ¡Por ahora, puedes unirte al Chat Embrujado Global!",
+        "primaryButton": "Unirse al chat global"
+      }
+    },
+    "tutorialModal": {
+      "title": "Grimorio de SpookLens",
+      "comingAttractions": "Próximas atracciones",
+      "comingAttractionsDescription": "Contempla las características místicas que aguardan en las sombras. Estas maravillas espectrales aún se están materializando, ¡pero pronto embrujarán tu experiencia en SpookLens!",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "finish": "Finalizar",
+      "welcome": {
+        "title": "¡Bienvenido a SpookLens!",
+        "description": "¡Prepárate para una aventura de Halloween que te pondrá los pelos de punta! Descubramos las espeluznantes características de nuestra app embrujada."
+      },
+      "trickOrTreat": {
+        "title": "Truco o Trato",
+        "description": "¡Participa en nuestra espeluznante función de 'Truco o Trato'! Elige 'Trato' para tener la oportunidad de ganar caramelos o incluso una poción rara. ¡Elige 'Truco' para transformar tu foto con efectos terroríficos!"
+      },
+      "captureGhostlyGlamour": {
+        "title": "Captura tu glamour fantasmal",
+        "description": "¡Toma una foto de tu transformación de Halloween. Nuestro editor de Cloudinary impulsado por IA añade una capa extra de miedo a tu look!"
+      },
+      "globalCovenChat": {
+        "title": "Chat global",
+        "description": "¡Únete a nuestra conversación mundial de brujas! Comparte tus escapadas de Halloween con criaturas de la noche de todos los rincones oscuros del globo!"
+      },
+      "candyCauldronLeaderboard": {
+        "title": "Tabla de clasificación",
+        "description": "¡Compite en un ranking global para ver quién es el verdadero campeón de Halloween!"
+      },
+      "spookyProfiles": {
+        "title": "Perfiles espeluznantes",
+        "description": "¡Descubre perfiles espeluznantes de otros espíritus y ve qué están haciendo!"
+      },
+      "brewMagicalPotions": {
+        "title": "Prepara pociones mágicas",
+        "description": "En el futuro, recogerás caramelos para preparar pociones poderosas. Estos elixires mejorarán tus fotos con efectos sobrenaturales o desbloquearán características ocultas."
+      },
+      "hauntedCandyStore": {
+        "title": "Tienda de caramelos embrujada",
+        "description": "Estoy preparando los estantes con golosinas de otro mundo. En el futuro, podrás intercambiar tus caramelos duramente ganados por pociones, hechizos y premios exclusivos."
+      },
+      "seanceChats": {
+        "title": "Chats de sesión espiritista",
+        "description": "¡Estoy trabajando en chats privados! Pronto, podrás comunicarte con otros espíritus en conversaciones uno a uno, forjando alianzas con otros entusiastas de Halloween."
+      },
+      "evolveInnerMonster": {
+        "title": "Evoluciona tu monstruo interior",
+        "description": "A medida que SpookLens crezca, desbloquearás nuevos rangos y niveles. Cada hito te acercará más a convertirte en la última criatura de la noche. ¡Mantente atento a esta emocionante característica!"
+      },
+      "sweetBeginnings": {
+        "title": "Dulces comienzos",
+        "description": "Como bienvenida especial, cuando te registres en SpookLens, ¡recibirás 10 caramelos para comenzar tu espeluznante viaje! ¡Empieza a recolectar golosinas y a lanzar trucos de inmediato!"
+      }
+    },
+    "trickOrTreatModal": {
+      "title": "Truco o trato",
+      "dareToTempt": "¿Te atreves a tentar a los espíritus?",
+      "registerToSpin": "Regístrate para girar",
+      "waitSeconds": "Espera {seconds}s",
+      "spinTheWheel": "¡Gira la ruleta!",
+      "youGotTreat": "¡Has obtenido un premio!",
+      "luckyYou": "¡Qué suerte! ¡Puedes ganar {candies}!",
+      "claimYourTreat": "Reclama tu premio",
+      "youHaveBeenTricked": "¡Te han engañado!",
+      "spiritsNotInFavor": "Los espíritus no estaban a tu favor esta vez...",
+      "quickClickWarning": "¡Rápido! ¡Haz clic en el botón o perderás un caramelo en 10 segundos!",
+      "spookOnePhoto": "Asusta con una foto",
+      "spinningWheelAlt": "Rueda girando",
+      "wheelAlt": "Rueda",
+      "totalSpins": "Total de giros: {count}"
+    },
+    "authModal": {
+      "titles": {
+        "signUp": "Únete a la cripta",
+        "signIn": "Entra en la cripta",
+        "forgotPassword": "Invoca una contraseña"
+      },
+      "labels": {
+        "email": "Dirección de correo electrónico",
+        "username": "Nombre de usuario (este será tu @)",
+        "password": "Contraseña",
+        "confirmPassword": "Confirmar contraseña",
+        "chooseAvatar": "Elige tu forma espectral",
+        "bio": "Biografía",
+        "emailOrUsername": "Dirección de correo electrónico"
+      },
+      "placeholders": {
+        "email": "ejemplo@fantasma.com",
+        "username": "SusurroMedianoche",
+        "password": "Tu hechizo secreto",
+        "confirmPassword": "Repite tu hechizo secreto",
+        "bio": "Cuéntanos sobre tu yo espectral...",
+        "emailOrUsername": "ejemplo@fantasma.com"
+      },
+      "buttons": {
+        "back": "Atrás",
+        "next": "Siguiente",
+        "signUp": "¡Conviértete en miembro!",
+        "signIn": "Adéntrate en las sombras",
+        "resetPassword": "Enviar un hechizo de reinicio",
+        "loading": "Lanzando hechizo...",
+        "guestSignIn": "¡Prueba como fantasma! (Anónimo)",
+        "guestSignInLoading": "Invocando..."
+      },
+      "links": {
+        "alreadyMember": "¿Ya eres un fantasma? ¡Inicia sesión!",
+        "notMember": "¿Aún no eres un fantasma?",
+        "forgotPassword": "¿Olvidaste tu hechizo?"
+      },
+      "errors": {
+        "invalidEmail": "Por favor, introduce una dirección etérea válida (correo electrónico).",
+        "passwordMismatch": "Tus encantamientos no coinciden. Inténtalo de nuevo, aprendiz.",
+        "passwordTooShort": "Tu hechizo debe tener al menos 6 caracteres para ser efectivo.",
+        "guestSignInFailed": "Los espíritus rechazan tu presencia fantasmal. Inténtalo más tarde.",
+        "genericError": "Ocurrió un error. Por favor, inténtalo de nuevo."
+      },
+      "alerts": {
+        "passwordResetSent": "Un cuervo espectral ha sido enviado con tu pergamino de reinicio de contraseña."
+      },
+      "passwordStrength": "Fuerza de la contraseña",
+      "passwordStrengthLevels": {
+        "weak": "Débil",
+        "medium": "Media",
+        "strong": "Fuerte"
+      },
+      "or": "O",
+      "altTexts": {
+        "logo": "SpookLens",
+        "userAvatar": "Avatar del usuario"
+      }
+    },
+    "spookyUploader": {
+      "modalTitle": "🧙‍♂️ Cargador espeluznante",
+      "preparingMessage": "Preparando tu creación espeluznante...",
+      "steps": {
+        "summon": {
+          "title": "Invocar",
+          "description": "Sube tu imagen espeluznante"
+        },
+        "frame": {
+          "title": "Enmarcar",
+          "description": "Recorta a una relación de aspecto vertical"
+        },
+        "enchant": {
+          "title": "Encantar",
+          "description": "Aplica efectos mágicos"
+        },
+        "caption": {
+          "title": "Subtitular",
+          "description": "Añade una descripción inquietante"
+        },
+        "background": {
+          "title": "Fondo",
+          "description": "Establece una escena escalofriante"
+        }
+      },
+      "cropPreviewAlt": "Vista previa de recorte espeluznante",
+      "imagePreviewAlt": "Vista previa espeluznante",
+      "cameraLogoAlt": "Cámara SpookLens",
+      "clickToCapture": "Haz clic para capturar",
+      "verticalPreferred": "Se prefieren imágenes verticales",
+      "nextStepButton": "Siguiente paso",
+      "retakeButton": "Volver a tomar",
+      "backButton": "Atrás",
+      "applyCropButton": "Aplicar recorte",
+      "zoomLabel": "Zoom",
+      "titleLabel": "Título inquietante",
+      "descriptionLabel": "Descripción espeluznante",
+      "titlePlaceholder": "Ingresa un título escalofriante",
+      "descriptionPlaceholder": "Describe tu imagen inquietante con detalles espeluznantes",
+      "titleLoadingPlaceholder": "Invocando título desde el más allá...",
+      "descriptionLoadingPlaceholder": "Canalizando descripciones espectrales...",
+      "captionLoadingMessage": "Conjurando subtítulos espeluznantes desde el inframundo...",
+      "generatingButton": "Generando...",
+      "uploadingTitle": "Subiendo tu creación espeluznante",
+      "uploadingProgress": "Subiendo: {progress}%",
+      "uploadComplete": "¡Subida completa!",
+      "errors": {
+        "cloudinaryUpload": "Error al subir la imagen a Cloudinary",
+        "cloudinaryUploadWithMessage": "Error al subir a Cloudinary",
+        "captionGeneration": "Error al generar subtítulos. Por favor, inténtalo de nuevo.",
+        "captionGenerationIssue": "Hubo un problema al generar los subtítulos. Por favor, inténtalo de nuevo o usa una imagen diferente.",
+        "captionGenerationWithMessage": "Error al generar subtítulos: {message}",
+        "loginRequired": "Por favor, inicia sesión para subir tu imagen.",
+        "imageUpload": "Error al subir la imagen. Por favor, inténtalo de nuevo.",
+        "imageDocumentAdd": "Error al añadir el documento de la imagen",
+        "imageSave": "Error al guardar la información de la imagen. Por favor, inténtalo de nuevo.",
+        "general": "Ocurrió un error. Por favor, inténtalo de nuevo.",
+        "noCloudinaryUrl": "Error: No hay URL de Cloudinary disponible"
+      },
+      "cloudinaryEdit": {
+        "title": "Encanta Tu Imagen",
+        "imageAlt": "Vista previa de la imagen editada",
+        "effects": {
+          "original": "Original",
+          "sepia": "Sepia",
+          "cartoonify": "Caricatura",
+          "vignette": "Viñeta",
+          "spooky": "Espeluznante"
+        },
+        "effectTooltip": "Aplicar efecto {effect}",
+        "intensityLabel": "Intensidad del Efecto",
+        "savingButton": "Guardando...",
+        "saveButton": "Guardar cambios"
+      },
+      "cloudinaryBackgroundReplace": {
+        "title": "Establece una escena espeluznante (espera ~1 minuto)",
+        "imageAlt": "Imagen con fondo reemplazado",
+        "defaultPrompt": "una escena espeluznante",
+        "promptPlaceholder": "Describe el nuevo fondo",
+        "replaceButton": "Reemplazar",
+        "saveButton": "Guardar",
+        "resetButton": "Reiniciar",
+        "buttonTooltip": "{action} fondo"
+      },
+      "defaults": {
+        "title": "Imagen espeluznante sin título",
+        "description": "Una imagen misteriosa espera tu descripción..."
+      }
+    },
+    "chatRoom": {
+      "you": "Tú",
+      "anonymousGhost": "Fantasma anónimo",
+      "errors": {
+        "loginRequired": "Debes iniciar sesión para comenzar un chat privado.",
+        "userNotFound": "Usuario no encontrado.",
+        "sendingFailed": "Una fuerza oscura impidió tu mensaje. Inténtalo de nuevo."
+      },
+      "altTexts": {
+        "spookLens": "SpookLens"
+      },
+      "noMessages": "Ningún espíritu ha hablado aún. ¡Sé el primero en romper el silencio!",
+      "privateChatTitle": "Chat espeluznante con {username}",
+      "globalChatTitle": "Chat global embrujado",
+      "signUpToChat": "Regístrate / Inicia sesión primero",
+      "placeholders": {
+        "messageInput": "Habla con los espíritus..."
+      },
+      "ariaLabels": {
+        "messageInput": "Entrada de mensaje",
+        "toggleEmojiPicker": "Alternar selector de emojis",
+        "sendingMessage": "Enviando mensaje",
+        "sendMessage": "Enviar mensaje"
+      },
+      "buttons": {
+        "send": "Enviar"
+      }
+    },
+    "musicPlayer": {
+      "title": "Melodías espeluznantes",
+      "playlistTitle": "Lista de reproducción embrujada",
+      "trackCount": "{count} pistas espeluznantes",
+      "from": "de",
+      "ariaLabels": {
+        "trackProgress": "Progreso de la pista",
+        "shuffleOn": "Reproducción aleatoria activada",
+        "shuffleOff": "Reproducción aleatoria desactivada",
+        "previousTrack": "Pista anterior",
+        "pause": "Pausar",
+        "play": "Reproducir",
+        "openPlaylist": "Abrir lista de reproducción",
+        "nextTrack": "Siguiente pista",
+        "repeatOn": "Repetición activada",
+        "repeatOff": "Repetición desactivada",
+        "volume": "Volumen"
+      },
+      "toasts": {
+        "repeatOn": {
+          "title": "Repetición activada",
+          "description": "La pista actual se repetirá indefinidamente"
+        },
+        "repeatOff": {
+          "title": "Repetición desactivada",
+          "description": "Las pistas se reproducirán en secuencia"
+        },
+        "shuffleOn": {
+          "title": "Reproducción aleatoria activada",
+          "description": "Las pistas se reproducirán en orden aleatorio"
+        },
+        "shuffleOff": {
+          "title": "Reproducción aleatoria desactivada",
+          "description": "Las pistas se reproducirán en el orden original"
+        }
+      }
+    },
+    "scrollIndicator": {
+      "scrollMessage": "Desplázate hacia abajo para descubrir más..."
+    },
+    "userProfilePage": {
+      "title": "Perfil embrujado de {username}",
+      "subtitle": "¡Explora tus logros espectrales y personaliza tu presencia fantasmal!",
+      "tabs": {
+        "profile": "Perfil",
+        "photos": "Fotos espeluznantes",
+        "stats": "Estadísticas de embrujamiento"
+      },
+      "profileView": {
+        "bioTitle": "Biografía espectral",
+        "visibleStatus": "Visible para otros espíritus",
+        "hiddenStatus": "Oculto de ojos mortales",
+        "editButton": "Editar perfil"
+      },
+      "profileEdit": {
+        "bioLabel": "Biografía espectral",
+        "updateButton": "Actualizar perfil",
+        "deleteButton": "Desterrar tu presencia espectral"
+      },
+      "credentialChange": {
+        "title": "Cambiar credenciales espectrales",
+        "currentPasswordLabel": "Encantamiento actual",
+        "newPasswordLabel": "Nuevo encantamiento secreto",
+        "changeButton": "Lanzar nuevo hechizo"
+      },
+      "deleteDialog": {
+        "title": "Confirmar destierro espectral",
+        "description": "Este ritual oscuro borrará permanentemente tu presencia de este reino embrujado. Todos tus datos, incluyendo caramelos y fotos, se perderán en el vacío.",
+        "confirmationLabel": "Escribe tu nombre de usuario para confirmar:",
+        "passwordLabel": "Ingresa tu contraseña:",
+        "cancelButton": "Cancelar",
+        "confirmButton": "Confirmar destierro",
+        "banishingButton": "Desterrando..."
+      },
+      "alerts": {
+        "notOwnProfile": "Solo puedes cambiar las credenciales de tu propio perfil.",
+        "emailChangeSuccess": "¡Tu nueva dirección espectral ha sido conjurada con éxito!",
+        "passwordChangeSuccess": "¡Tu nueva contraseña secreta ha sido conjurada con éxito!",
+        "emailChangeError": "Los espíritus rechazaron tu nueva dirección. Verifica tu contraseña actual e intenta de nuevo.",
+        "passwordChangeError": "Las fuerzas oscuras rechazaron tu nuevo encantamiento. Verifica tu contraseña actual e intenta de nuevo.",
+        "profileUpdateSuccess": "¡El perfil espectral ha sido actualizado con éxito!",
+        "profileUpdateError": "Los espíritus no pudieron actualizar el perfil. Por favor, intenta de nuevo.",
+        "deleteConfirmationMismatch": "La confirmación del nombre de usuario no coincide. Tu cuenta permanece intacta.",
+        "accountDeleteSuccess": "Tu presencia espectral ha sido desterrada de este reino.",
+        "accountDeleteError": "No se pudo eliminar la cuenta. Por favor, verifica tu contraseña e intenta de nuevo.",
+        "errorTitle": "Presagio oscuro",
+        "successTitle": "Éxito místico"
+      },
+      "stats": {
+        "hauntingSince": "Embrujando desde",
+        "totalCandies": "Total de caramelos recolectados",
+        "totalSpins": "Total de giros",
+        "magicalPotions": "Pociones mágicas"
+      }
+    },
+    "myViewer": {
+      "title": "Visor espeluznante",
+      "defaultImageTitle": "Imagen espeluznante",
+      "defaultImageDescription": "Una visión inquietante del más allá...",
+      "noImageYet": "¡Aún no hay imagen espeluznante!",
+      "tryTrickOrTreat": "¡Prueba Truco o Trato primero!",
+      "lastPhoto": "Última foto:",
+      "ariaLabels": {
+        "download": "Descargar imagen",
+        "copyUrl": "Copiar URL de la imagen",
+        "share": "Compartir imagen",
+        "delete": "Eliminar imagen"
+      },
+      "notifications": {
+        "downloadSuccess": "¡Imagen espeluznante descargada con éxito!",
+        "downloadError": "¡Ups! El fantasma se escapó. La descarga falló.",
+        "copySuccess": "¡URL de la imagen copiada al portapapeles!",
+        "copyError": "Los espíritus interfirieron. La copia falló.",
+        "shareSuccess": "¡Has compartido lo espeluznante!",
+        "shareError": "La oscuridad impidió compartir.",
+        "shareNotSupported": "Compartir no es compatible en este dispositivo.",
+        "deleteSuccess": "¡La imagen espeluznante se ha desvanecido en el aire!",
+        "deleteError": "La imagen resistió la eliminación. ¡Inténtalo de nuevo si te atreves!"
+      },
+      "altTexts": {
+        "logo": "Logo de fantasma triste"
+      },
+      "deleteConfirmTitle": "¿Desterrar esta Imagen Espeluznante?",
+      "deleteConfirmDescription": "¿Estás seguro de que quieres enviar esta imagen inquietante de vuelta al reino de los espíritus? ¡Esta acción no se puede deshacer!",
+      "cancel": "Mantenerla",
+      "delete": "Desterrarla"
+    },
+    "photoGallery": {
+      "title": "Galería de fotos espeluznantes",
+      "viewInfo": "Ver información",
+      "downloadPhoto": "Descargar foto",
+      "deletePhoto": "Eliminar foto",
+      "deleteConfirmTitle": "¿Estás seguro?",
+      "deleteConfirmDescription": "Esta acción no se puede deshacer. Eliminará permanentemente la foto.",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "lastPhoto": "Última foto tomada:",
+      "noPhotosFound": "¡No se encontraron fotos espeluznantes!",
+      "noSearchResults": "¡No hay fotos espeluznantes que coincidan con tu búsqueda!",
+      "searchPlaceholder": "Buscar fotos espeluznantes...",
+      "altTexts": {
+        "logo": "Logo de fantasma triste"
+      },
+      "notifications": {
+        "deleteSuccess": "¡Foto eliminada con éxito!",
+        "deleteError": "Error al eliminar la foto. Por favor, inténtalo de nuevo.",
+        "downloadSuccess": "¡Foto descargada con éxito!",
+        "downloadError": "Error al descargar la foto. Por favor, inténtalo de nuevo."
+      }
+    },
+    "candyStore": {
+      "title": "Tienda de dulces espeluznante",
+      "subtitle": "¡Compra golosinas especiales y mejoras usando tus caramelos y pociones!",
+      "resources": {
+        "candies": "Caramelos",
+        "potions": "Pociones"
+      },
+      "categories": {
+        "all": "Todos los Artículos",
+        "consumables": "Consumibles",
+        "cosmetics": "Cosméticos",
+        "upgrades": "Mejoras",
+        "music": "Música"
+      },
+      "purchaseButton": "Comprar",
+      "confirmPurchase": "Confirmar compra",
+      "confirmPurchaseDescription": "¿Estás seguro de que quieres comprar {itemName}?",
+      "confirmPurchaseButton": "Confirmar compra",
+      "items": {
+        "ghostGummies": {
+          "name": "Gomitas fantasma",
+          "description": "Aumenta tu visibilidad durante 24 horas"
+        },
+        "pumpkinPotion": {
+          "name": "Poción de calabaza",
+          "description": "Duplica tus me gusta en tu próxima publicación"
+        },
+        "batWings": {
+          "name": "Alas de murciélago",
+          "description": "Vuela a la cima del feed durante 1 hora"
+        },
+        "spiderSilk": {
+          "name": "Seda de araña",
+          "description": "Capta la atención de 5 usuarios aleatorios"
+        },
+        "witchsBroom": {
+          "name": "Escoba de bruja",
+          "description": "Desbloquea animaciones especiales de perfil"
+        },
+        "wizardHat": {
+          "name": "Sombrero de mago",
+          "description": "Añade un sombrero mágico a tu foto de perfil"
+        },
+        "skullAmulet": {
+          "name": "Amuleto de calavera",
+          "description": "Intimida a otros usuarios con este accesorio espeluznante"
+        },
+        "spellBook": {
+          "name": "Libro de hechizos",
+          "description": "Aprende nuevos hechizos para lanzar en tus fotos"
+        },
+        "cauldronUpgrade": {
+          "name": "Mejora de caldero",
+          "description": "Aumenta tu capacidad de elaboración de pociones"
+        },
+        "newSong": {
+          "name": "1 nueva canción",
+          "description": "¡Añade una nueva canción a tu lista de reproducción espeluznante!"
+        },
+        "newPlaylist": {
+          "name": "1 nueva lista de reproducción",
+          "description": "¡Añade una nueva lista de reproducción a tu cuenta!"
+        }
+      }
+    },
+    "cloudinaryAIVision": {
+      "errors": {
+        "invalidImageUrl": "URL de imagen inválida o faltante",
+        "analysisFailure": "El análisis de la imagen falló. Por favor, inténtelo de nuevo más tarde.",
+        "unexpectedResponseFormat": "Formato de respuesta de AI Vision inesperado",
+        "apiError": "Error de API de AI Vision: {status} - {errorText}",
+        "generateFailed": "No se pudo generar el análisis de la imagen"
+      },
+      "defaults": {
+        "title": "Imagen epeluznante sin título",
+        "description": "Escena misteriosa."
+      },
+      "prompts": {
+        "title": "Crea un título espeluznante para esta imagen siniestra en cinco palabras o menos",
+        "description": "Describe brevemente esta imagen en diez palabras o menos"
+      }
+    }
+  }
+}

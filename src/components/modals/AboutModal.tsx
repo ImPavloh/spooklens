@@ -23,6 +23,7 @@ import {
   FaTrophy,
   FaCode,
 } from 'react-icons/fa6'
+import { useLanguage } from '@/utils/LanguageContext'
 
 interface AboutModalProps {
   isOpen: boolean
@@ -31,22 +32,22 @@ interface AboutModalProps {
 
 const appInfo = {
   name: 'SpookLens',
-  version: '0.1.1 - Beta',
-  description: 'A Halloween-themed social media app with AI-powered features!',
+  version: '0.1.2 - Beta',
   creator: {
     name: 'Pavloh',
     twitter: 'impavloh',
     github: 'impavloh',
   },
   hackathon: {
-    name: 'Cloudinary Spooky AI Creations Hackathon',
-    date: 'October 8 - 22, 2024',
     organizer: 'MiduDev x Cloudinary',
   },
   repository: 'https://github.com/impavloh/spooklens',
 }
 
 export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
+  const { language, translations } = useLanguage()
+  const t = translations[language].aboutModal
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px] w-[95vw] max-h-[90vh] overflow-y-auto bg-gradient-to-b from-gray-900 to-gray-800 text-orange-200 border-2 border-orange-500 rounded-lg shadow-lg shadow-orange-500/20">
@@ -54,7 +55,7 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
           <DialogTitle className="text-3xl sm:text-4xl font-halloween text-orange-500 flex items-center justify-center gap-2">
             <Image
               src="/images/logo2.png"
-              alt="SpookLens logo"
+              alt={translations[language].common.logoAlt}
               width={50}
               height={50}
               className="animate-pulse"
@@ -62,7 +63,7 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
             <span className="break-all">{appInfo.name}</span>
           </DialogTitle>
           <DialogDescription className="text-orange-200 text-center text-base sm:text-lg">
-            Version {appInfo.version}
+            {t.version} {appInfo.version}
           </DialogDescription>
         </DialogHeader>
         <Separator className="bg-orange-500/50" />
@@ -72,9 +73,7 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <p className="text-sm sm:text-base text-center">
-            {appInfo.description}
-          </p>
+          <p className="text-sm sm:text-base text-center">{t.description}</p>
 
           <motion.div
             className="flex flex-col items-center space-y-2"
@@ -86,24 +85,24 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
               variant="secondary"
               className="bg-orange-500/20 text-orange-300 text-sm sm:text-base text-center px-2"
             >
-              {appInfo.hackathon.name}
+              {t.hackathonName}
             </Badge>
             <Badge
               variant="secondary"
               className="bg-yellow-500/20 text-yellow-300 flex items-center space-x-2 text-sm sm:text-base px-2"
             >
               <FaTrophy className="text-yellow-400 mr-2" aria-hidden="true" />
-              <span>Finalist Project</span>
+              <span>{t.finalistProject}</span>
             </Badge>
             <div className="flex items-center space-x-2 text-sm sm:text-base">
               <FaCalendar
                 className="h-4 w-4 sm:h-5 sm:w-5 text-orange-400"
                 aria-hidden="true"
               />
-              <span>{appInfo.hackathon.date}</span>
+              <span>{t.hackathonDate}</span>
             </div>
             <span className="text-sm text-orange-300 text-center">
-              Organized by {appInfo.hackathon.organizer}
+              {t.organizedBy} {appInfo.hackathon.organizer}
             </span>
           </motion.div>
         </motion.div>
@@ -116,7 +115,9 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
         >
           <div className="flex items-center justify-center space-x-2 text-sm sm:text-base">
             <FaHeart className="text-red-500" aria-hidden="true" />
-            <span>Created by {appInfo.creator.name}</span>
+            <span>
+              {t.createdBy} {appInfo.creator.name}
+            </span>
           </div>
           <div className="flex justify-center items-center gap-2 w-full">
             <Button
@@ -145,7 +146,7 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
                 rel="noopener noreferrer"
               >
                 <FaCode className="h-4 w-4 mr-2" aria-hidden="true" />
-                <span className="truncate">SpookLens Repository</span>
+                <span className="truncate">{t.repository}</span>
               </Link>
             </Button>
             <Button
@@ -172,7 +173,7 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
           transition={{ delay: 0.5, duration: 0.5 }}
         >
           <p className="text-orange-200 text-xs sm:text-sm text-center">
-            User avatars designed by{' '}
+            {t.avatarCredits}{' '}
             <Link
               href="https://www.freepik.com"
               target="_blank"
@@ -182,7 +183,7 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
               Freepik
             </Link>
             <br />
-            Music by{' '}
+            {t.musicCredits}{' '}
             <Link
               href="https://www.pixabay.com"
               target="_blank"
@@ -197,7 +198,7 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
           onClick={onClose}
           className="w-full bg-orange-500 hover:bg-orange-600 text-white transition-colors duration-200 text-base"
         >
-          Close
+          {t.close}
         </Button>
       </DialogContent>
     </Dialog>

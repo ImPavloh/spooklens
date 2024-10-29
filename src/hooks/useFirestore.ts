@@ -1,12 +1,15 @@
 import { useState, useCallback } from 'react'
 
 import {
+  Query,
+  CollectionReference,
   collection,
   doc,
   addDoc,
   updateDoc,
   deleteDoc,
   getDocs,
+  getDoc,
   query,
   where,
   DocumentData,
@@ -61,7 +64,7 @@ export const useFirestore = () => {
     setLoading(true)
     setError(null)
     try {
-      let q = collection(db, collectionName)
+      let q: Query<DocumentData> | CollectionReference<DocumentData> = collection(db, collectionName)
       if (conditions) {
         conditions.forEach(([field, operator, value]) => {
           q = query(q, where(field, operator, value))
@@ -81,11 +84,36 @@ export const useFirestore = () => {
     }
   }, [])
 
+  const getDocument = useCallback(async <T extends DocumentData>(
+    collectionName: string,
+    docId: string
+  ): Promise<T | null> => {
+    setLoading(true)
+    setError(null)
+    try {
+      const docRef = doc(db, collectionName, docId)
+      const docSnap = await getDoc(docRef)
+      setLoading(false)
+      if (docSnap.exists()) {
+        return { id: docSnap.id, ...docSnap.data() } as unknown as T
+      } else {
+        setError('Document does not exist')
+        return null
+      }
+    } catch (err) {
+      setError('Failed to fetch document')
+      setLoading(false)
+      console.error('Error fetching document: ', err)
+      return null
+    }
+  }, [])
+
   return {
     addDocument,
     updateDocument,
     deleteDocument,
     getDocuments,
+    getDocument,
     loading,
     error
   }

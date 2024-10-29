@@ -1,21 +1,27 @@
 'use client'
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+
 import { motion, AnimatePresence } from 'framer-motion'
 import { FaGhost, FaSkull } from 'react-icons/fa'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 
 import ChatRoom from '@/components/ChatRoom'
+import MyViewer from '@/components/MyViewer'
 import MusicPlayer from '@/components/MusicPlayer'
+
 import AuthModal from '@/components/modals/AuthModal'
 import TrickOrTreatModal from '@/components/modals/TrickOrTreatModal'
 import SpookyUploaderModal from '@/components/modals/SpookyUploaderModal'
+
 import BackgroundAnimation from '@/components/extras/BackgroundAnimation'
-import MyViewer from '@/components/MyViewer'
+
+import { useLanguage } from '@/utils/LanguageContext'
 
 const MemoizedChatRoom = React.memo(ChatRoom)
 const MemoizedMusicPlayer = React.memo(MusicPlayer)
+
 interface LocalSettings {
   disableBackgroundImage: boolean
   disableMusicPlayerAnimations: boolean
@@ -23,20 +29,31 @@ interface LocalSettings {
   musicPlayerVolume: number
 }
 
-export default function Page() {
+export default function Home() {
+  const { language, translations } = useLanguage()
+  const t = translations[language].page
+
   const [isTrickOrTreatModalOpen, setTrickOrTreatModalOpen] = useState(false)
   const [isUploadModalOpen, setUploadModalOpen] = useState(false)
   const [isAuthModalOpen, setAuthModalOpen] = useState(false)
   const [localSettings] = useState<LocalSettings>(() => {
-    const savedSettings = localStorage.getItem('localSettings')
-    return savedSettings
-      ? JSON.parse(savedSettings)
-      : {
-          disableBackgroundImage: false,
-          disableMusicPlayerAnimations: false,
-          disableChatBackgroundAnimations: false,
-          musicPlayerVolume: 50,
-        }
+    if (typeof window !== 'undefined') {
+      const savedSettings = localStorage.getItem('localSettings')
+      return savedSettings
+        ? JSON.parse(savedSettings)
+        : {
+            disableBackgroundImage: false,
+            disableMusicPlayerAnimations: false,
+            disableChatBackgroundAnimations: false,
+            musicPlayerVolume: 50,
+          }
+    }
+    return {
+      disableBackgroundImage: false,
+      disableMusicPlayerAnimations: false,
+      disableChatBackgroundAnimations: false,
+      musicPlayerVolume: 50,
+    }
   })
   const hauntedEffectRef = useRef(false)
   const [, forceUpdate] = useState({})
@@ -70,7 +87,9 @@ export default function Page() {
   }, [])
 
   useEffect(() => {
-    localStorage.setItem('localSettings', JSON.stringify(localSettings))
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('localSettings', JSON.stringify(localSettings))
+    }
   }, [localSettings])
 
   const handleImageFinalized = useCallback(
@@ -122,7 +141,7 @@ export default function Page() {
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               <h1 className="text-5xl sm:text-8xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-red-500 to-purple-600 animate-gradient-x drop-shadow-[0_5px_3px_rgba(0,0,0,0.4)]">
-                Social Hub
+                {t.title}
               </h1>
             </motion.div>
             <motion.div
@@ -138,7 +157,7 @@ export default function Page() {
                 <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2C9FB_0%,#A5B4FC_50%,#818CF8_100%)]" />
                 <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-gray-900 px-8 py-4 text-sm font-medium text-orange-300 backdrop-blur-3xl transition-colors duration-300 group-hover:bg-gray-800">
                   <FaGhost className="mr-2 h-5 w-5 group-hover:animate-pulse" />
-                  TRICK OR TREAT
+                  {t.trickOrTreatButton}
                   <FaSkull className="ml-2 h-5 w-5 group-hover:animate-shake" />
                 </span>
               </Button>

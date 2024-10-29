@@ -1,7 +1,7 @@
 // no disponible actuamente (solo frontend activo)
 'use client'
 
-import { useState } from 'react' // useEffect
+import { useState } from 'react'
 import dynamic from 'next/dynamic'
 
 import { motion, AnimatePresence } from 'framer-motion'
@@ -42,8 +42,8 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 import { useToast } from '@/hooks/useToast'
-/*import { auth, db } from '@/lib/firebase'
-import { doc, getDoc, updateDoc, collection, addDoc } from 'firebase/firestore'*/
+
+import { useLanguage } from '@/utils/LanguageContext'
 
 const ComingSoonModal = dynamic(
   () => import('@/components/modals/ComingSoonModal'),
@@ -52,107 +52,15 @@ const ComingSoonModal = dynamic(
   },
 )
 
-const storeItems = [
-  {
-    id: 1,
-    name: 'Ghost Gummies',
-    icon: FaGhost,
-    candyCost: 10,
-    potionCost: 1,
-    description: 'Boost your visibility for 24 hours',
-    category: 'consumables',
-  },
-  {
-    id: 2,
-    name: 'Pumpkin Potion',
-    icon: GiPumpkin,
-    candyCost: 20,
-    potionCost: 2,
-    description: 'Double your likes for your next post',
-    category: 'consumables',
-  },
-  {
-    id: 3,
-    name: 'Bat Wings',
-    icon: GiBat,
-    candyCost: 15,
-    potionCost: 1,
-    description: 'Fly to the top of the feed for 1 hour',
-    category: 'consumables',
-  },
-  {
-    id: 4,
-    name: 'Spider Silk',
-    icon: FaSpellCheck,
-    candyCost: 30,
-    potionCost: 3,
-    description: 'Catch 5 random users attention',
-    category: 'consumables',
-  },
-  {
-    id: 5,
-    name: "Witch's Broom",
-    icon: GiSpellBook,
-    candyCost: 50,
-    potionCost: 5,
-    description: 'Unlock special profile animations',
-    category: 'cosmetics',
-  },
-  {
-    id: 6,
-    name: 'Wizard Hat',
-    icon: GiCauldron,
-    candyCost: 40,
-    potionCost: 4,
-    description: 'Add a magical hat to your profile picture',
-    category: 'cosmetics',
-  },
-  {
-    id: 7,
-    name: 'Skull Amulet',
-    icon: GiCandleSkull,
-    candyCost: 60,
-    potionCost: 6,
-    description: 'Intimidate other users with this spooky accessory',
-    category: 'cosmetics',
-  },
-  {
-    id: 8,
-    name: 'Spell Book',
-    icon: GiSpellBook,
-    candyCost: 100,
-    potionCost: 10,
-    description: 'Learn new spells to cast on your photos',
-    category: 'upgrades',
-  },
-  {
-    id: 9,
-    name: 'Cauldron Upgrade',
-    icon: GiCauldron,
-    candyCost: 80,
-    potionCost: 8,
-    description: 'Increase your potion brewing capacity',
-    category: 'upgrades',
-  },
-  {
-    id: 10,
-    name: '1 new song',
-    icon: FaCompactDisc ,
-    candyCost: 80,
-    potionCost: 8,
-    description: 'Add a new song to your spooky playlist!',
-    category: 'music',
-  },
-  {
-    id: 11,
-    name: '1 new playlist',
-    icon: FaCompactDisc,
-    candyCost: 1000,
-    potionCost: 10,
-    description: 'Add a new playlist to your account!',
-    category: 'music',
-  },
-]
+interface StoreItem {
+  id: number
+  name: string
+  icon: React.ElementType
+  candyCost: number
+  potionCost: number
+  description: string
+  category: string
+}
 
 interface UserResources {
   candies: number
@@ -160,6 +68,111 @@ interface UserResources {
 }
 
 export default function CandyStore() {
+  const { language, translations } = useLanguage()
+  const t = translations[language].candyStore
+
+  const storeItems: StoreItem[] = [
+    {
+      id: 1,
+      name: t.items.ghostGummies.name,
+      icon: FaGhost,
+      candyCost: 10,
+      potionCost: 1,
+      description: t.items.ghostGummies.description,
+      category: 'consumables',
+    },
+    {
+      id: 2,
+      name: t.items.pumpkinPotion.name,
+      icon: GiPumpkin,
+      candyCost: 20,
+      potionCost: 2,
+      description: t.items.pumpkinPotion.description,
+      category: 'consumables',
+    },
+    {
+      id: 3,
+      name: t.items.batWings.name,
+      icon: GiBat,
+      candyCost: 15,
+      potionCost: 1,
+      description: t.items.batWings.description,
+      category: 'consumables',
+    },
+    {
+      id: 4,
+      name: t.items.spiderSilk.name,
+      icon: FaSpellCheck,
+      candyCost: 30,
+      potionCost: 3,
+      description: t.items.spiderSilk.description,
+      category: 'consumables',
+    },
+    {
+      id: 5,
+      name: t.items.witchsBroom.name,
+      icon: GiSpellBook,
+      candyCost: 50,
+      potionCost: 5,
+      description: t.items.witchsBroom.description,
+      category: 'cosmetics',
+    },
+    {
+      id: 6,
+      name: t.items.wizardHat.name,
+      icon: GiCauldron,
+      candyCost: 40,
+      potionCost: 4,
+      description: t.items.wizardHat.description,
+      category: 'cosmetics',
+    },
+    {
+      id: 7,
+      name: t.items.skullAmulet.name,
+      icon: GiCandleSkull,
+      candyCost: 60,
+      potionCost: 6,
+      description: t.items.skullAmulet.description,
+      category: 'cosmetics',
+    },
+    {
+      id: 8,
+      name: t.items.spellBook.name,
+      icon: GiSpellBook,
+      candyCost: 100,
+      potionCost: 10,
+      description: t.items.spellBook.description,
+      category: 'upgrades',
+    },
+    {
+      id: 9,
+      name: t.items.cauldronUpgrade.name,
+      icon: GiCauldron,
+      candyCost: 80,
+      potionCost: 8,
+      description: t.items.cauldronUpgrade.description,
+      category: 'upgrades',
+    },
+    {
+      id: 10,
+      name: t.items.newSong.name,
+      icon: FaCompactDisc,
+      candyCost: 80,
+      potionCost: 8,
+      description: t.items.newSong.description,
+      category: 'music',
+    },
+    {
+      id: 11,
+      name: t.items.newPlaylist.name,
+      icon: FaCompactDisc,
+      candyCost: 1000,
+      potionCost: 10,
+      description: t.items.newPlaylist.description,
+      category: 'music',
+    },
+  ]
+
   const [userResources, setUserResources] = useState<UserResources>({
     candies: 0,
     potions: 0,
@@ -279,7 +292,7 @@ export default function CandyStore() {
                 aria-hidden="true"
               />
             </motion.span>
-            Spooky Candy Store
+            {t.title}
           </motion.h1>
           <motion.p
             className="mb-8 text-center text-lg lg:text-xl text-orange-300"
@@ -287,7 +300,7 @@ export default function CandyStore() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            Buy special treats and upgrades using your candies and potions!
+            {t.subtitle}
           </motion.p>
           <motion.div
             className="flex justify-between items-center mb-8 flex-wrap gap-4"
@@ -299,13 +312,13 @@ export default function CandyStore() {
               <motion.div className="flex items-center bg-purple-900/50 rounded-full px-3 py-1 shadow-lg shadow-pink-500/20">
                 <FaCandyCane className="text-pink-400 mr-2 animate-spin-slow" />
                 <span className="text-pink-400 font-bold">
-                  {userResources.candies} Candies
+                  {userResources.candies} {t.resources.candies}
                 </span>
               </motion.div>
               <motion.div className="flex items-center bg-purple-900/50 rounded-full px-3 py-1 shadow-lg shadow-green-500/20">
                 <FaFlask className="text-green-400 mr-2 animate-bounce-slow" />
                 <span className="text-green-400 font-bold">
-                  {userResources.potions} Potions
+                  {userResources.potions} {t.resources.potions}
                 </span>
               </motion.div>
             </div>
@@ -318,19 +331,19 @@ export default function CandyStore() {
             >
               <TabsList className="grid w-full grid-cols-5 bg-gray-800/50 backdrop-blur-sm rounded-full p-1 gap-2">
                 <TabsTrigger value="all" className="rounded-full">
-                  All Items
+                  {t.categories.all}
                 </TabsTrigger>
                 <TabsTrigger value="consumables" className="rounded-full">
-                  Consumables
+                  {t.categories.consumables}
                 </TabsTrigger>
                 <TabsTrigger value="cosmetics" className="rounded-full">
-                  Cosmetics
+                  {t.categories.cosmetics}
                 </TabsTrigger>
                 <TabsTrigger value="upgrades" className="rounded-full">
-                  Upgrades
+                  {t.categories.upgrades}
                 </TabsTrigger>
                 <TabsTrigger value="music" className="rounded-full">
-                  Music
+                  {t.categories.music}
                 </TabsTrigger>
               </TabsList>
             </Tabs>
@@ -379,39 +392,37 @@ export default function CandyStore() {
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button className="w-full bg-purple-700 hover:bg-purple-800 text-white py-2 px-4 rounded-lg text-lg font-semibold hover:animate-pulse shadow-sm shadow-purple-500/50 transition-all duration-300">
-                            Purchase
+                            {t.purchaseButton}
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="bg-gradient-to-br from-[#2c003e] to-[#1a1a1d] text-orange-200 border-2 border-orange-500 p-6 rounded-lg shadow-2xl shadow-orange-500/30 max-w-2xl">
-                          {' '}
                           <DialogHeader className="text-center">
                             <DialogTitle className="text-2xl font-halloween text-orange-500 animate-flicker">
-                              Confirm Purchase
+                              {t.confirmPurchase}
                             </DialogTitle>
                             <DialogDescription className="text-orange-400 mt-4 text-lg italic">
-                              Are you sure you want to purchase{' '}
-                              <strong>{item.name}</strong>?
+                              {t.confirmPurchaseDescription.replace(
+                                '{itemName}',
+                                item.name,
+                              )}
                             </DialogDescription>
                           </DialogHeader>
                           <DialogFooter className="flex justify-between items-center gap-4 mt-6">
                             <div className="flex items-center space-x-2">
                               <FaCandyCane className="text-pink-400 animate-spin-slow" />
                               <span className="text-pink-400 font-medium">
-                                {item.candyCost} Candies
+                                {item.candyCost} {t.resources.candies}
                               </span>
                             </div>
                             <div className="flex items-center space-x-2">
                               <FaFlask className="text-green-400 animate-bounce-slow" />
                               <span className="text-green-400 font-medium">
-                                {item.potionCost} Potions
+                                {item.potionCost} {t.resources.potions}
                               </span>
                             </div>
-                            <Button
-                              // onClick={() => purchaseItem(item)}
-                              className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg text-lg font-semibold shadow-sm shadow-purple-500/50 transition-all duration-300 hover:animate-pulse"
-                            >
+                            <Button className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg text-lg font-semibold shadow-sm shadow-purple-500/50 transition-all duration-300 hover:animate-pulse">
                               <FaCheck className="mr-2" />
-                              Confirm Purchase
+                              {t.confirmPurchaseButton}
                             </Button>
                           </DialogFooter>
                         </DialogContent>

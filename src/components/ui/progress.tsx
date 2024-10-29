@@ -23,6 +23,7 @@ const Progress = forwardRef<
             className,
           )}
           {...props}
+          aria-label={`Progress: ${progressValue}%`}
         >
           <ProgressPrimitive.Indicator
             className="h-full transition-transform duration-500 ease-in-out bg-gradient-to-r from-orange-600 to-yellow-500 rounded-full"
@@ -32,7 +33,10 @@ const Progress = forwardRef<
       </div>
 
       {showLabel && (
-        <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-semibold text-gray-800">
+        <span
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-semibold text-gray-800"
+          aria-hidden="true"
+        >
           {`${progressValue}%`}
         </span>
       )}

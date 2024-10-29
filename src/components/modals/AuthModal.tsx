@@ -15,7 +15,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Progress } from '@/components/ui/progress'
 
 import { useAuth } from '@/hooks/useAuth'
-
+import { useLanguage } from '@/utils/LanguageContext'
 import { useUsernameValidator } from '@/utils/UsernameValidator'
 
 const avatars = [
@@ -72,6 +72,8 @@ interface AuthModalProps {
 
 export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const { signIn, signUp, signInAnonymously, resetPassword } = useAuth()
+  const { language, translations } = useLanguage()
+  const t = translations[language].authModal
   const [formState, setFormState] = useState({
     emailOrUsername: '',
     email: '',
@@ -146,19 +148,19 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const validateInput = useCallback((): string | null => {
     if (mode === 'signUp') {
       if (signUpStep === 1 && !validateEmail(formState.email)) {
-        return 'Please enter a valid ethereal address (email).'
+        return t.errors.invalidEmail
       }
       if (signUpStep === 2) {
         if (formState.password !== formState.confirmPassword) {
-          return 'Your incantations do not match. Try again, apprentice.'
+          return t.errors.passwordMismatch
         }
         if (formState.password.length < 6) {
-          return 'Your spell must be at least 6 characters long to be effective.'
+          return t.errors.passwordTooShort
         }
       }
     }
     return null
-  }, [formState, mode, signUpStep])
+  }, [formState, mode, signUpStep, t.errors])
 
   const handleGuestSignIn = useCallback(async () => {
     setLoading(true)
@@ -167,11 +169,11 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       onClose()
       window.location.reload()
     } catch (err: any) {
-      setError('The spirits reject your ghostly presence. Try again later.')
+      setError(t.errors.guestSignInFailed)
     } finally {
       setLoading(false)
     }
-  }, [signInAnonymously, onClose])
+  }, [signInAnonymously, onClose, t.errors.guestSignInFailed])
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -198,9 +200,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       try {
         if (mode === 'forgotPassword') {
           await resetPassword(formState.email)
-          alert(
-            'A spectral raven has been dispatched with your password reset scroll.',
-          )
+          alert(t.alerts.passwordResetSent)
           toggleMode('signIn')
         } else if (mode === 'signUp') {
           if (signUpStep < 3) {
@@ -226,7 +226,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           window.location.reload()
         }
       } catch (err: any) {
-        setError(err.message || 'An error occurred. Please try again.')
+        setError(err.message || t.errors.genericError)
       } finally {
         setLoading(false)
       }
@@ -236,17 +236,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       signUpStep,
       validateInput,
       validateUsername,
-      formState.username,
-      formState.email,
-      formState.password,
-      formState.avatar,
-      formState.bio,
-      formState.emailOrUsername,
+      formState,
       resetPassword,
       toggleMode,
       signUp,
       onClose,
       signIn,
+      t.alerts.passwordResetSent,
+      t.errors.genericError,
     ],
   )
 
@@ -263,13 +260,13 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           >
             <div>
               <Label htmlFor="email" className="text-orange-300">
-                Email Address
+                {t.labels.email}
               </Label>
               <Input
                 variant="orange"
                 id="email"
                 name="email"
-                placeholder="example@ghost.com"
+                placeholder={t.placeholders.email}
                 value={formState.email}
                 onChange={handleChange}
                 className="bg-zinc-800 text-orange-100 border-orange-500 focus:ring-orange-400"
@@ -277,13 +274,13 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             </div>
             <div>
               <Label htmlFor="username" className="text-orange-300">
-                Username (This will be your @handle)
+                {t.labels.username}
               </Label>
               <Input
                 variant="orange"
                 id="username"
                 name="username"
-                placeholder="MidnightWhisper"
+                placeholder={t.placeholders.username}
                 value={formState.username}
                 onChange={handleChange}
                 className="bg-zinc-800 text-orange-100 border-orange-500 focus:ring-orange-400"
@@ -302,14 +299,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           >
             <div>
               <Label htmlFor="password" className="text-orange-300">
-                Password
+                {t.labels.password}
               </Label>
               <div className="relative">
                 <Input
                   variant="orange"
                   id="password"
                   name="password"
-                  placeholder="Your secret spell"
+                  placeholder={t.placeholders.password}
                   type={showPassword ? 'text' : 'password'}
                   value={formState.password}
                   onChange={handleChange}
@@ -325,23 +322,23 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               </div>
               <Progress value={passwordStrength} className="mt-2" />
               <p className="text-xs text-orange-300 mt-1">
-                Password strength:{' '}
+                {t.passwordStrength}:{' '}
                 {passwordStrength === 100
-                  ? 'Strong'
+                  ? t.passwordStrengthLevels.strong
                   : passwordStrength >= 50
-                  ? 'Medium'
-                  : 'Weak'}
+                  ? t.passwordStrengthLevels.medium
+                  : t.passwordStrengthLevels.weak}
               </p>
             </div>
             <div>
               <Label htmlFor="confirmPassword" className="text-orange-300">
-                Confirm Password
+                {t.labels.confirmPassword}
               </Label>
               <Input
                 variant="orange"
                 id="confirmPassword"
                 name="confirmPassword"
-                placeholder="Repeat your secret spell"
+                placeholder={t.placeholders.confirmPassword}
                 type={showPassword ? 'text' : 'password'}
                 value={formState.confirmPassword}
                 onChange={handleChange}
@@ -361,7 +358,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           >
             <div className="flex flex-col items-center mb-4">
               <Label className="text-orange-300 mb-2">
-                Choose your spectral form
+                {t.labels.chooseAvatar}
               </Label>
               <div className="flex items-center">
                 <Button
@@ -381,7 +378,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 >
                   <Image
                     src={formState.avatar}
-                    alt="User avatar"
+                    alt={t.altTexts.userAvatar}
                     width={128}
                     height={128}
                     className="rounded-full"
@@ -399,13 +396,13 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             </div>
             <div>
               <Label htmlFor="bio" className="text-orange-300">
-                Biography
+                {t.labels.bio}
               </Label>
               <Textarea
                 variant="orange"
                 id="bio"
                 name="bio"
-                placeholder="Tell us about your spectral self..."
+                placeholder={t.placeholders.bio}
                 value={formState.bio}
                 onChange={handleChange}
                 className="bg-zinc-800 text-orange-100 border-orange-500 focus:ring-orange-400 resize-none overflow-auto max-h-20"
@@ -427,13 +424,13 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     >
       <div>
         <Label htmlFor="emailOrUsername" className="text-orange-300">
-          Email address
+          {t.labels.emailOrUsername}
         </Label>
         <Input
           variant="orange"
           id="emailOrUsername"
           name="emailOrUsername"
-          placeholder="example@ghost.com"
+          placeholder={t.placeholders.emailOrUsername}
           value={formState.emailOrUsername}
           onChange={handleChange}
           className="bg-zinc-800 text-orange-100 border-orange-500 focus:ring-orange-400"
@@ -441,14 +438,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       </div>
       <div>
         <Label htmlFor="password" className="text-orange-300">
-          Password
+          {t.labels.password}
         </Label>
         <div className="relative">
           <Input
             variant="orange"
             id="password"
             name="password"
-            placeholder="Your secret spell"
+            placeholder={t.placeholders.password}
             type={showPassword ? 'text' : 'password'}
             value={formState.password}
             onChange={handleChange}
@@ -476,13 +473,13 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     >
       <div>
         <Label htmlFor="email" className="text-orange-300">
-          Ethereal Address
+          {t.labels.email}
         </Label>
         <Input
           variant="orange"
           id="email"
           name="email"
-          placeholder="example@ghost.com"
+          placeholder={t.placeholders.email}
           value={formState.email}
           onChange={handleChange}
           className="bg-zinc-800 text-orange-100 border-orange-500 focus:ring-orange-400"
@@ -510,12 +507,12 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           animate="visible"
           exit="exit"
           variants={overlayVariants}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto"
         >
           <motion.div variants={modalVariants} className="w-full max-w-md">
             <Card className="relative border-2 border-orange-500 bg-gradient-to-b from-orange-950 to-black shadow-2xl shadow-orange-500/20">
-              <CardHeader className="rounded-lg bg-zinc-950 text-center">
-                <CardTitle className="flex items-center justify-center gap-2 text-4xl font-bold text-orange-500">
+              <CardHeader className="rounded-lg bg-zinc-950 text-center p-4 sm:p-6">
+                <CardTitle className="flex flex-col sm:flex-row items-center justify-center gap-2 text-3xl sm:text-4xl font-bold text-orange-500">
                   <motion.div
                     animate={{ y: [0, -5, 5, 0] }}
                     transition={{
@@ -526,7 +523,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   >
                     <Image
                       src="/images/logo2.png"
-                      alt="SpookLens"
+                      alt={t.altTexts.logo}
                       className="mx-auto filter drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]"
                       width={60}
                       height={60}
@@ -540,10 +537,10 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                   >
                     {mode === 'signUp'
-                      ? 'Join the Haunt'
+                      ? t.titles.signUp
                       : mode === 'forgotPassword'
-                      ? 'Invoke a Password'
-                      : 'Enter the Crypt'}
+                      ? t.titles.forgotPassword
+                      : t.titles.signIn}
                   </motion.span>
                 </CardTitle>
               </CardHeader>
@@ -559,7 +556,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                         onClick={() => setSignUpStep((prev) => prev - 1)}
                         className="bg-orange-600 text-white hover:bg-orange-700"
                       >
-                        Back
+                        {t.buttons.back}
                       </Button>
                     )}
                     <Button
@@ -572,14 +569,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                       }`}
                     >
                       {loading
-                        ? 'Casting Spell...'
+                        ? t.buttons.loading
                         : mode === 'signUp'
                         ? signUpStep < 3
-                          ? 'Next'
-                          : 'Become a Member!'
+                          ? t.buttons.next
+                          : t.buttons.signUp
                         : mode === 'forgotPassword'
-                        ? 'Send a Reset Spell'
-                        : 'Step into the Shadows'}
+                        ? t.buttons.resetPassword
+                        : t.buttons.signIn}
                     </Button>
                   </div>
                 </form>
@@ -601,15 +598,15 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     }
                   >
                     {mode === 'signUp'
-                      ? 'Already a Ghost? Log In!'
-                      : 'Not a Ghost Yet? '}
+                      ? t.links.alreadyMember
+                      : t.links.notMember}
                   </button>
                   {mode === 'signIn' && (
                     <button
                       className="underline hover:text-orange-100"
                       onClick={() => toggleMode('forgotPassword')}
                     >
-                      Forgot Your Spell?
+                      {t.links.forgotPassword}
                     </button>
                   )}
                 </div>
@@ -617,7 +614,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   <>
                     <div className="flex items-center justify-center">
                       <div className="h-px w-1/4 bg-orange-700"></div>
-                      <span className="mx-3 text-orange-400">OR</span>
+                      <span className="mx-3 text-orange-400">{t.or}</span>
                       <div className="h-px w-1/4 bg-orange-700"></div>
                     </div>
                     <Button
@@ -626,11 +623,11 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                       onClick={handleGuestSignIn}
                     >
                       {loading ? (
-                        'Summoning...'
+                        t.buttons.guestSignInLoading
                       ) : (
                         <>
                           <FaSkull />
-                          Try as a Ghost! (Anonymous)
+                          {t.buttons.guestSignIn}
                         </>
                       )}
                     </Button>

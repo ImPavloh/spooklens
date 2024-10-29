@@ -47,17 +47,7 @@ import { db, auth } from '@/lib/firebase'
 import BackgroundAnimation from '@/components/extras/BackgroundAnimation'
 import PhotoGallery from '@/components/PhotoGallery'
 
-function formatDate(dateString: string): string {
-  const date = new Date(dateString)
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }
-  return new Intl.DateTimeFormat('en-US', options).format(date)
-}
+import { useLanguage } from '@/utils/LanguageContext'
 
 interface AlertState {
   type: 'success' | 'error'
@@ -86,6 +76,9 @@ interface UserProfilePageProps {
 }
 
 export default function UserProfilePage({ profileData }: UserProfilePageProps) {
+  const { language, translations } = useLanguage()
+  const t = translations[language].userProfilePage
+
   const [profile, setProfile] = useState<UserProfile>(profileData)
   const [isEditing, setIsEditing] = useState(false)
   const [password, setPassword] = useState('')
@@ -122,7 +115,7 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
     if (!isOwnProfile) {
       return setAlert({
         type: 'error',
-        message: 'You can only change credentials for your own profile.',
+        message: t.alerts.notOwnProfile,
       })
     }
 
@@ -141,8 +134,8 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
         type: 'success',
         message:
           changeType === 'email'
-            ? 'Your new spectral address has been conjured successfully!'
-            : 'Your new secret password has been conjured successfully!',
+            ? t.alerts.emailChangeSuccess
+            : t.alerts.passwordChangeSuccess,
       })
     } catch (error) {
       console.error(`Error updating ${changeType}:`, error)
@@ -150,8 +143,8 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
         type: 'error',
         message:
           changeType === 'email'
-            ? 'The spirits rejected your new address. Check your current password and try again.'
-            : 'The dark forces rejected your new incantation. Verify your current password and try again.',
+            ? t.alerts.emailChangeError
+            : t.alerts.passwordChangeError,
       })
     }
   }
@@ -164,14 +157,13 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
         setProfile({ ...profile, ...updatedProfile })
         setAlert({
           type: 'success',
-          message: 'The spectral profile has been updated successfully!',
+          message: t.alerts.profileUpdateSuccess,
         })
       } catch (error) {
         console.error('Error updating profile:', error)
         setAlert({
           type: 'error',
-          message:
-            'The spirits were unable to update the profile. Please try again.',
+          message: t.alerts.profileUpdateError,
         })
       }
     }
@@ -183,8 +175,7 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
     if (deleteConfirmation !== profile.username) {
       setAlert({
         type: 'error',
-        message:
-          'The username confirmation does not match. Your account remains intact.',
+        message: t.alerts.deleteConfirmationMismatch,
       })
       return
     }
@@ -203,7 +194,7 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
       setIsDeleteDialogOpen(false)
       setAlert({
         type: 'success',
-        message: 'Your spectral presence has been banished from this realm.',
+        message: t.alerts.accountDeleteSuccess,
       })
 
       router.push('/')
@@ -211,8 +202,7 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
       console.error('Error deleting account:', error)
       setAlert({
         type: 'error',
-        message:
-          'Failed to delete account. Please check your password and try again.',
+        message: t.alerts.accountDeleteError,
       })
     } finally {
       setIsReauthenticating(false)
@@ -220,12 +210,7 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="min-h-screen pt-16 md:pt-24 flex flex-col bg-gradient-to-b from-gray-900 via-purple-900 to-gray-900 text-orange-200 overflow-hidden pb-8 relative"
-    >
+    <motion.div className="min-h-screen pt-16 md:pt-24 flex flex-col bg-gradient-to-b from-gray-900 via-purple-900 to-gray-900 text-orange-200 overflow-hidden pb-8 relative">
       {!localSettings.disableBackgroundImage && (
         <BackgroundAnimation
           numWebs={20}
@@ -241,7 +226,7 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            {profile.username}&apos;s Haunted Profile
+            {t.title.replace('{username}', profile.username)}
           </motion.h1>
           <motion.p
             className="mb-8 text-center text-lg md:text-xl lg:text-2xl text-orange-300"
@@ -249,8 +234,7 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            Explore your spectral achievements and customize your ghostly
-            presence!
+            {t.subtitle}
           </motion.p>
 
           <Card className="bg-gradient-to-br from-[#1a1a1d] to-[#2c003e] border-orange-500 text-orange-200 overflow-hidden rounded-2xl shadow-2xl shadow-orange-500/30 transition-shadow duration-300">
@@ -262,25 +246,25 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
                     className="rounded-full data-[state=active]:bg-orange-500 data-[state=active]:text-white transition-all duration-300"
                   >
                     <FaGhost className="mr-2 h-4 w-4" />
-                    <span className="hidden md:inline">Profile</span>
+                    <span className="hidden md:inline">{t.tabs.profile}</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="photos"
                     className="rounded-full data-[state=active]:bg-orange-500 data-[state=active]:text-white transition-all duration-300"
                   >
                     <FaCamera className="mr-2 h-4 w-4" />
-                    <span className="hidden md:inline">Spooky Pics</span>
+                    <span className="hidden md:inline">{t.tabs.photos}</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="stats"
                     className="rounded-full data-[state=active]:bg-orange-500 data-[state=active]:text-white transition-all duration-300"
                   >
                     <FaTrophy className="mr-2 h-4 w-4" />
-                    <span className="hidden md:inline">Haunting Stats</span>
+                    <span className="hidden md:inline">{t.tabs.stats}</span>
                   </TabsTrigger>
                 </TabsList>
                 <TabsContent value="profile">
-                  <ScrollArea className="h-[450px] md:h-[550px] pr-4">
+                  <ScrollArea className="h-[450px] md:h-[500px] pr-4">
                     <div className="space-y-6">
                       <ProfileImage imageUrl={profile.avatar} />
                       <p className="text-center text-xl text-orange-300">
@@ -292,12 +276,14 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
                           onUpdate={handleProfileUpdate}
                           setIsEditing={setIsEditing}
                           setIsDeleteDialogOpen={setIsDeleteDialogOpen}
+                          t={t}
                         />
                       ) : (
                         <ProfileView
                           profile={profile}
                           setIsEditing={setIsEditing}
                           isOwnProfile={isOwnProfile}
+                          t={t}
                         />
                       )}
                       {isEditing && isOwnProfile && (
@@ -309,14 +295,15 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
                           onPasswordChange={() =>
                             handleCredentialChange('password')
                           }
+                          t={t}
                         />
                       )}
                     </div>
                   </ScrollArea>
-                  <AlertMessage alert={alert} />
+                  <AlertMessage alert={alert} t={t} />
                 </TabsContent>
                 <TabsContent value="photos">
-                  <ScrollArea className="h-[450px] md:h-[550px] pr-4">
+                  <ScrollArea className="h-[450px] md:h-[500px] pr-4">
                     <PhotoGallery
                       userId={profile.uid}
                       isOwnProfile={isOwnProfile}
@@ -324,8 +311,8 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
                   </ScrollArea>
                 </TabsContent>
                 <TabsContent value="stats">
-                  <ScrollArea className="h-[450px] md:h-[550px] pr-4">
-                    <StatsView profile={profile} />
+                  <ScrollArea className="h-[450px] md:h-[500px] pr-4">
+                    <StatsView profile={profile} t={t} />
                   </ScrollArea>
                 </TabsContent>
               </Tabs>
@@ -337,12 +324,10 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
                 <DialogContent className="bg-gray-800 text-orange-200 border-2 border-red-500 max-w-[90vw] md:max-w-md">
                   <DialogHeader>
                     <DialogTitle className="text-xl md:text-2xl font-bold text-red-500">
-                      Confirm Spectral Banishment
+                      {t.deleteDialog.title}
                     </DialogTitle>
                     <DialogDescription className="text-orange-300 text-sm md:text-base">
-                      This dark ritual will permanently erase your presence from
-                      this haunted realm. All your data, including candies and
-                      photos, will be lost to the void.
+                      {t.deleteDialog.description}
                     </DialogDescription>
                   </DialogHeader>
                   <div className="py-4">
@@ -350,7 +335,7 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
                       htmlFor="deleteConfirmation"
                       className="text-orange-400 text-sm md:text-base"
                     >
-                      Type your username to confirm:{' '}
+                      {t.deleteDialog.confirmationLabel}{' '}
                       <span className="font-bold">{profile.username}</span>
                     </Label>
                     <Input
@@ -364,7 +349,7 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
                       htmlFor="password"
                       className="text-orange-400 mt-4 block text-sm md:text-base"
                     >
-                      Enter your password:
+                      {t.deleteDialog.passwordLabel}
                     </Label>
                     <Input
                       variant="orange"
@@ -377,7 +362,7 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
                   </div>
                   {alert && alert.type === 'error' && (
                     <Alert variant="destructive">
-                      <AlertTitle>Error</AlertTitle>
+                      <AlertTitle>{t.alerts.errorTitle}</AlertTitle>
                       <AlertDescription>{alert.message}</AlertDescription>
                     </Alert>
                   )}
@@ -386,7 +371,7 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
                       className="bg-red-200 text-red-800  w-full sm:w-auto"
                       onClick={() => setIsDeleteDialogOpen(false)}
                     >
-                      Cancel
+                      {t.deleteDialog.cancelButton}
                     </Button>
                     <Button
                       className="bg-red-800 text-red-200 w-full sm:w-auto"
@@ -394,8 +379,8 @@ export default function UserProfilePage({ profileData }: UserProfilePageProps) {
                       disabled={isReauthenticating}
                     >
                       {isReauthenticating
-                        ? 'Banishing...'
-                        : 'Confirm Banishment'}
+                        ? t.deleteDialog.banishingButton
+                        : t.deleteDialog.confirmButton}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
@@ -431,15 +416,17 @@ const ProfileView = ({
   profile,
   setIsEditing,
   isOwnProfile,
+  t,
 }: {
   profile: UserProfile
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
   isOwnProfile: boolean
+  t: any
 }) => (
   <div className="space-y-4">
     <div>
       <h3 className="text-lg md:text-xl font-semibold text-orange-400 mb-2">
-        Spectral Biography
+        {t.profileView.bioTitle}
       </h3>
       <p className="text-sm md:text-base text-gray-300 bg-purple-900/30 p-4 rounded-lg">
         {profile.bio}
@@ -449,8 +436,8 @@ const ProfileView = ({
       <FaEye className="text-orange-500" />
       <span className="text-sm md:text-base text-gray-300">
         {profile.profileVisible
-          ? 'Visible to other spirits'
-          : 'Hidden from mortal eyes'}
+          ? t.profileView.visibleStatus
+          : t.profileView.hiddenStatus}
       </span>
     </div>
     {isOwnProfile && (
@@ -459,7 +446,7 @@ const ProfileView = ({
         className="w-full bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 transform"
       >
         <FaEdit className="mr-2" />
-        Edit Profile
+        {t.profileView.editButton}
       </Button>
     )}
   </div>
@@ -470,11 +457,13 @@ const ProfileEdit = ({
   onUpdate,
   setIsEditing,
   setIsDeleteDialogOpen,
+  t,
 }: {
   profile: UserProfile
   onUpdate: (updatedProfile: Partial<UserProfile>) => Promise<void>
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
   setIsDeleteDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
+  t: any
 }) => {
   const [bio, setBio] = useState(profile.bio)
   const [profileVisible] = useState(profile.profileVisible)
@@ -490,7 +479,7 @@ const ProfileEdit = ({
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <Label htmlFor="bio" className="text-orange-400 text-sm md:text-base">
-          Spectral Biography
+          {t.profileEdit.bioLabel}
         </Label>
         <Textarea
           variant="orange"
@@ -505,7 +494,7 @@ const ProfileEdit = ({
         type="submit"
         className="w-full bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 transform"
       >
-        Update Profile
+        {t.profileEdit.updateButton}
       </Button>
       <Button
         type="button"
@@ -513,7 +502,7 @@ const ProfileEdit = ({
         className="w-full bg-red-600 hover:bg-red-700 text-white transition-all duration-300 transform"
       >
         <FaTrash className="mr-2" />
-        Banish Your Spectral Presence
+        {t.profileEdit.deleteButton}
       </Button>
     </form>
   )
@@ -525,23 +514,25 @@ const CredentialChangeForm = ({
   newPassword,
   setNewPassword,
   onPasswordChange,
+  t,
 }: {
   currentPassword: string
   setCurrentPassword: React.Dispatch<React.SetStateAction<string>>
   newPassword: string
   setNewPassword: React.Dispatch<React.SetStateAction<string>>
   onPasswordChange: () => void
+  t: any
 }) => (
   <div className="mt-6 space-y-4 bg-purple-900/30 p-4 md:p-6 rounded-lg">
     <h3 className="text-xl md:text-2xl font-semibold text-orange-500 mb-4">
-      Change Spectral Credentials
+      {t.credentialChange.title}
     </h3>
     <div>
       <Label
         htmlFor="currentPassword"
         className="text-orange-400 text-sm md:text-base"
       >
-        Current Incantation
+        {t.credentialChange.currentPasswordLabel}
       </Label>
       <Input
         variant="orange"
@@ -557,7 +548,7 @@ const CredentialChangeForm = ({
         htmlFor="newPassword"
         className="text-orange-400 text-sm md:text-base"
       >
-        New Secret Incantation
+        {t.credentialChange.newPasswordLabel}
       </Label>
       <Input
         variant="orange"
@@ -572,13 +563,13 @@ const CredentialChangeForm = ({
         className="mt-2 w-full bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 transform"
       >
         <FaLock className="mr-2" />
-        Cast New Spell
+        {t.credentialChange.changeButton}
       </Button>
     </div>
   </div>
 )
 
-const AlertMessage = ({ alert }: { alert: AlertState | null }) => (
+const AlertMessage = ({ alert, t }: { alert: AlertState | null; t: any }) => (
   <AnimatePresence>
     {alert && (
       <motion.div
@@ -599,7 +590,9 @@ const AlertMessage = ({ alert }: { alert: AlertState | null }) => (
               alert.type === 'error' ? 'text-red-300' : 'text-green-300'
             } text-sm md:text-base`}
           >
-            {alert.type === 'error' ? 'Dark Omen' : 'Mystical Success'}
+            {alert.type === 'error'
+              ? t.alerts.errorTitle
+              : t.alerts.successTitle}
           </AlertTitle>
           <AlertDescription className="text-sm md:text-base">
             {alert.message}
@@ -610,22 +603,22 @@ const AlertMessage = ({ alert }: { alert: AlertState | null }) => (
   </AnimatePresence>
 )
 
-const StatsView = ({ profile }: { profile: UserProfile }) => (
+const StatsView = ({ profile, t }: { profile: UserProfile; t: any }) => (
   <div className="space-y-4 md:space-y-6 mt-4">
     {[
       {
         icon: FaCalendarAlt,
-        label: 'Haunting Since',
-        value: formatDate(profile.createdAt),
+        label: t.stats.hauntingSince,
+        value: new Date(profile.createdAt).toLocaleDateString(),
         isDate: true,
       },
       {
         icon: FaCandyCane,
-        label: 'Total Candies Collected',
+        label: t.stats.totalCandies,
         value: profile.totalCandies,
       },
-      { icon: GiPumpkin, label: 'Total Spins', value: profile.totalSpins },
-      { icon: FaFlask, label: 'Magical Potions', value: profile.potions },
+      { icon: GiPumpkin, label: t.stats.totalSpins, value: profile.totalSpins },
+      { icon: FaFlask, label: t.stats.magicalPotions, value: profile.potions },
     ].map((stat, index) => (
       <div
         key={index}
