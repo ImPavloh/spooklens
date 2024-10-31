@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     'candies',
     'Spookify',
   ],
-  authors: [{ name: 'Pavloh', url: 'https://github.com/Pavloh' }],
+  authors: [{ name: 'Pavloh', url: 'https://github.com/ImPavloh' }],
   openGraph: {
     title: 'SpookLens',
     description:
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     siteName: 'SpookLens',
     images: [
       {
-        url: 'https://spooklens.vercel.app/images/screenshots/s3.jpg',
+        url: 'https://spooklens.vercel.app/images/screenshots/s1.jpg',
         width: 1200,
         height: 630,
         alt: 'SpookLens app screenshot',
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     title: 'SpookLens',
     description:
       'Join SpookLens, a hackathon finalist in spooky AI social media with photo editing and global chat.',
-    images: ['https://spooklens.vercel.app/images/screenshots/s3.jpg'],
+    images: ['https://spooklens.vercel.app/images/screenshots/s1.jpg'],
     site: '@SpookLens',
     creator: '@impavloh',
   },
@@ -80,16 +80,35 @@ const jsonLd = {
   author: {
     '@type': 'Person',
     name: 'Pavloh',
-    url: 'https://github.com/Pavloh',
+    url: 'https://github.com/ImPavloh',
   },
   description:
     'Finalist in the 2024 Cloudinary + MiduDev Spooky AI Creations Hackathon with Halloween-themed interactions.',
-  image: 'https://spooklens.vercel.app/images/screenshots/s3.jpg',
+  image: 'https://spooklens.vercel.app/images/screenshots/s1.jpg',
   potentialAction: {
     '@type': 'SearchAction',
     target: 'https://spooklens.vercel.app/search?q={search_term_string}',
     'query-input': 'required name=search_term_string',
   },
+}
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: 'https://spooklens.vercel.app/home',
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Leaderboard',
+      item: 'https://spooklens.vercel.app/leaderboard',
+    },
+  ],
 }
 
 export default function RootLayout({
@@ -100,15 +119,23 @@ export default function RootLayout({
   return (
     <html className={breeSerif.className}>
       <head>
-      <meta name="google-site-verification" content="MwDtcW9VYqfgR5LrqYTzwUtwEslW1xtqu3PgSMt7ods" /> 
-      // Si en el futuro se adquiere un dominio personalizado:
-      // modificar el DNS para la verificación de Google (y eleminar este meta)
-      // agregar una política de privacidad en la web
+        <meta name="google-site-verification" content="MwDtcW9VYqfgR5LrqYTzwUtwEslW1xtqu3PgSMt7ods" /> 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#2b184a" />
         <link rel="canonical" href="https://spooklens.vercel.app" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        />
+        <link
+          rel="preload"
+          href="/images/screenshots/s1.jpg"
+          as="image"
+          type="image/jpeg"
         />
       </head>
       <body className="bg-gray-900 text-white">
