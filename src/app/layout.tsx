@@ -100,6 +100,10 @@ export default function RootLayout({
   return (
     <html className={breeSerif.className}>
       <head>
+      <meta name="google-site-verification" content="MwDtcW9VYqfgR5LrqYTzwUtwEslW1xtqu3PgSMt7ods" /> 
+      // Si en el futuro se adquiere un dominio personalizado:
+      // modificar el DNS para la verificación de Google (y eleminar este meta)
+      // agregar una política de privacidad en la web
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="canonical" href="https://spooklens.vercel.app" />
         <script
