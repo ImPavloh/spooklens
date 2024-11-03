@@ -37,6 +37,9 @@
 - **Candy Cauldron Leaderboard**  
   See who reigns supreme in our global rankings! Compete for the title of Halloween champion! 🏆
 
+- **Multilingual Support**  
+  Currently supports English and Spanish.
+
 <div align="center">
   <img src="./public/images/ruleta.gif" alt="Ruleta SpookLens" height="150" />
 </div>
@@ -54,9 +57,6 @@
 
 - **Evolve Your Inner Monster**  
   Unlock ranks and levels as you grow with SpookLens, bringing you closer to becoming the ultimate creature of the night! 🌙🧛‍♀️
-
-- **Multilingual Support**  
-  Currently supports English and Spanish, with Portuguese coming soon.
 
 <div align="center">
   <img src="./public/images/sad-logo2.png" alt="Ruleta SpookLens" height="150"/>
@@ -90,13 +90,19 @@
 
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/impavloh/spooklens/blob/main/LICENSE) for more details.
 
-<img src="./public/images/camera-logo.png" alt="Ruleta SpookLens"/>
+<img src="./public/images/camera-logo.png" alt="Camera SpookLens"/>
 
 ---
 
 ### 🚀 Project Submission for Hackathon 2024
 
 The final project submitted for the Hackathon corresponds to this [commit](https://github.com/ImPavloh/spooklens/tree/f1720411db429c5b42dc7a3b4b0f097563089f3e). This commit marks the exact version of the project presented, which ended up being a finalist! 🎉
+
+<img src="./public/images/screenshots/s8.jpg" alt="SpookLens Finalista" height="300"/>
+
+1 - https://cloudinary.com/blog/cloudinarys-hackathon-results-are-in
+2 - https://www.linkedin.com/posts/activity-7257880324393631745-sG8c/
+3 - https://x.com/ImPavloh/status/1849221803803054182
 
 > **Note:**  
 > I have many exciting ideas for the future of SpookLens! Stay tuned for more updates after the Hackathon.

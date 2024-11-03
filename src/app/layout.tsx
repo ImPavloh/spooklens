@@ -28,6 +28,7 @@ export const metadata: Metadata = {
     'MiduDev',
     'hackathon finalist',
     'Pavloh',
+    'Pablo Casado Rodríguez'
     'hackathon',
     'Halloween',
     'spooky',
@@ -121,6 +122,7 @@ export default function RootLayout({
       <head>
         <meta name="google-site-verification" content="MwDtcW9VYqfgR5LrqYTzwUtwEslW1xtqu3PgSMt7ods" /> 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <meta name="theme-color" content="#2b184a" />
         <link rel="canonical" href="https://spooklens.vercel.app" />
         <script

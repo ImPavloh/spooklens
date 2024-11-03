@@ -4,48 +4,30 @@
     <loc>https://spooklens.vercel.app/</loc>
     <priority>1.0</priority>
     <changefreq>daily</changefreq>
-    <lastmod>2024-10-31</lastmod>
+    <lastmod>2024-11-03</lastmod>
   </url>
   <url>
     <loc>https://spooklens.vercel.app/home</loc>
-    <priority>0.9</priority>
+    <priority>0.8</priority>
     <changefreq>daily</changefreq>
-    <lastmod>2024-10-31</lastmod>
+    <lastmod>2024-11-03</lastmod>
   </url>
   <url>
     <loc>https://spooklens.vercel.app/leaderboard</loc>
-    <priority>0.8</priority>
-    <changefreq>daily</changefreq>
-    <lastmod>2024-10-31</lastmod>
+    <priority>0.7</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2024-11-03</lastmod>
   </url>
   <url>
     <loc>https://spooklens.vercel.app/store</loc>
-    <priority>0.7</priority>
-    <changefreq>weekly</changefreq>
-    <lastmod>2024-10-31</lastmod>
+    <priority>0.6</priority>
+    <changefreq>monthly</changefreq>
+    <lastmod>2024-11-03</lastmod>
   </url>
   <url>
     <loc>https://spooklens.vercel.app/chats</loc>
-    <priority>0.6</priority>
-    <changefreq>weekly</changefreq>
-    <lastmod>2024-10-31</lastmod>
-  </url>
-  <url>
-    <loc>https://spooklens.vercel.app/chat/username</loc>
     <priority>0.5</priority>
-    <changefreq>weekly</changefreq>
-    <lastmod>2024-10-31</lastmod>
-  </url>
-  <url>
-    <loc>https://spooklens.vercel.app/user/username</loc>
-    <priority>0.5</priority>
-    <changefreq>weekly</changefreq>
-    <lastmod>2024-10-31</lastmod>
-  </url>
-  <url>
-    <loc>https://spooklens.vercel.app/not-found</loc>
-    <priority>0.3</priority>
-    <changefreq>never</changefreq>
-    <lastmod>2024-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <lastmod>2024-11-03</lastmod>
   </url>
 </urlset>

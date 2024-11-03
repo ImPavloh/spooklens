@@ -24,6 +24,7 @@ const slides: Slide[] = [
   { image: '/images/screenshots/s5.jpg', alt: 'SpookLens Leaderboard' },
   { image: '/images/screenshots/s6.jpg', alt: 'SpookLens Profiles' },
   { image: '/images/screenshots/s7.jpg', alt: 'SpookLens Store' },
+  { image: '/images/screenshots/s8.jpg', alt: 'SpookLens Finalist Tweet' },
 ]
 
 export default function HauntedCarousel() {
