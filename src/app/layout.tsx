@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     'MiduDev',
     'hackathon finalist',
     'Pavloh',
-    'Pablo Casado Rodríguez'
+    'Pablo Casado Rodríguez',
     'hackathon',
     'Halloween',
     'spooky',
